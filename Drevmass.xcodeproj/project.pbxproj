@@ -7,10 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB22E2562B95C1FB00694714 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */; };
+		DB22E2572B95C1FB00694714 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */; };
+		DB22E2582B95C1FB00694714 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */; };
+		DB22E2592B95C1FB00694714 /* SF-Pro-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2542B95C1FB00694714 /* SF-Pro-Text-Medium.otf */; };
+		DB22E25A2B95C1FB00694714 /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2552B95C1FB00694714 /* SF-Pro-Text-Semibold.otf */; };
+		DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E25B2B95CFBB00694714 /* TabBarController.swift */; };
+		DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E25D2B95D02700694714 /* CoursesViewController.swift */; };
+		DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E25F2B95D05100694714 /* CatalogMainViewController.swift */; };
+		DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2612B95D06D00694714 /* BasketViewController.swift */; };
+		DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2632B95D08800694714 /* ProfileViewController.swift */; };
 		DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7132B93A12100CD42BE /* AppDelegate.swift */; };
 		DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */; };
-		DBDAA7182B93A12100CD42BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7172B93A12100CD42BE /* ViewController.swift */; };
-		DBDAA71B2B93A12100CD42BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBDAA7192B93A12100CD42BE /* Main.storyboard */; };
 		DBDAA71D2B93A12200CD42BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBDAA71C2B93A12200CD42BE /* Assets.xcassets */; };
 		DBDAA7202B93A12200CD42BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBDAA71E2B93A12200CD42BE /* LaunchScreen.storyboard */; };
 		DBDAA72B2B93A12200CD42BE /* DrevmassTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA72A2B93A12200CD42BE /* DrevmassTests.swift */; };
@@ -36,11 +44,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
+		DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
+		DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
+		DB22E2542B95C1FB00694714 /* SF-Pro-Text-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Medium.otf"; sourceTree = "<group>"; };
+		DB22E2552B95C1FB00694714 /* SF-Pro-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Semibold.otf"; sourceTree = "<group>"; };
+		DB22E25B2B95CFBB00694714 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		DB22E25D2B95D02700694714 /* CoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursesViewController.swift; sourceTree = "<group>"; };
+		DB22E25F2B95D05100694714 /* CatalogMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogMainViewController.swift; sourceTree = "<group>"; };
+		DB22E2612B95D06D00694714 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
+		DB22E2632B95D08800694714 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		DBDAA7102B93A12100CD42BE /* Drevmass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drevmass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDAA7132B93A12100CD42BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DBDAA7172B93A12100CD42BE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		DBDAA71A2B93A12100CD42BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DBDAA71C2B93A12200CD42BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DBDAA71F2B93A12200CD42BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DBDAA7212B93A12200CD42BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -76,6 +92,187 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB190DA92B94ECE700990BF2 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */,
+				DBDAA7132B93A12100CD42BE /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DB190DAA2B94ECF500990BF2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DB190DBA2B94EE4600990BF2 /* Font */,
+				DBDAA71C2B93A12200CD42BE /* Assets.xcassets */,
+				DBDAA71E2B93A12200CD42BE /* LaunchScreen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		DB190DAB2B94ED0500990BF2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DB190DAC2B94ED2500990BF2 /* Registration */,
+				DB190DB12B94ED8E00990BF2 /* Catalog */,
+				DB190DB32B94EDA100990BF2 /* Courses */,
+				DB190DB22B94ED9800990BF2 /* Profile */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		DB190DAC2B94ED2500990BF2 /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+				DB190DAD2B94ED4900990BF2 /* Onboarding */,
+				DB190DAF2B94ED6400990BF2 /* SignUp */,
+				DB190DAE2B94ED5500990BF2 /* SignIn */,
+				DB190DB02B94ED7400990BF2 /* ForgotPass */,
+			);
+			path = Registration;
+			sourceTree = "<group>";
+		};
+		DB190DAD2B94ED4900990BF2 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		DB190DAE2B94ED5500990BF2 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		DB190DAF2B94ED6400990BF2 /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SignUp;
+			sourceTree = "<group>";
+		};
+		DB190DB02B94ED7400990BF2 /* ForgotPass */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ForgotPass;
+			sourceTree = "<group>";
+		};
+		DB190DB12B94ED8E00990BF2 /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				DB190DB42B94EDD100990BF2 /* CatalogMain */,
+				DB190DB52B94EDE300990BF2 /* Product */,
+				DB190DB72B94EE0D00990BF2 /* Order */,
+				DB190DB62B94EDF900990BF2 /* Basket */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		DB190DB22B94ED9800990BF2 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E2632B95D08800694714 /* ProfileViewController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		DB190DB32B94EDA100990BF2 /* Courses */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E25D2B95D02700694714 /* CoursesViewController.swift */,
+			);
+			path = Courses;
+			sourceTree = "<group>";
+		};
+		DB190DB42B94EDD100990BF2 /* CatalogMain */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E25F2B95D05100694714 /* CatalogMainViewController.swift */,
+			);
+			path = CatalogMain;
+			sourceTree = "<group>";
+		};
+		DB190DB52B94EDE300990BF2 /* Product */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
+		DB190DB62B94EDF900990BF2 /* Basket */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E2612B95D06D00694714 /* BasketViewController.swift */,
+			);
+			path = Basket;
+			sourceTree = "<group>";
+		};
+		DB190DB72B94EE0D00990BF2 /* Order */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Order;
+			sourceTree = "<group>";
+		};
+		DB190DB82B94EE1D00990BF2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DB190DB92B94EE2100990BF2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DB190DBE2B94EE9400990BF2 /* UIViewController */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		DB190DBA2B94EE4600990BF2 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */,
+				DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */,
+				DB22E2542B95C1FB00694714 /* SF-Pro-Text-Medium.otf */,
+				DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */,
+				DB22E2552B95C1FB00694714 /* SF-Pro-Text-Semibold.otf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		DB190DBB2B94EE5E00990BF2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		DB190DBC2B94EE6500990BF2 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		DB190DBD2B94EE6A00990BF2 /* Static */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Static;
+			sourceTree = "<group>";
+		};
+		DB190DBE2B94EE9400990BF2 /* UIViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UIViewController;
+			sourceTree = "<group>";
+		};
 		DBDAA7072B93A12100CD42BE = {
 			isa = PBXGroup;
 			children = (
@@ -99,12 +296,15 @@
 		DBDAA7122B93A12100CD42BE /* Drevmass */ = {
 			isa = PBXGroup;
 			children = (
-				DBDAA7132B93A12100CD42BE /* AppDelegate.swift */,
-				DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */,
-				DBDAA7172B93A12100CD42BE /* ViewController.swift */,
-				DBDAA7192B93A12100CD42BE /* Main.storyboard */,
-				DBDAA71C2B93A12200CD42BE /* Assets.xcassets */,
-				DBDAA71E2B93A12200CD42BE /* LaunchScreen.storyboard */,
+				DB190DB92B94EE2100990BF2 /* Extensions */,
+				DB190DBC2B94EE6500990BF2 /* Protocols */,
+				DB190DBD2B94EE6A00990BF2 /* Static */,
+				DB190DBB2B94EE5E00990BF2 /* Shared */,
+				DB190DB82B94EE1D00990BF2 /* Models */,
+				DB190DAB2B94ED0500990BF2 /* Controllers */,
+				DB190DAA2B94ECF500990BF2 /* Resources */,
+				DB190DA92B94ECE700990BF2 /* App */,
+				DB22E25B2B95CFBB00694714 /* TabBarController.swift */,
 				DBDAA7212B93A12200CD42BE /* Info.plist */,
 			);
 			path = Drevmass;
@@ -231,9 +431,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB22E2562B95C1FB00694714 /* SF-Pro-Text-Regular.otf in Resources */,
+				DB22E2582B95C1FB00694714 /* SF-Pro-Text-Bold.otf in Resources */,
+				DB22E2592B95C1FB00694714 /* SF-Pro-Text-Medium.otf in Resources */,
 				DBDAA7202B93A12200CD42BE /* LaunchScreen.storyboard in Resources */,
+				DB22E2572B95C1FB00694714 /* SF-Pro-Display-Bold.otf in Resources */,
 				DBDAA71D2B93A12200CD42BE /* Assets.xcassets in Resources */,
-				DBDAA71B2B93A12100CD42BE /* Main.storyboard in Resources */,
+				DB22E25A2B95C1FB00694714 /* SF-Pro-Text-Semibold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +462,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBDAA7182B93A12100CD42BE /* ViewController.swift in Sources */,
+				DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */,
+				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
+				DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */,
+				DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */,
+				DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
 				DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */,
 			);
@@ -297,14 +505,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		DBDAA7192B93A12100CD42BE /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DBDAA71A2B93A12100CD42BE /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		DBDAA71E2B93A12200CD42BE /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -368,7 +568,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -425,7 +625,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -446,7 +646,7 @@
 				INFOPLIST_FILE = Drevmass/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -457,9 +657,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Aset-Madina.Drevmass";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -474,7 +678,7 @@
 				INFOPLIST_FILE = Drevmass/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -485,9 +689,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Aset-Madina.Drevmass";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
