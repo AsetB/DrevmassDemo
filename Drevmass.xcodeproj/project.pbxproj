@@ -17,6 +17,14 @@
 		DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E25F2B95D05100694714 /* CatalogMainViewController.swift */; };
 		DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2612B95D06D00694714 /* BasketViewController.swift */; };
 		DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2632B95D08800694714 /* ProfileViewController.swift */; };
+		DB22E2662B95FB4D00694714 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2652B95FB4D00694714 /* OnboardingViewController.swift */; };
+		DB22E26C2B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2692B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift */; };
+		DB22E26D2B95FD2800694714 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E26A2B95FD2800694714 /* Extensions.swift */; };
+		DB22E26E2B95FD2800694714 /* SGSegmentedProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E26B2B95FD2800694714 /* SGSegmentedProgressBar.swift */; };
+		DB22E2722B95FE7E00694714 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2712B95FE7E00694714 /* SnapKit */; };
+		DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; };
+		DB22E2752B95FE8200694714 /* SnapKit-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		DB22E2782B96192200694714 /* UIFont + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2772B96192200694714 /* UIFont + Extensions.swift */; };
 		DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7132B93A12100CD42BE /* AppDelegate.swift */; };
 		DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */; };
 		DBDAA71D2B93A12200CD42BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBDAA71C2B93A12200CD42BE /* Assets.xcassets */; };
@@ -43,6 +51,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		DB22E2762B95FE8200694714 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DB22E2752B95FE8200694714 /* SnapKit-Dynamic in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
@@ -54,6 +76,12 @@
 		DB22E25F2B95D05100694714 /* CatalogMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogMainViewController.swift; sourceTree = "<group>"; };
 		DB22E2612B95D06D00694714 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		DB22E2632B95D08800694714 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		DB22E2652B95FB4D00694714 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		DB22E2682B95FD2800694714 /* SGSegmentedProgressBarLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSegmentedProgressBarLibrary.h; sourceTree = "<group>"; };
+		DB22E2692B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGSegmentedProgressBarProtocols.swift; sourceTree = "<group>"; };
+		DB22E26A2B95FD2800694714 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		DB22E26B2B95FD2800694714 /* SGSegmentedProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGSegmentedProgressBar.swift; sourceTree = "<group>"; };
+		DB22E2772B96192200694714 /* UIFont + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont + Extensions.swift"; sourceTree = "<group>"; };
 		DBDAA7102B93A12100CD42BE /* Drevmass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drevmass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDAA7132B93A12100CD42BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +100,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB22E2722B95FE7E00694714 /* SnapKit in Frameworks */,
+				DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +166,7 @@
 		DB190DAD2B94ED4900990BF2 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				DB22E2652B95FB4D00694714 /* OnboardingViewController.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -229,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				DB190DBE2B94EE9400990BF2 /* UIViewController */,
+				DB22E2772B96192200694714 /* UIFont + Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -269,8 +301,27 @@
 		DB190DBE2B94EE9400990BF2 /* UIViewController */ = {
 			isa = PBXGroup;
 			children = (
+				DB22E2672B95FCA600694714 /* SGSegmentedProgressBarLibrary */,
 			);
 			path = UIViewController;
+			sourceTree = "<group>";
+		};
+		DB22E2672B95FCA600694714 /* SGSegmentedProgressBarLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E26A2B95FD2800694714 /* Extensions.swift */,
+				DB22E26B2B95FD2800694714 /* SGSegmentedProgressBar.swift */,
+				DB22E2682B95FD2800694714 /* SGSegmentedProgressBarLibrary.h */,
+				DB22E2692B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift */,
+			);
+			path = SGSegmentedProgressBarLibrary;
+			sourceTree = "<group>";
+		};
+		DB22E2702B95FE7E00694714 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		DBDAA7072B93A12100CD42BE = {
@@ -280,6 +331,7 @@
 				DBDAA7292B93A12200CD42BE /* DrevmassTests */,
 				DBDAA7332B93A12200CD42BE /* DrevmassUITests */,
 				DBDAA7112B93A12100CD42BE /* Products */,
+				DB22E2702B95FE7E00694714 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -337,12 +389,17 @@
 				DBDAA70C2B93A12100CD42BE /* Sources */,
 				DBDAA70D2B93A12100CD42BE /* Frameworks */,
 				DBDAA70E2B93A12100CD42BE /* Resources */,
+				DB22E2762B95FE8200694714 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Drevmass;
+			packageProductDependencies = (
+				DB22E2712B95FE7E00694714 /* SnapKit */,
+				DB22E2732B95FE8200694714 /* SnapKit-Dynamic */,
+			);
 			productName = Drevmass;
 			productReference = DBDAA7102B93A12100CD42BE /* Drevmass.app */;
 			productType = "com.apple.product-type.application";
@@ -415,6 +472,9 @@
 				Base,
 			);
 			mainGroup = DBDAA7072B93A12100CD42BE;
+			packageReferences = (
+				DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = DBDAA7112B93A12100CD42BE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -462,11 +522,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB22E2782B96192200694714 /* UIFont + Extensions.swift in Sources */,
 				DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */,
 				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
 				DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */,
+				DB22E2662B95FB4D00694714 /* OnboardingViewController.swift in Sources */,
 				DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */,
+				DB22E26E2B95FD2800694714 /* SGSegmentedProgressBar.swift in Sources */,
+				DB22E26D2B95FD2800694714 /* Extensions.swift in Sources */,
 				DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */,
+				DB22E26C2B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
 				DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */,
 			);
@@ -811,6 +876,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DB22E2712B95FE7E00694714 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		DB22E2732B95FE8200694714 /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DBDAA7082B93A12100CD42BE /* Project object */;
 }
