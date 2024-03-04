@@ -25,6 +25,7 @@
 		DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; };
 		DB22E2752B95FE8200694714 /* SnapKit-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DB22E2782B96192200694714 /* UIFont + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2772B96192200694714 /* UIFont + Extensions.swift */; };
+		DB22E27A2B96461100694714 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2792B96461100694714 /* Onboarding.swift */; };
 		DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7132B93A12100CD42BE /* AppDelegate.swift */; };
 		DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */; };
 		DBDAA71D2B93A12200CD42BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBDAA71C2B93A12200CD42BE /* Assets.xcassets */; };
@@ -82,6 +83,7 @@
 		DB22E26A2B95FD2800694714 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DB22E26B2B95FD2800694714 /* SGSegmentedProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGSegmentedProgressBar.swift; sourceTree = "<group>"; };
 		DB22E2772B96192200694714 /* UIFont + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont + Extensions.swift"; sourceTree = "<group>"; };
+		DB22E2792B96461100694714 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		DBDAA7102B93A12100CD42BE /* Drevmass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drevmass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDAA7132B93A12100CD42BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -324,6 +326,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DB22E27B2B9646A800694714 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E2792B96461100694714 /* Onboarding.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		DBDAA7072B93A12100CD42BE = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +358,7 @@
 		DBDAA7122B93A12100CD42BE /* Drevmass */ = {
 			isa = PBXGroup;
 			children = (
+				DB22E27B2B9646A800694714 /* Constants */,
 				DB190DB92B94EE2100990BF2 /* Extensions */,
 				DB190DBC2B94EE6500990BF2 /* Protocols */,
 				DB190DBD2B94EE6A00990BF2 /* Static */,
@@ -530,6 +541,7 @@
 				DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */,
 				DB22E26E2B95FD2800694714 /* SGSegmentedProgressBar.swift in Sources */,
 				DB22E26D2B95FD2800694714 /* Extensions.swift in Sources */,
+				DB22E27A2B96461100694714 /* Onboarding.swift in Sources */,
 				DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */,
 				DB22E26C2B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
