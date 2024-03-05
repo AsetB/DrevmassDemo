@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D430763E2B9612440085BB4D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D430763D2B9612440085BB4D /* SnapKit */; };
+		D43076442B96EC380085BB4D /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43076432B96EC380085BB4D /* UIButton.swift */; };
 		DB22E2562B95C1FB00694714 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */; };
 		DB22E2572B95C1FB00694714 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */; };
 		DB22E2582B95C1FB00694714 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */; };
@@ -44,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D43076432B96EC380085BB4D /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D430763E2B9612440085BB4D /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +96,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D430763C2B9612440085BB4D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D43076452B9708790085BB4D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D43076432B96EC380085BB4D /* UIButton.swift */,
+			);
+			name = Components;
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		DB190DA92B94ECE700990BF2 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,35 +150,35 @@
 				DB190DAE2B94ED5500990BF2 /* SignIn */,
 				DB190DB02B94ED7400990BF2 /* ForgotPass */,
 			);
-			path = Registration;
+			name = Registration;
 			sourceTree = "<group>";
 		};
 		DB190DAD2B94ED4900990BF2 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Onboarding;
+			name = Onboarding;
 			sourceTree = "<group>";
 		};
 		DB190DAE2B94ED5500990BF2 /* SignIn */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = SignIn;
+			name = SignIn;
 			sourceTree = "<group>";
 		};
 		DB190DAF2B94ED6400990BF2 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = SignUp;
+			name = SignUp;
 			sourceTree = "<group>";
 		};
 		DB190DB02B94ED7400990BF2 /* ForgotPass */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = ForgotPass;
+			name = ForgotPass;
 			sourceTree = "<group>";
 		};
 		DB190DB12B94ED8E00990BF2 /* Catalog */ = {
@@ -200,7 +220,7 @@
 			isa = PBXGroup;
 			children = (
 			);
-			path = Product;
+			name = Product;
 			sourceTree = "<group>";
 		};
 		DB190DB62B94EDF900990BF2 /* Basket */ = {
@@ -215,14 +235,14 @@
 			isa = PBXGroup;
 			children = (
 			);
-			path = Order;
+			name = Order;
 			sourceTree = "<group>";
 		};
 		DB190DB82B94EE1D00990BF2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Models;
+			name = Models;
 			sourceTree = "<group>";
 		};
 		DB190DB92B94EE2100990BF2 /* Extensions */ = {
@@ -230,7 +250,7 @@
 			children = (
 				DB190DBE2B94EE9400990BF2 /* UIViewController */,
 			);
-			path = Extensions;
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		DB190DBA2B94EE4600990BF2 /* Font */ = {
@@ -249,28 +269,28 @@
 			isa = PBXGroup;
 			children = (
 			);
-			path = Shared;
+			name = Shared;
 			sourceTree = "<group>";
 		};
 		DB190DBC2B94EE6500990BF2 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Protocols;
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 		DB190DBD2B94EE6A00990BF2 /* Static */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Static;
+			name = Static;
 			sourceTree = "<group>";
 		};
 		DB190DBE2B94EE9400990BF2 /* UIViewController */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = UIViewController;
+			name = UIViewController;
 			sourceTree = "<group>";
 		};
 		DBDAA7072B93A12100CD42BE = {
@@ -280,6 +300,7 @@
 				DBDAA7292B93A12200CD42BE /* DrevmassTests */,
 				DBDAA7332B93A12200CD42BE /* DrevmassUITests */,
 				DBDAA7112B93A12100CD42BE /* Products */,
+				D430763C2B9612440085BB4D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -303,6 +324,7 @@
 				DB190DB82B94EE1D00990BF2 /* Models */,
 				DB190DAB2B94ED0500990BF2 /* Controllers */,
 				DB190DAA2B94ECF500990BF2 /* Resources */,
+				D43076452B9708790085BB4D /* Components */,
 				DB190DA92B94ECE700990BF2 /* App */,
 				DB22E25B2B95CFBB00694714 /* TabBarController.swift */,
 				DBDAA7212B93A12200CD42BE /* Info.plist */,
@@ -343,6 +365,9 @@
 			dependencies = (
 			);
 			name = Drevmass;
+			packageProductDependencies = (
+				D430763D2B9612440085BB4D /* SnapKit */,
+			);
 			productName = Drevmass;
 			productReference = DBDAA7102B93A12100CD42BE /* Drevmass.app */;
 			productType = "com.apple.product-type.application";
@@ -415,6 +440,9 @@
 				Base,
 			);
 			mainGroup = DBDAA7072B93A12100CD42BE;
+			packageReferences = (
+				D492C4F92B9607DD00A4FC9E /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = DBDAA7112B93A12100CD42BE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -465,6 +493,7 @@
 				DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */,
 				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
 				DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */,
+				D43076442B96EC380085BB4D /* UIButton.swift in Sources */,
 				DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */,
 				DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
@@ -811,6 +840,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D492C4F92B9607DD00A4FC9E /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D430763D2B9612440085BB4D /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D492C4F92B9607DD00A4FC9E /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DBDAA7082B93A12100CD42BE /* Project object */;
 }
