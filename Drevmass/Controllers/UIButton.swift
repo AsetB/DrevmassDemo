@@ -42,13 +42,12 @@ extension Button {
        titleLabel?.font = UIFont(name: "SFProText-Semibold", size: 17)
        layer.borderWidth = 2
        layer.cornerRadius = 20
-       titleLabel?.snp.makeConstraints({ make in
-           make.left.equalToSuperview().inset(52)
-       })
-       
+       contentHorizontalAlignment = .leading
+       contentEdgeInsets.left = 52
        addSubview(leftIcon)
        addSubview(rightIcon)
     }
+    
    func setupConstraints() {
        leftIcon.snp.makeConstraints { make in
            make.centerY.equalToSuperview()

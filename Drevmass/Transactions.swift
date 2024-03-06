@@ -1,5 +1,5 @@
 //
-//  TransactionsBonus.swift
+//  Transactions.swift
 //  Drevmass
 //
 //  Created by Madina Olzhabek on 06.03.2024.

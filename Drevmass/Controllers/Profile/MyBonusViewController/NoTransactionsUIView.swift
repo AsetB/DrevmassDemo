@@ -1,5 +1,5 @@
 //
-//  UIViewWhenNoTransactions.swift
+//  NoTransactionsUIView.swift
 //  Drevmass
 //
 //  Created by Madina Olzhabek on 06.03.2024.
@@ -13,7 +13,7 @@ class NoTransactionsUIView: UIView {
     var historyPointsLabel: UILabel = {
         var label = UILabel()
         label.textColor = .Colors._181715
-        label.font = UIFont(name: "SFProDisplay-Bold", size: 20)
+        label.font = UIFont(name: "SFProText-Semibold", size: 20)
         label.text = "История баллов"
         return label
     }()

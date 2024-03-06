@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 
+            // ДОБАВИТЬ ЗАПРОС В СЕТЬ И УСТАНОВИТЬ ЗНАЧЕНИЯ ЛЭЙБЛАМ !!!!!
+
 class ProfileViewController: UIViewController {
     
     // - MARK: - IU elements
@@ -52,12 +54,13 @@ class ProfileViewController: UIViewController {
         return view
     }()
     
-    var myPointsLabel: UILabel = {
-       var label = UILabel()
-        label.textColor = .Colors.FFFFFF
-        label.font = UIFont(name: "SFProText-Semibold", size: 15)
-        label.text = "Мои баллы"
-        return label
+    var myPointsButton: UIButton = {
+       var button = UIButton()
+        button.setTitle("Мои баллы", for: .normal)
+        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFProText-Semibold", size: 15)
+        button.addTarget(self, action: #selector(showMyPoints), for: .touchUpInside)
+        return button
     }()
     
     var arrow: UIImageView = {
@@ -196,7 +199,7 @@ class ProfileViewController: UIViewController {
         button.setTitle("Информация", for: .normal)
         button.heightAnchor.constraint(equalToConstant: 53).isActive = true
         button.layer.borderWidth = 0
-        button.leftIcon.image = .Profile.iconInfoProfile
+        button.leftIcon.image = .Profile.iconInfoBeigeProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
         return button
     }()
@@ -224,6 +227,15 @@ class ProfileViewController: UIViewController {
 }
 
 extension ProfileViewController {
+    // - MARK: - functions
+    @objc func showMyPoints() {
+        let myPointsVC = MyBonusViewController()
+        myPointsVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(myPointsVC, animated: true)
+    }
+    
+    
+    // - MARK: - setupView
     func setupView() {
         view.backgroundColor = .Colors.FFFFFF
         view.addSubview(scrollView)
@@ -232,7 +244,7 @@ extension ProfileViewController {
         contentview.addSubview(numberTitle)
         contentview.addSubview(viewForBonus)
         viewForBonus.addSubview(patternTreeImageview)
-        viewForBonus.addSubview(myPointsLabel)
+        viewForBonus.addSubview(myPointsButton)
         viewForBonus.addSubview(arrow)
         viewForBonus.addSubview(iconBonus)
         viewForBonus.addSubview(pointsLabel)
@@ -249,6 +261,7 @@ extension ProfileViewController {
         viewMain.addSubview(logoutButton)
     }
     
+    // - MARK: - setupConstraints
     func setupConstraints() {
         scrollView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -276,22 +289,22 @@ extension ProfileViewController {
             make.top.bottom.right.equalToSuperview()
             make.left.equalTo(arrow.snp.right).inset(-5)
         }
-        myPointsLabel.snp.makeConstraints { make in
+        myPointsButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(24)
             make.left.equalToSuperview().inset(24)
         }
         arrow.snp.makeConstraints { make in
-            make.centerY.equalTo(myPointsLabel)
+            make.centerY.equalTo(myPointsButton)
             make.height.width.equalTo(12)
-            make.left.equalTo(myPointsLabel.snp.right).inset(-4)
+            make.left.equalTo(myPointsButton.snp.right).inset(-4)
         }
         iconBonus.snp.makeConstraints { make in
-            make.top.equalTo(myPointsLabel.snp.bottom).inset(-13)
+            make.top.equalTo(myPointsButton.snp.bottom).inset(-13)
             make.left.equalToSuperview().inset(24)
             make.height.width.equalTo(32)
         }
         pointsLabel.snp.makeConstraints { make in
-            make.top.equalTo(myPointsLabel.snp.bottom).inset(-12)
+            make.top.equalTo(myPointsButton.snp.bottom).inset(-12)
             make.left.equalTo(iconBonus.snp.right).inset(-9)
             make.right.equalToSuperview().inset(24)
         }

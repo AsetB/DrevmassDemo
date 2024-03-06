@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		D430763E2B9612440085BB4D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D430763D2B9612440085BB4D /* SnapKit */; };
 		D43076442B96EC380085BB4D /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43076432B96EC380085BB4D /* UIButton.swift */; };
+		D45B74D52B9744EB00359A22 /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74D42B9744EB00359A22 /* DashedLineView.swift */; };
+		D45B74D72B9749CD00359A22 /* MyBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74D62B9749CD00359A22 /* MyBonusViewController.swift */; };
+		D45B74DA2B97B41E00359A22 /* BonusHistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74D92B97B41E00359A22 /* BonusHistoryTableViewCell.swift */; };
+		D45B74DC2B98B8B700359A22 /* Urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74DB2B98B8B700359A22 /* Urls.swift */; };
+		D45B74DE2B98BD3500359A22 /* Bonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74DD2B98BD3500359A22 /* Bonus.swift */; };
+		D45B74E02B98BDE400359A22 /* BurningBonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74DF2B98BDE400359A22 /* BurningBonus.swift */; };
+		D45B74E22B98BE7900359A22 /* Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74E12B98BE7900359A22 /* Transactions.swift */; };
+		D45B74E52B98C00E00359A22 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = D45B74E42B98C00E00359A22 /* SwiftyJSON */; };
+		D45B74E82B98C0B000359A22 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D45B74E72B98C0B000359A22 /* Alamofire */; };
+		D45B74EB2B98CAE800359A22 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D45B74EA2B98CAE800359A22 /* SVProgressHUD */; };
+		D45B74ED2B98D12000359A22 /* NoTransactionsUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B74EC2B98D12000359A22 /* NoTransactionsUIView.swift */; };
 		DB22E2562B95C1FB00694714 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */; };
 		DB22E2572B95C1FB00694714 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */; };
 		DB22E2582B95C1FB00694714 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */; };
@@ -47,6 +58,14 @@
 
 /* Begin PBXFileReference section */
 		D43076432B96EC380085BB4D /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		D45B74D42B9744EB00359A22 /* DashedLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
+		D45B74D62B9749CD00359A22 /* MyBonusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBonusViewController.swift; sourceTree = "<group>"; };
+		D45B74D92B97B41E00359A22 /* BonusHistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusHistoryTableViewCell.swift; sourceTree = "<group>"; };
+		D45B74DB2B98B8B700359A22 /* Urls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Urls.swift; sourceTree = "<group>"; };
+		D45B74DD2B98BD3500359A22 /* Bonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonus.swift; sourceTree = "<group>"; };
+		D45B74DF2B98BDE400359A22 /* BurningBonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurningBonus.swift; sourceTree = "<group>"; };
+		D45B74E12B98BE7900359A22 /* Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transactions.swift; sourceTree = "<group>"; };
+		D45B74EC2B98D12000359A22 /* NoTransactionsUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTransactionsUIView.swift; sourceTree = "<group>"; };
 		DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
@@ -75,6 +94,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D45B74EB2B98CAE800359A22 /* SVProgressHUD in Frameworks */,
+				D45B74E82B98C0B000359A22 /* Alamofire in Frameworks */,
+				D45B74E52B98C00E00359A22 /* SwiftyJSON in Frameworks */,
 				D430763E2B9612440085BB4D /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,9 +129,20 @@
 			isa = PBXGroup;
 			children = (
 				D43076432B96EC380085BB4D /* UIButton.swift */,
+				D45B74D42B9744EB00359A22 /* DashedLineView.swift */,
 			);
 			name = Components;
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D45B74D82B97B32200359A22 /* MyBonusViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D45B74D62B9749CD00359A22 /* MyBonusViewController.swift */,
+				D45B74EC2B98D12000359A22 /* NoTransactionsUIView.swift */,
+				D45B74D92B97B41E00359A22 /* BonusHistoryTableViewCell.swift */,
+			);
+			path = MyBonusViewController;
 			sourceTree = "<group>";
 		};
 		DB190DA92B94ECE700990BF2 /* App */ = {
@@ -196,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				DB22E2632B95D08800694714 /* ProfileViewController.swift */,
+				D45B74D82B97B32200359A22 /* MyBonusViewController */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -241,6 +275,9 @@
 		DB190DB82B94EE1D00990BF2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D45B74DD2B98BD3500359A22 /* Bonus.swift */,
+				D45B74DF2B98BDE400359A22 /* BurningBonus.swift */,
+				D45B74E12B98BE7900359A22 /* Transactions.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -282,6 +319,7 @@
 		DB190DBD2B94EE6A00990BF2 /* Static */ = {
 			isa = PBXGroup;
 			children = (
+				D45B74DB2B98B8B700359A22 /* Urls.swift */,
 			);
 			name = Static;
 			sourceTree = "<group>";
@@ -367,6 +405,9 @@
 			name = Drevmass;
 			packageProductDependencies = (
 				D430763D2B9612440085BB4D /* SnapKit */,
+				D45B74E42B98C00E00359A22 /* SwiftyJSON */,
+				D45B74E72B98C0B000359A22 /* Alamofire */,
+				D45B74EA2B98CAE800359A22 /* SVProgressHUD */,
 			);
 			productName = Drevmass;
 			productReference = DBDAA7102B93A12100CD42BE /* Drevmass.app */;
@@ -442,6 +483,9 @@
 			mainGroup = DBDAA7072B93A12100CD42BE;
 			packageReferences = (
 				D492C4F92B9607DD00A4FC9E /* XCRemoteSwiftPackageReference "SnapKit" */,
+				D45B74E32B98C00E00359A22 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				D45B74E62B98C0A800359A22 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				D45B74E92B98CAE800359A22 /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
 			);
 			productRefGroup = DBDAA7112B93A12100CD42BE /* Products */;
 			projectDirPath = "";
@@ -491,13 +535,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */,
+				D45B74DA2B97B41E00359A22 /* BonusHistoryTableViewCell.swift in Sources */,
 				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
+				D45B74DC2B98B8B700359A22 /* Urls.swift in Sources */,
 				DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */,
+				D45B74D72B9749CD00359A22 /* MyBonusViewController.swift in Sources */,
+				D45B74DE2B98BD3500359A22 /* Bonus.swift in Sources */,
+				D45B74E22B98BE7900359A22 /* Transactions.swift in Sources */,
+				D45B74D52B9744EB00359A22 /* DashedLineView.swift in Sources */,
 				D43076442B96EC380085BB4D /* UIButton.swift in Sources */,
+				D45B74ED2B98D12000359A22 /* NoTransactionsUIView.swift in Sources */,
 				DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */,
 				DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
 				DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */,
+				D45B74E02B98BDE400359A22 /* BurningBonus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,6 +894,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D45B74E32B98C00E00359A22 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+		D45B74E62B98C0A800359A22 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.0;
+			};
+		};
+		D45B74E92B98CAE800359A22 /* XCRemoteSwiftPackageReference "SVProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVProgressHUD/SVProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.1;
+			};
+		};
 		D492C4F92B9607DD00A4FC9E /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -857,6 +933,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D492C4F92B9607DD00A4FC9E /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		D45B74E42B98C00E00359A22 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D45B74E32B98C00E00359A22 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		D45B74E72B98C0B000359A22 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D45B74E62B98C0A800359A22 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		D45B74EA2B98CAE800359A22 /* SVProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D45B74E92B98CAE800359A22 /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
+			productName = SVProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
