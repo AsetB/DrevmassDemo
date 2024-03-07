@@ -20,8 +20,8 @@ class TabBarController: UITabBarController {
     }
     // - MARK: - Settings
     func setupTabs() {
-        tabBar.backgroundColor = UIColor(resource: ColorResource.Colors.A_1_A_1_A_1)
-    
+        tabBar.backgroundColor = UIColor(resource: ColorResource.Colors.F_9_F_9_F_9)
+
         coursesVC.tabBarItem = UITabBarItem(title: "", image: UIImage(resource: ImageResource.TabBarIcon.course), selectedImage: UIImage(resource: ImageResource.TabBarIcon.courseSelected).withRenderingMode(.alwaysOriginal))
         catalogVC.tabBarItem = UITabBarItem(title: "", image: UIImage(resource: ImageResource.TabBarIcon.catalog), selectedImage: UIImage(resource: ImageResource.TabBarIcon.catalogSelected).withRenderingMode(.alwaysOriginal))
         basketVC.tabBarItem = UITabBarItem(title: "", image: UIImage(resource: ImageResource.TabBarIcon.basket), selectedImage: UIImage(resource: ImageResource.TabBarIcon.basketSelected).withRenderingMode(.alwaysOriginal))
