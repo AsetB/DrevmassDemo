@@ -26,6 +26,14 @@
 		DB22E2752B95FE8200694714 /* SnapKit-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DB22E2782B96192200694714 /* UIFont + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2772B96192200694714 /* UIFont + Extensions.swift */; };
 		DB22E27A2B96461100694714 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2792B96461100694714 /* Onboarding.swift */; };
+		DB22E27F2B96645B00694714 /* UITextfield + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E27E2B96645B00694714 /* UITextfield + Extensions.swift */; };
+		DB22E2812B96649300694714 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E2802B96649300694714 /* SignUpViewController.swift */; };
+		DB6E519F2B98AC7C0053F5CE /* UIViewController + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E519E2B98AC7C0053F5CE /* UIViewController + Extensions.swift */; };
+		DB6E51A22B999A810053F5CE /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DB6E51A12B999A810053F5CE /* KeychainSwift */; };
+		DB6E51A52B999AAD0053F5CE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DB6E51A42B999AAD0053F5CE /* Alamofire */; };
+		DB6E51A82B999ABF0053F5CE /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = DB6E51A72B999ABF0053F5CE /* SwiftyJSON */; };
+		DB6E51AA2B99A15F0053F5CE /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E51A92B99A15F0053F5CE /* URLs.swift */; };
+		DB6E51AC2B99A97C0053F5CE /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E51AB2B99A97C0053F5CE /* Authentication.swift */; };
 		DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7132B93A12100CD42BE /* AppDelegate.swift */; };
 		DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */; };
 		DBDAA71D2B93A12200CD42BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBDAA71C2B93A12200CD42BE /* Assets.xcassets */; };
@@ -33,6 +41,9 @@
 		DBDAA72B2B93A12200CD42BE /* DrevmassTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA72A2B93A12200CD42BE /* DrevmassTests.swift */; };
 		DBDAA7352B93A12200CD42BE /* DrevmassUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7342B93A12200CD42BE /* DrevmassUITests.swift */; };
 		DBDAA7372B93A12200CD42BE /* DrevmassUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDAA7362B93A12200CD42BE /* DrevmassUITestsLaunchTests.swift */; };
+		DBFABD372B97418A003F91BA /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFABD362B97418A003F91BA /* SignInViewController.swift */; };
+		DBFABD392B97501C003F91BA /* RestorePassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFABD382B97501C003F91BA /* RestorePassViewController.swift */; };
+		DBFABD3B2B978581003F91BA /* RestorePassModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBFABD3A2B978581003F91BA /* RestorePassModalViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +95,11 @@
 		DB22E26B2B95FD2800694714 /* SGSegmentedProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGSegmentedProgressBar.swift; sourceTree = "<group>"; };
 		DB22E2772B96192200694714 /* UIFont + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont + Extensions.swift"; sourceTree = "<group>"; };
 		DB22E2792B96461100694714 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
+		DB22E27E2B96645B00694714 /* UITextfield + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextfield + Extensions.swift"; sourceTree = "<group>"; };
+		DB22E2802B96649300694714 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		DB6E519E2B98AC7C0053F5CE /* UIViewController + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Extensions.swift"; sourceTree = "<group>"; };
+		DB6E51A92B99A15F0053F5CE /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
+		DB6E51AB2B99A97C0053F5CE /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		DBDAA7102B93A12100CD42BE /* Drevmass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drevmass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDAA7132B93A12100CD42BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBDAA7152B93A12100CD42BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,6 +111,9 @@
 		DBDAA7302B93A12200CD42BE /* DrevmassUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DrevmassUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDAA7342B93A12200CD42BE /* DrevmassUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrevmassUITests.swift; sourceTree = "<group>"; };
 		DBDAA7362B93A12200CD42BE /* DrevmassUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrevmassUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DBFABD362B97418A003F91BA /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		DBFABD382B97501C003F91BA /* RestorePassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestorePassViewController.swift; sourceTree = "<group>"; };
+		DBFABD3A2B978581003F91BA /* RestorePassModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestorePassModalViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +121,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB6E51A22B999A810053F5CE /* KeychainSwift in Frameworks */,
+				DB6E51A52B999AAD0053F5CE /* Alamofire in Frameworks */,
 				DB22E2722B95FE7E00694714 /* SnapKit in Frameworks */,
+				DB6E51A82B999ABF0053F5CE /* SwiftyJSON in Frameworks */,
 				DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,6 +198,7 @@
 		DB190DAE2B94ED5500990BF2 /* SignIn */ = {
 			isa = PBXGroup;
 			children = (
+				DBFABD362B97418A003F91BA /* SignInViewController.swift */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -183,6 +206,7 @@
 		DB190DAF2B94ED6400990BF2 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
+				DB22E2802B96649300694714 /* SignUpViewController.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -190,6 +214,8 @@
 		DB190DB02B94ED7400990BF2 /* ForgotPass */ = {
 			isa = PBXGroup;
 			children = (
+				DBFABD382B97501C003F91BA /* RestorePassViewController.swift */,
+				DBFABD3A2B978581003F91BA /* RestorePassModalViewController.swift */,
 			);
 			path = ForgotPass;
 			sourceTree = "<group>";
@@ -261,6 +287,7 @@
 		DB190DB92B94EE2100990BF2 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DB22E27C2B96642B00694714 /* UITextfield */,
 				DB190DBE2B94EE9400990BF2 /* UIViewController */,
 				DB22E2772B96192200694714 /* UIFont + Extensions.swift */,
 			);
@@ -282,6 +309,7 @@
 		DB190DBB2B94EE5E00990BF2 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				DB6E51AB2B99A97C0053F5CE /* Authentication.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -296,6 +324,7 @@
 		DB190DBD2B94EE6A00990BF2 /* Static */ = {
 			isa = PBXGroup;
 			children = (
+				DB6E51A92B99A15F0053F5CE /* URLs.swift */,
 			);
 			path = Static;
 			sourceTree = "<group>";
@@ -304,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				DB22E2672B95FCA600694714 /* SGSegmentedProgressBarLibrary */,
+				DB6E519E2B98AC7C0053F5CE /* UIViewController + Extensions.swift */,
 			);
 			path = UIViewController;
 			sourceTree = "<group>";
@@ -332,6 +362,22 @@
 				DB22E2792B96461100694714 /* Onboarding.swift */,
 			);
 			path = Constants;
+			sourceTree = "<group>";
+		};
+		DB22E27C2B96642B00694714 /* UITextfield */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E27D2B96643800694714 /* SignIn-SignUp */,
+			);
+			path = UITextfield;
+			sourceTree = "<group>";
+		};
+		DB22E27D2B96643800694714 /* SignIn-SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				DB22E27E2B96645B00694714 /* UITextfield + Extensions.swift */,
+			);
+			path = "SignIn-SignUp";
 			sourceTree = "<group>";
 		};
 		DBDAA7072B93A12100CD42BE = {
@@ -410,6 +456,9 @@
 			packageProductDependencies = (
 				DB22E2712B95FE7E00694714 /* SnapKit */,
 				DB22E2732B95FE8200694714 /* SnapKit-Dynamic */,
+				DB6E51A12B999A810053F5CE /* KeychainSwift */,
+				DB6E51A42B999AAD0053F5CE /* Alamofire */,
+				DB6E51A72B999ABF0053F5CE /* SwiftyJSON */,
 			);
 			productName = Drevmass;
 			productReference = DBDAA7102B93A12100CD42BE /* Drevmass.app */;
@@ -485,6 +534,9 @@
 			mainGroup = DBDAA7072B93A12100CD42BE;
 			packageReferences = (
 				DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				DB6E51A02B999A810053F5CE /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				DB6E51A32B999AA70053F5CE /* XCRemoteSwiftPackageReference "Alamofire" */,
+				DB6E51A62B999ABF0053F5CE /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = DBDAA7112B93A12100CD42BE /* Products */;
 			projectDirPath = "";
@@ -536,13 +588,21 @@
 				DB22E2782B96192200694714 /* UIFont + Extensions.swift in Sources */,
 				DB22E2622B95D06D00694714 /* BasketViewController.swift in Sources */,
 				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
+				DB22E27F2B96645B00694714 /* UITextfield + Extensions.swift in Sources */,
+				DBFABD392B97501C003F91BA /* RestorePassViewController.swift in Sources */,
+				DB22E2812B96649300694714 /* SignUpViewController.swift in Sources */,
 				DB22E2602B95D05100694714 /* CatalogMainViewController.swift in Sources */,
 				DB22E2662B95FB4D00694714 /* OnboardingViewController.swift in Sources */,
 				DB22E25E2B95D02700694714 /* CoursesViewController.swift in Sources */,
 				DB22E26E2B95FD2800694714 /* SGSegmentedProgressBar.swift in Sources */,
+				DBFABD3B2B978581003F91BA /* RestorePassModalViewController.swift in Sources */,
+				DB6E519F2B98AC7C0053F5CE /* UIViewController + Extensions.swift in Sources */,
 				DB22E26D2B95FD2800694714 /* Extensions.swift in Sources */,
 				DB22E27A2B96461100694714 /* Onboarding.swift in Sources */,
+				DB6E51AC2B99A97C0053F5CE /* Authentication.swift in Sources */,
 				DB22E2642B95D08800694714 /* ProfileViewController.swift in Sources */,
+				DB6E51AA2B99A15F0053F5CE /* URLs.swift in Sources */,
+				DBFABD372B97418A003F91BA /* SignInViewController.swift in Sources */,
 				DB22E26C2B95FD2800694714 /* SGSegmentedProgressBarProtocols.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
 				DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */,
@@ -898,6 +958,30 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		DB6E51A02B999A810053F5CE /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 21.0.0;
+			};
+		};
+		DB6E51A32B999AA70053F5CE /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.0;
+			};
+		};
+		DB6E51A62B999ABF0053F5CE /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -910,6 +994,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = "SnapKit-Dynamic";
+		};
+		DB6E51A12B999A810053F5CE /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB6E51A02B999A810053F5CE /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+		DB6E51A42B999AAD0053F5CE /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB6E51A32B999AA70053F5CE /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		DB6E51A72B999ABF0053F5CE /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB6E51A62B999ABF0053F5CE /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

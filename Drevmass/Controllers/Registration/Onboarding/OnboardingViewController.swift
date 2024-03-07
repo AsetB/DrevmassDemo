@@ -12,7 +12,6 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     //- MARK: - Local outlets
     private lazy var imageView: UIImageView = {
         var image = UIImageView()
-        //image.clipsToBounds = true
         image.layer.cornerRadius = 16
         image.layer.masksToBounds = true
         image.image = .Onboarding.image1
@@ -43,6 +42,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
         button.backgroundColor = .Colors.B_5_A_380
+        button.addTarget(self, action: #selector(goToSignIn), for: .touchUpInside)
         return button
     }()
     
@@ -55,6 +55,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor(resource: ColorResource.Colors.B_5_A_380).cgColor
         button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(goToSignUp), for: .touchUpInside)
         return button
     }()
     
@@ -75,7 +76,11 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
 
     }
     override func viewWillAppear(_ animated: Bool) {
+        imageView.image = .Onboarding.image1
         self.segmentBar?.start()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.segmentBar?.reset()
     }
     //- MARK: - Set Views
     private func setViews() {
@@ -129,7 +134,15 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         topLabel.text = Onboarding.topLabel1
         descriptionLabel.text = Onboarding.descriptionLabel
     }
-    
+    //- MARK: - Button Actions
+    @objc func goToSignIn() {
+        let signUpVC = SignInViewController()
+        navigationController?.show(signUpVC, sender: self)
+    }
+    @objc func goToSignUp() {
+        let signUpVC = SignUpViewController()
+        navigationController?.show(signUpVC, sender: self)
+    }
     //- MARK: - Set SegmentBar
     func setSegmentBar() {
         let rect = CGRect(x: 20, y: 100, width: self.view.frame.size.width-40, height: 2)
