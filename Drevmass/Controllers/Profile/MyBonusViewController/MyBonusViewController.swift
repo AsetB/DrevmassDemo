@@ -13,7 +13,7 @@ import SwiftyJSON
  
 class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var bonus = Bonus()
+    var burningBonus = BurningBonus()
     var transactionBonusArray: [Transactions] = []
     
     
@@ -72,13 +72,11 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
         label.text = "1 балл = 1 ₽"
         return label
     }()
-    
-    var bonusExpireLabel: UILabel = {
+
+   lazy var burningBonusLabel: UILabel = {
         var label = UILabel()
         label.textColor = .Colors.FFFFFF
         label.font = UIFont(name: "SFProText-Regular", size: 13)
-        // доделать атрибутер стринг
-        label.text = "400 сгорят 22.12.27"
         label.backgroundColor = .Colors._302C28A20
         label.heightAnchor.constraint(equalToConstant: 30).isActive = true
         label.layer.cornerRadius = 8
@@ -111,8 +109,22 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         
         setupView()
+        setupNavigationBar()
         setupConstraints()
         downlaodTransactions()
+        
+        if burningBonus.burning_date.isEmpty {
+            burningBonusLabel.isHidden = true
+        }else{
+      //            ПРОВЕРИТЬ ПРАВИЛЬНО ЛИ ПЕРЕДАЮТСЯ ДАННЫЕ
+            let firstAttributedString = NSAttributedString(string: " 🔥 \(burningBonus.bonus)", attributes: [.font : UIFont.addFont(type: .SFProTextBold , size: 13), .foregroundColor : UIColor.Colors.FFFFFF ])
+            let secondAttributedString = NSAttributedString(string: "\(burningBonus.burning_date) ", attributes: [.font : UIFont.addFont(type: .SFProTextRegular , size: 13), .foregroundColor : UIColor.Colors.FFFFFF ])
+            
+            let combinedString = NSMutableAttributedString()
+            combinedString.append(firstAttributedString)
+            combinedString.append(secondAttributedString)
+            burningBonusLabel.attributedText = combinedString
+        }
     }
     
     // - MARK: - TableView
@@ -137,11 +149,18 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
         if transactionBonusArray[indexPath.row].transaction_type == "-" {
             cell.bonusLabel.textColor = .Colors.FA_5_C_5_C
         }
+        
+           let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd-HH:mm:ss"
+           if let date = dateFormatter.date(from: transactionBonusArray[indexPath.row].transaction_date){
+                dateFormatter.dateFormat = "dd MMM yyyy"
+            cell.subtitleLabel.text = dateFormatter.string(from: date)
+            }
 
         return cell
     }
 }
-
+// - MARK: - Extension MyBonusViewController
 extension MyBonusViewController {
     
     func chekingTransactions() {
@@ -155,13 +174,22 @@ extension MyBonusViewController {
         }
     }
     
+   @objc func showInfoVC() {
+        let infoVc = InformationViewController()
+       navigationController?.modalPresentationStyle = .overFullScreen
+       present(infoVc, animated: true)
+    }
+    @objc func dismissView() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func downlaodTransactions() {
         SVProgressHUD.show()
         
         let headers: HTTPHeaders = [
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQXNldCIsImlkIjoxMjZ9.AhS0U4qjjRB1f-D63GkyFsOPDrwLsyen5y1av-o1vf4"
+            "Authorization": "Bearer \(AuthenticationService.shared.token)"
         ]
-        AF.request(Urls.GET_BONUS_URL, method: .get, headers: headers).responseData { response in
+        AF.request(URLs.GET_BONUS_URL, method: .get, headers: headers).responseData { response in
             SVProgressHUD.dismiss()
             var resultString = ""
             if let data = response.data{
@@ -187,6 +215,15 @@ extension MyBonusViewController {
                 }else {
                     SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
                 }
+                
+                if let burningBonus = json["Burning"]["bonus"].int{
+                    self.burningBonus.bonus = burningBonus
+                }
+                
+                if let burningDate = json["Burning"]["burning_date"].string{
+                    self.burningBonus.burning_date = burningDate
+                }
+                
             }else{
                 var ErrorString = "CONNECTION_ERROR"
                 if let sCode = response.response?.statusCode{
@@ -199,17 +236,10 @@ extension MyBonusViewController {
         chekingTransactions()
     }
     
+    // - MARK: - setups
+    
     func setupView() {
         view.backgroundColor = .Colors.FFFFFF
-        navigationItem.title = "Мои баллы"
-//        var leftBarButton = UIBarButtonItem(image: .Profile.iconBack, style: .plain, target: self, action: nil)
-//        navigationItem.setLeftBarButton(leftBarButton, animated: true)
-//        leftBarButton.tintColor = .white
-        var rightBarButton = UIBarButtonItem(image: .Profile.iconInfoBeigeProfile, style: .plain, target: self, action: nil)
-        navigationItem.setRightBarButton(rightBarButton, animated: true)
-        rightBarButton.tintColor = .white
-
-
         view.addSubview(scrollView)
         scrollView.addSubview(contentview)
         contentview.addSubview(patternTreeImageview)
@@ -217,9 +247,19 @@ extension MyBonusViewController {
         contentview.addSubview(pointsLabel)
         contentview.addSubview(stackViewForBonus)
         stackViewForBonus.addArrangedSubview(bonusToRUBLabel)
-        stackViewForBonus.addArrangedSubview(bonusExpireLabel)
+        stackViewForBonus.addArrangedSubview(burningBonusLabel)
         contentview.addSubview(transactionsView)
         contentview.addSubview(tableView)
+    }
+    func setupNavigationBar(){
+        navigationItem.title = "Мои баллы"
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        let rightBarButton = UIBarButtonItem(image: .Profile.iconInfoBeigeProfile, style: .plain, target: self, action: #selector(showInfoVC))
+        navigationItem.setRightBarButton(rightBarButton, animated: true)
+        rightBarButton.tintColor = .white
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Profile.iconBack, style: .done, target: self, action: #selector(dismissView))
+        navigationItem.leftBarButtonItem?.tintColor = .Colors.FFFFFF
     }
     
     func setupConstraints() {

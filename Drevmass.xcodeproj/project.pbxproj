@@ -15,7 +15,6 @@
 		D45B75352B99E22200359A22 /* SGSegmentedProgressBarProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75062B99E22200359A22 /* SGSegmentedProgressBarProtocols.swift */; };
 		D45B75362B99E22200359A22 /* UIFont + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75082B99E22200359A22 /* UIFont + Extensions.swift */; };
 		D45B75372B99E22200359A22 /* UITextfield + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B750B2B99E22200359A22 /* UITextfield + Extensions.swift */; };
-		D45B75382B99E22200359A22 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B750C2B99E22200359A22 /* UIViewController+Extensions.swift */; };
 		D45B75392B99E22200359A22 /* Bonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B750D2B99E22200359A22 /* Bonus.swift */; };
 		D45B753A2B99E22200359A22 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75112B99E22200359A22 /* SignUpViewController.swift */; };
 		D45B753B2B99E22200359A22 /* RestorePassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75132B99E22200359A22 /* RestorePassViewController.swift */; };
@@ -32,12 +31,12 @@
 		D45B75462B99E22200359A22 /* BonusHistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75262B99E22200359A22 /* BonusHistoryTableViewCell.swift */; };
 		D45B75472B99E22200359A22 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75272B99E22200359A22 /* ProfileViewController.swift */; };
 		D45B75482B99E22200359A22 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75282B99E22200359A22 /* UIButton.swift */; };
-		D45B75492B99E22200359A22 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B75292B99E22200359A22 /* CustomNavigationController.swift */; };
-		D45B754A2B99E22200359A22 /* Urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B752A2B99E22200359A22 /* Urls.swift */; };
 		D45B754B2B99E22200359A22 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B752C2B99E22200359A22 /* Authentication.swift */; };
 		D45B754C2B99E22200359A22 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B752E2B99E22200359A22 /* Onboarding.swift */; };
 		D45B754D2B99E22200359A22 /* BurningBonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B752F2B99E22200359A22 /* BurningBonus.swift */; };
 		D45B75502B99E25500359A22 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D45B754F2B99E25500359A22 /* SVProgressHUD */; };
+		D4CE67BA2B9A16AC0092A51D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67B92B9A16AC0092A51D /* User.swift */; };
+		D4CE67BD2B9A27E30092A51D /* PromoCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */; };
 		DB22E2562B95C1FB00694714 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */; };
 		DB22E2572B95C1FB00694714 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */; };
 		DB22E2582B95C1FB00694714 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */; };
@@ -100,7 +99,6 @@
 		D45B75072B99E22200359A22 /* SGSegmentedProgressBarLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSegmentedProgressBarLibrary.h; sourceTree = "<group>"; };
 		D45B75082B99E22200359A22 /* UIFont + Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont + Extensions.swift"; sourceTree = "<group>"; };
 		D45B750B2B99E22200359A22 /* UITextfield + Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextfield + Extensions.swift"; sourceTree = "<group>"; };
-		D45B750C2B99E22200359A22 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		D45B750D2B99E22200359A22 /* Bonus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonus.swift; sourceTree = "<group>"; };
 		D45B75112B99E22200359A22 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		D45B75132B99E22200359A22 /* RestorePassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestorePassViewController.swift; sourceTree = "<group>"; };
@@ -117,11 +115,11 @@
 		D45B75262B99E22200359A22 /* BonusHistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonusHistoryTableViewCell.swift; sourceTree = "<group>"; };
 		D45B75272B99E22200359A22 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		D45B75282B99E22200359A22 /* UIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
-		D45B75292B99E22200359A22 /* CustomNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
-		D45B752A2B99E22200359A22 /* Urls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Urls.swift; sourceTree = "<group>"; };
 		D45B752C2B99E22200359A22 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		D45B752E2B99E22200359A22 /* Onboarding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		D45B752F2B99E22200359A22 /* BurningBonus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurningBonus.swift; sourceTree = "<group>"; };
+		D4CE67B92B9A16AC0092A51D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoCodeViewController.swift; sourceTree = "<group>"; };
 		DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
@@ -230,12 +228,9 @@
 			isa = PBXGroup;
 			children = (
 				D45B750F2B99E22200359A22 /* Registration */,
-				D45B75192B99E22200359A22 /* DashedLineView.swift */,
 				D45B751A2B99E22200359A22 /* Catalog */,
 				D45B751F2B99E22200359A22 /* Courses */,
 				D45B75212B99E22200359A22 /* Profile */,
-				D45B75282B99E22200359A22 /* UIButton.swift */,
-				D45B75292B99E22200359A22 /* CustomNavigationController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -320,8 +315,10 @@
 		D45B75212B99E22200359A22 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				D45B75222B99E22200359A22 /* MyBonusViewController */,
 				D45B75272B99E22200359A22 /* ProfileViewController.swift */,
+				D45B75282B99E22200359A22 /* UIButton.swift */,
+				D4CE67BB2B9A279D0092A51D /* PromoCodeViewController */,
+				D45B75222B99E22200359A22 /* MyBonusViewController */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -351,6 +348,26 @@
 				D45B752E2B99E22200359A22 /* Onboarding.swift */,
 			);
 			path = Constants;
+			sourceTree = "<group>";
+		};
+		D4CE67B82B99F0FF0092A51D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D45B75192B99E22200359A22 /* DashedLineView.swift */,
+				D45B74FD2B99E22200359A22 /* Transactions.swift */,
+				D45B752F2B99E22200359A22 /* BurningBonus.swift */,
+				D4CE67B92B9A16AC0092A51D /* User.swift */,
+				D45B750D2B99E22200359A22 /* Bonus.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D4CE67BB2B9A279D0092A51D /* PromoCodeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */,
+			);
+			path = PromoCodeViewController;
 			sourceTree = "<group>";
 		};
 		DB190DA92B94ECE700990BF2 /* App */ = {
@@ -415,16 +432,12 @@
 		DBDAA7122B93A12100CD42BE /* Drevmass */ = {
 			isa = PBXGroup;
 			children = (
-				D45B750D2B99E22200359A22 /* Bonus.swift */,
-				D45B752F2B99E22200359A22 /* BurningBonus.swift */,
 				D45B752D2B99E22200359A22 /* Constants */,
 				D45B750E2B99E22200359A22 /* Controllers */,
 				D45B75002B99E22200359A22 /* Extensions */,
 				D45B752B2B99E22200359A22 /* Shared */,
 				D45B74FE2B99E22200359A22 /* Static */,
-				D45B74FD2B99E22200359A22 /* Transactions.swift */,
-				D45B750C2B99E22200359A22 /* UIViewController+Extensions.swift */,
-				D45B752A2B99E22200359A22 /* Urls.swift */,
+				D4CE67B82B99F0FF0092A51D /* Models */,
 				DB190DAA2B94ECF500990BF2 /* Resources */,
 				DB190DA92B94ECE700990BF2 /* App */,
 				DB22E25B2B95CFBB00694714 /* TabBarController.swift */,
@@ -605,14 +618,12 @@
 				D45B75312B99E22200359A22 /* URLs.swift in Sources */,
 				D45B75432B99E22200359A22 /* MyBonusViewController.swift in Sources */,
 				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
+				D4CE67BA2B9A16AC0092A51D /* User.swift in Sources */,
 				D45B75362B99E22200359A22 /* UIFont + Extensions.swift in Sources */,
 				D45B754B2B99E22200359A22 /* Authentication.swift in Sources */,
 				D45B754D2B99E22200359A22 /* BurningBonus.swift in Sources */,
 				DBDAA7142B93A12100CD42BE /* AppDelegate.swift in Sources */,
 				D45B75472B99E22200359A22 /* ProfileViewController.swift in Sources */,
-				D45B75382B99E22200359A22 /* UIViewController+Extensions.swift in Sources */,
-				D45B75492B99E22200359A22 /* CustomNavigationController.swift in Sources */,
-				D45B754A2B99E22200359A22 /* Urls.swift in Sources */,
 				D45B753B2B99E22200359A22 /* RestorePassViewController.swift in Sources */,
 				D45B75452B99E22200359A22 /* NoTransactionsUIView.swift in Sources */,
 				D45B753C2B99E22200359A22 /* RestorePassModalViewController.swift in Sources */,
@@ -634,6 +645,7 @@
 				D45B75342B99E22200359A22 /* SGSegmentedProgressBar.swift in Sources */,
 				D45B753F2B99E22200359A22 /* DashedLineView.swift in Sources */,
 				D45B75442B99E22200359A22 /* InformationViewController.swift in Sources */,
+				D4CE67BD2B9A27E30092A51D /* PromoCodeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

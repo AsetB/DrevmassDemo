@@ -7,6 +7,9 @@
 
 import UIKit
 import SnapKit
+import Alamofire
+import SwiftyJSON
+import SVProgressHUD
 
             // ДОБАВИТЬ ЗАПРОС В СЕТЬ И УСТАНОВИТЬ ЗНАЧЕНИЯ ЛЭЙБЛАМ !!!!!
 
@@ -33,7 +36,6 @@ class ProfileViewController: UIViewController {
         var label = UILabel()
         label.textColor = .Colors.FFFFFF
         label.font = UIFont(name: "SFProDisplay-Bold", size: 28)
-        label.text = "Катерина"
         return label
     }() 
     
@@ -41,7 +43,6 @@ class ProfileViewController: UIViewController {
         var label = UILabel()
         label.textColor = .Colors.FFFFFF
         label.font = UIFont(name: "SFProText-Semibold", size: 15)
-        label.text = "+7 905 666 69 96"
         return label
     }()
     
@@ -89,7 +90,6 @@ class ProfileViewController: UIViewController {
        var label = UILabel()
         label.textColor = .Colors.FFFFFF
         label.font = UIFont(name: "SFProDisplay-Bold", size: 28)
-        label.text = "500"
         return label
     }()
     
@@ -110,7 +110,7 @@ class ProfileViewController: UIViewController {
         button.layer.borderColor = UIColor(red: 0.95, green: 0.95, blue: 0.94, alpha: 1.00).cgColor
         button.leftIcon.image = .Profile.iconPromocodeProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
-    
+        button.addTarget(self, action: #selector(showPromoCodeViewController), for: .touchUpInside)
         return button
     }()
 
@@ -221,20 +221,90 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .red
+        view.backgroundColor = .Colors.FFFFFF
 
         setupView()
         setupConstraints()
+        getProfileInfo()
+        downlaodBonus()
     }
 }
 
 extension ProfileViewController {
+    
     // - MARK: - functions
+    
+    @objc func showPromoCodeViewController(){
+        let promoCodeVC = PromoCodeViewController()
+        navigationController?.pushViewController(promoCodeVC, animated: true)
+    }
+    
     @objc func showMyPoints() {
         let myPointsVC = MyBonusViewController()
         myPointsVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(myPointsVC, animated: true)
     }
+    
+    // - MARK: - Alamofire
+    
+    func getProfileInfo(){
+        SVProgressHUD.show()
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(AuthenticationService.shared.token)"
+        ]
+        AF.request(URLs.GET_USER_INFO_URL, method: .get, headers: headers).responseData { response in
+         SVProgressHUD.dismiss()
+            var resultString = ""
+            if let data = response.data{
+                resultString = String(data: data, encoding: .utf8)!
+                print(resultString)
+            }
+            if response.response?.statusCode == 200{
+                
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                self.nameTitle.text = json["name"].string
+                self.numberTitle.text = json["phone_number"].string
+                
+            } else {
+                    SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
+            }
+        }
+    }
+    func downlaodBonus() {
+        SVProgressHUD.show()
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(AuthenticationService.shared.token)"
+        ]
+        AF.request(URLs.GET_BONUS_URL, method: .get, headers: headers).responseData { response in
+            SVProgressHUD.dismiss()
+            var resultString = ""
+            if let data = response.data{
+                resultString = String(data: data, encoding: .utf8)!
+                print(resultString)
+            }
+
+            if response.response?.statusCode == 200{
+            
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                self.pointsLabel.text = String(json["bonus"].int ?? 0)
+                
+            }else{
+                var ErrorString = "CONNECTION_ERROR"
+                if let sCode = response.response?.statusCode{
+                    ErrorString = ErrorString + "\(sCode)"
+                }
+                ErrorString = ErrorString + "\(resultString)"
+                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+            }
+        }
+    }
+   
     
     
     // - MARK: - setupView
