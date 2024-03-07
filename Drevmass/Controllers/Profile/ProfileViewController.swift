@@ -214,6 +214,7 @@ class ProfileViewController: UIViewController {
         button.setTitleColor(.Colors._787878, for: .normal)
         button.leftIcon.image = .Profile.iconLogoutProfile
         button.rightIcon.isHidden = true
+        button.addTarget(self, action: #selector(logout), for: .touchUpInside)
         return button
     }()
     
@@ -235,7 +236,21 @@ extension ProfileViewController {
         myPointsVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(myPointsVC, animated: true)
     }
-    
+    @objc private func logout() {
+        let refreshAlert = UIAlertController(title: "Вы действительно хотите выйти?", message: "", preferredStyle: UIAlertController.Style.alert)
+
+        refreshAlert.addAction(UIAlertAction(title: "Остаться", style: .default, handler: { (action: UIAlertAction!) in
+        }))
+
+        refreshAlert.addAction(UIAlertAction(title: "Выйти", style: .cancel, handler: { (action: UIAlertAction!) in
+            AuthenticationService.shared.tokenClear()
+            //тут прописать удаление данных пользователя если они хранятся в UserDefaults
+            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+            sceneDelegate.setRootViewController(SignInViewController())
+        }))
+        present(refreshAlert, animated: true, completion: nil)
+        
+    }
     
     // - MARK: - setupView
     func setupView() {
