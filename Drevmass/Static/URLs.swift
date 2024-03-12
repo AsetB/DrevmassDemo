@@ -21,5 +21,6 @@ class URLs {
     static let INFO_URL = BASE_URL + "info"
     static let SOCIAL_URL = BASE_URL + "social"
     static let CONTACT_URL = BASE_URL + "contacts"
+    static let POST_SUPPORT_URL = BASE_URL + "support"
 }
 

@@ -100,6 +100,7 @@ class InfoAboutMeViewController: UIViewController {
         textfieldview.titleLabel.text = "  "
         textfieldview.textfield.attributedPlaceholder = NSAttributedString(string: "Рост", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors.A_1_A_1_A_1])
         textfieldview.widthAnchor.constraint(equalToConstant: 159.5).isActive = true
+        textfieldview.textfield.keyboardType = .numberPad
         return textfieldview
     }() 
     
@@ -108,6 +109,7 @@ class InfoAboutMeViewController: UIViewController {
         textfieldview.titleLabel.text = "  "
         textfieldview.textfield.attributedPlaceholder = NSAttributedString(string: "Вес", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors.A_1_A_1_A_1])
         textfieldview.widthAnchor.constraint(equalToConstant: 159.5).isActive = true
+        textfieldview.textfield.keyboardType = .numberPad
         return textfieldview
     }()
     
@@ -311,6 +313,10 @@ extension InfoAboutMeViewController {
 
     @objc func doneButtonAction(){
         birthdateTextFieldView.textfield.resignFirstResponder()
+        nameTextFieldView.textfield.resignFirstResponder()
+        numberTextFieldView.textfield.resignFirstResponder()
+        heightTextField.textfield.resignFirstResponder()
+        weightTextField.textfield.resignFirstResponder()
     }
     
     // - MARK: - Setups
@@ -343,19 +349,25 @@ extension InfoAboutMeViewController {
         birthdateTextFieldView.textfield.inputView = datePicker
         
         //кнопка готово, его ширина равно ширине экрана
-        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 40))
         doneToolbar.barStyle = .default
         
                 // кнопка готово справа
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         // сама кнопка
         let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonAction))
+        doneButton.tintColor = .Colors.B_5_A_380
         
         
         doneToolbar.items = [flexSpace, doneButton]
         
         //скрывать клаву или тулбар
         birthdateTextFieldView.textfield.inputAccessoryView = doneToolbar
+        nameTextFieldView.textfield.inputAccessoryView = doneToolbar
+        numberTextFieldView.textfield.inputAccessoryView = doneToolbar
+        heightTextField.textfield.inputAccessoryView = doneToolbar
+        weightTextField.textfield.inputAccessoryView = doneToolbar
+        
     }
     
     func setupConstraints() {
@@ -367,7 +379,7 @@ extension InfoAboutMeViewController {
         contentview.snp.makeConstraints { make in
             make.horizontalEdges.top.bottom.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
-            make.height.equalTo(1500)
+            
         }
         stackViewForTextfiels.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview().inset(16)
@@ -397,7 +409,8 @@ extension InfoAboutMeViewController {
             make.left.equalToSuperview().inset(16)
         }
         saveButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.top.equalTo(deleteAccountButton.snp.bottom).inset(-62)
+            make.bottom.equalToSuperview().inset(16)
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(48)
         }
