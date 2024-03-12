@@ -91,7 +91,6 @@ class InformationViewController: UIViewController {
         }
     
     @objc func dismissView() {
-//        navigationController?.popViewController(animated: true)
         dismiss(animated: true)
     }
     

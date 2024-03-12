@@ -14,5 +14,12 @@ class URLs {
     static let FORGOT_PASS_URL = BASE_URL + "forgot_password"
     static let GET_BONUS_URL = BASE_URL + "bonus"
     static let BONUS_INFO_URL = BASE_URL + "bonus/info"
-    static let GET_USER_INFO_URL = BASE_URL + "user/information"
+    static let USER_INFO_URL = BASE_URL + "user/information"
+    static let GET_PROMOCODE_INFO_URL = BASE_URL + "user/promocode"
+    static let DELETE_USER_URL = BASE_URL + "user"
+    static let RESET_PASSWORD_URL = BASE_URL + "reset_password"
+    static let INFO_URL = BASE_URL + "info"
+    static let SOCIAL_URL = BASE_URL + "social"
+    static let CONTACT_URL = BASE_URL + "contacts"
 }
+

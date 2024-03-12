@@ -10,8 +10,7 @@ import SnapKit
 import Alamofire
 import SwiftyJSON
 import SVProgressHUD
-
-            // ДОБАВИТЬ ЗАПРОС В СЕТЬ И УСТАНОВИТЬ ЗНАЧЕНИЯ ЛЭЙБЛАМ !!!!!
+import PanModal
 
 class ProfileViewController: UIViewController {
     
@@ -129,13 +128,14 @@ class ProfileViewController: UIViewController {
         return stackview
     }()
     
-    var myInfoButton: Button = {
+    var infoAboutMeButton: Button = {
        var button = Button()
         button.setTitle("Мои данные", for: .normal)
         button.heightAnchor.constraint(equalToConstant: 53).isActive = true
         button.layer.borderWidth = 0
         button.leftIcon.image = .Profile.iconInfoProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
+        button.addTarget(self, action: #selector(showInfoAboutMeViewController), for: .touchUpInside)
         return button
     }() 
     
@@ -146,6 +146,7 @@ class ProfileViewController: UIViewController {
         button.layer.borderWidth = 0
         button.leftIcon.image = .Profile.iconChangePasswordProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
+        button.addTarget(self, action: #selector(showChangePasswordVC), for: .touchUpInside)
         return button
     }()
     
@@ -156,6 +157,7 @@ class ProfileViewController: UIViewController {
         button.layer.borderWidth = 0
         button.leftIcon.image = .Profile.iconNotificationProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
+        button.addTarget(self, action: #selector(showNotificationViewController), for: .touchUpInside)
         return button
     }()
     
@@ -174,13 +176,14 @@ class ProfileViewController: UIViewController {
         return stackview
     }()
     
-    var connectUSButton: Button = {
+    var contactUSButton: Button = {
        var button = Button()
         button.setTitle("Связаться с нами", for: .normal)
         button.heightAnchor.constraint(equalToConstant: 53).isActive = true
         button.layer.borderWidth = 0
         button.leftIcon.image = .Profile.iconConnectUsProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
+        button.addTarget(self, action: #selector(showContactUsViewController), for: .touchUpInside)
         return button
     }()
     
@@ -201,6 +204,7 @@ class ProfileViewController: UIViewController {
         button.layer.borderWidth = 0
         button.leftIcon.image = .Profile.iconInfoBeigeProfile
         button.rightIcon.image = .Profile.arrowBeigeProfile
+        button.addTarget(self, action: #selector(showInformationAboutAppViewController), for: .touchUpInside)
         return button
     }()
     
@@ -228,24 +232,60 @@ class ProfileViewController: UIViewController {
         getProfileInfo()
         downlaodBonus()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        getProfileInfo()
+    }
 }
+
+// - MARK: - extension
 
 extension ProfileViewController {
     
-    // - MARK: - functions
-    
     @objc func showPromoCodeViewController(){
         let promoCodeVC = PromoCodeViewController()
+        promoCodeVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(promoCodeVC, animated: true)
+    } 
+    @objc func showNotificationViewController(){
+        let notificationVC = NotificationViewController()
+        notificationVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(notificationVC, animated: true)
+    }
+    @objc func showInfoAboutMeViewController(){
+        let infoAboutMeVC = InfoAboutMeViewController()
+        infoAboutMeVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(infoAboutMeVC, animated: true)
     }
     
     @objc func showMyPoints() {
         let myPointsVC = MyBonusViewController()
         myPointsVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(myPointsVC, animated: true)
+    } 
+    
+    @objc func showInformationAboutAppViewController() {
+        let infoVc = InformationAboutAppViewController()
+        infoVc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(infoVc, animated: true)
+    } 
+    
+    @objc func showContactUsViewController() {
+        let contactUsVc = ContactUsViewController()
+        contactUsVc.hidesBottomBarWhenPushed = true
+        contactUsVc.modalPresentationStyle = .overFullScreen
+//       present(contactUsVc, animated: true)
+        var panModalHeight: PanModalHeight = .contentHeight(400)
+        presentPanModal(contactUsVc)
     }
     
-    // - MARK: - Alamofire
+    @objc func showChangePasswordVC() {
+        let changePasswordVC = ChangePasswordViewController()
+        changePasswordVC.hidesBottomBarWhenPushed = true
+        navigationController?.modalPresentationStyle = .overFullScreen
+        present(changePasswordVC, animated: true)
+    }
+    
+    // - MARK: - network
     
     func getProfileInfo(){
         SVProgressHUD.show()
@@ -253,7 +293,7 @@ extension ProfileViewController {
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(AuthenticationService.shared.token)"
         ]
-        AF.request(URLs.GET_USER_INFO_URL, method: .get, headers: headers).responseData { response in
+        AF.request(URLs.USER_INFO_URL, method: .get, headers: headers).responseData { response in
          SVProgressHUD.dismiss()
             var resultString = ""
             if let data = response.data{
@@ -307,7 +347,7 @@ extension ProfileViewController {
    
     
     
-    // - MARK: - setupView
+    // - MARK: - Setups
     func setupView() {
         view.backgroundColor = .Colors.FFFFFF
         view.addSubview(scrollView)
@@ -323,17 +363,16 @@ extension ProfileViewController {
         contentview.addSubview(viewMain)
         viewMain.addSubview(promocodesButton)
         viewMain.addSubview(stackViewForFirstThreeButtons)
-        stackViewForFirstThreeButtons.addArrangedSubview(myInfoButton)
+        stackViewForFirstThreeButtons.addArrangedSubview(infoAboutMeButton)
         stackViewForFirstThreeButtons.addArrangedSubview(changePasswordButton)
         stackViewForFirstThreeButtons.addArrangedSubview(notificationsButton)
         viewMain.addSubview(stackViewForSecondThreeButtons)
-        stackViewForSecondThreeButtons.addArrangedSubview(connectUSButton)
+        stackViewForSecondThreeButtons.addArrangedSubview(contactUSButton)
         stackViewForSecondThreeButtons.addArrangedSubview(leaveFeedbackButton)
         stackViewForSecondThreeButtons.addArrangedSubview(infoButton)
         viewMain.addSubview(logoutButton)
     }
     
-    // - MARK: - setupConstraints
     func setupConstraints() {
         scrollView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -362,7 +401,7 @@ extension ProfileViewController {
             make.left.equalTo(arrow.snp.right).inset(-5)
         }
         myPointsButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(24)
+            make.top.equalToSuperview().inset(18)
             make.left.equalToSuperview().inset(24)
         }
         arrow.snp.makeConstraints { make in
@@ -371,12 +410,12 @@ extension ProfileViewController {
             make.left.equalTo(myPointsButton.snp.right).inset(-4)
         }
         iconBonus.snp.makeConstraints { make in
-            make.top.equalTo(myPointsButton.snp.bottom).inset(-13)
+            make.top.equalTo(myPointsButton.snp.bottom).inset(-9)
             make.left.equalToSuperview().inset(24)
             make.height.width.equalTo(32)
         }
         pointsLabel.snp.makeConstraints { make in
-            make.top.equalTo(myPointsButton.snp.bottom).inset(-12)
+            make.top.equalTo(myPointsButton.snp.bottom).inset(-8)
             make.left.equalTo(iconBonus.snp.right).inset(-9)
             make.right.equalToSuperview().inset(24)
         }

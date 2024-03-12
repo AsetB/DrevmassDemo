@@ -37,6 +37,18 @@
 		D45B75502B99E25500359A22 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D45B754F2B99E25500359A22 /* SVProgressHUD */; };
 		D4CE67BA2B9A16AC0092A51D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67B92B9A16AC0092A51D /* User.swift */; };
 		D4CE67BD2B9A27E30092A51D /* PromoCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */; };
+		D4CE67C12B9B89880092A51D /* InfoAboutMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67C02B9B89880092A51D /* InfoAboutMeViewController.swift */; };
+		D4CE67C32B9B8FFD0092A51D /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67C22B9B8FFD0092A51D /* TextFieldView.swift */; };
+		D4CE67C62B9E2D9E0092A51D /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67C52B9E2D9E0092A51D /* ChangePasswordViewController.swift */; };
+		D4CE67C92B9F84E80092A51D /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67C82B9F84E80092A51D /* NotificationViewController.swift */; };
+		D4CE67CD2B9F8F3E0092A51D /* ContactUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67CC2B9F8F3E0092A51D /* ContactUsViewController.swift */; };
+		D4CE67D32B9F905B0092A51D /* InformationAboutAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67D22B9F905B0092A51D /* InformationAboutAppViewController.swift */; };
+		D4CE67D52BA071250092A51D /* AboutCompanyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67D42BA071250092A51D /* AboutCompanyViewController.swift */; };
+		D4CE67D72BA07A250092A51D /* AboutAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67D62BA07A250092A51D /* AboutAppViewController.swift */; };
+		D4CE67D92BA07E160092A51D /* Social.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67D82BA07E160092A51D /* Social.swift */; };
+		D4CE67DC2BA081FE0092A51D /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = D4CE67DB2BA081FE0092A51D /* PanModal */; };
+		D4CE67DF2BA098A50092A51D /* SupportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67DE2BA098A50092A51D /* SupportViewController.swift */; };
+		D4CE67E12BA09D160092A51D /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67E02BA09D160092A51D /* Contact.swift */; };
 		DB22E2562B95C1FB00694714 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */; };
 		DB22E2572B95C1FB00694714 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */; };
 		DB22E2582B95C1FB00694714 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */; };
@@ -120,6 +132,17 @@
 		D45B752F2B99E22200359A22 /* BurningBonus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BurningBonus.swift; sourceTree = "<group>"; };
 		D4CE67B92B9A16AC0092A51D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoCodeViewController.swift; sourceTree = "<group>"; };
+		D4CE67C02B9B89880092A51D /* InfoAboutMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoAboutMeViewController.swift; sourceTree = "<group>"; };
+		D4CE67C22B9B8FFD0092A51D /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
+		D4CE67C52B9E2D9E0092A51D /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
+		D4CE67C82B9F84E80092A51D /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		D4CE67CC2B9F8F3E0092A51D /* ContactUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactUsViewController.swift; sourceTree = "<group>"; };
+		D4CE67D22B9F905B0092A51D /* InformationAboutAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationAboutAppViewController.swift; sourceTree = "<group>"; };
+		D4CE67D42BA071250092A51D /* AboutCompanyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCompanyViewController.swift; sourceTree = "<group>"; };
+		D4CE67D62BA07A250092A51D /* AboutAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppViewController.swift; sourceTree = "<group>"; };
+		D4CE67D82BA07E160092A51D /* Social.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social.swift; sourceTree = "<group>"; };
+		D4CE67DE2BA098A50092A51D /* SupportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportViewController.swift; sourceTree = "<group>"; };
+		D4CE67E02BA09D160092A51D /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		DB22E2512B95C1FB00694714 /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		DB22E2522B95C1FB00694714 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		DB22E2532B95C1FB00694714 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
@@ -150,6 +173,7 @@
 				DB22E2722B95FE7E00694714 /* SnapKit in Frameworks */,
 				DB6E51A82B999ABF0053F5CE /* SwiftyJSON in Frameworks */,
 				DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */,
+				D4CE67DC2BA081FE0092A51D /* PanModal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,13 +341,18 @@
 			children = (
 				D45B75272B99E22200359A22 /* ProfileViewController.swift */,
 				D45B75282B99E22200359A22 /* UIButton.swift */,
-				D4CE67BB2B9A279D0092A51D /* PromoCodeViewController */,
-				D45B75222B99E22200359A22 /* MyBonusViewController */,
+				D4CE67CF2B9F8FAC0092A51D /* InformationAboutApp */,
+				D4CE67CB2B9F8F280092A51D /* ContactUs */,
+				D4CE67CA2B9F853C0092A51D /* Notification */,
+				D4CE67C42B9E2D7D0092A51D /* ChangePassword */,
+				D4CE67BF2B9B88E50092A51D /* InfoAboutMe */,
+				D4CE67BB2B9A279D0092A51D /* PromoCode */,
+				D45B75222B99E22200359A22 /* MyBonus */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		D45B75222B99E22200359A22 /* MyBonusViewController */ = {
+		D45B75222B99E22200359A22 /* MyBonus */ = {
 			isa = PBXGroup;
 			children = (
 				D45B75232B99E22200359A22 /* MyBonusViewController.swift */,
@@ -331,7 +360,7 @@
 				D45B75252B99E22200359A22 /* NoTransactionsUIView.swift */,
 				D45B75262B99E22200359A22 /* BonusHistoryTableViewCell.swift */,
 			);
-			path = MyBonusViewController;
+			path = MyBonus;
 			sourceTree = "<group>";
 		};
 		D45B752B2B99E22200359A22 /* Shared */ = {
@@ -355,6 +384,8 @@
 			children = (
 				D45B75192B99E22200359A22 /* DashedLineView.swift */,
 				D45B74FD2B99E22200359A22 /* Transactions.swift */,
+				D4CE67D82BA07E160092A51D /* Social.swift */,
+				D4CE67E02BA09D160092A51D /* Contact.swift */,
 				D45B752F2B99E22200359A22 /* BurningBonus.swift */,
 				D4CE67B92B9A16AC0092A51D /* User.swift */,
 				D45B750D2B99E22200359A22 /* Bonus.swift */,
@@ -362,12 +393,63 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		D4CE67BB2B9A279D0092A51D /* PromoCodeViewController */ = {
+		D4CE67BB2B9A279D0092A51D /* PromoCode */ = {
 			isa = PBXGroup;
 			children = (
 				D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */,
 			);
-			path = PromoCodeViewController;
+			path = PromoCode;
+			sourceTree = "<group>";
+		};
+		D4CE67BF2B9B88E50092A51D /* InfoAboutMe */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67C02B9B89880092A51D /* InfoAboutMeViewController.swift */,
+			);
+			path = InfoAboutMe;
+			sourceTree = "<group>";
+		};
+		D4CE67C42B9E2D7D0092A51D /* ChangePassword */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67C52B9E2D9E0092A51D /* ChangePasswordViewController.swift */,
+			);
+			path = ChangePassword;
+			sourceTree = "<group>";
+		};
+		D4CE67CA2B9F853C0092A51D /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67C82B9F84E80092A51D /* NotificationViewController.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
+		D4CE67CB2B9F8F280092A51D /* ContactUs */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67CC2B9F8F3E0092A51D /* ContactUsViewController.swift */,
+				D4CE67DE2BA098A50092A51D /* SupportViewController.swift */,
+			);
+			path = ContactUs;
+			sourceTree = "<group>";
+		};
+		D4CE67CF2B9F8FAC0092A51D /* InformationAboutApp */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67D22B9F905B0092A51D /* InformationAboutAppViewController.swift */,
+				D4CE67D42BA071250092A51D /* AboutCompanyViewController.swift */,
+				D4CE67D62BA07A250092A51D /* AboutAppViewController.swift */,
+			);
+			path = InformationAboutApp;
+			sourceTree = "<group>";
+		};
+		D4CE67DD2BA08E790092A51D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE67C22B9B8FFD0092A51D /* TextFieldView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		DB190DA92B94ECE700990BF2 /* App */ = {
@@ -434,6 +516,7 @@
 			children = (
 				D45B752D2B99E22200359A22 /* Constants */,
 				D45B750E2B99E22200359A22 /* Controllers */,
+				D4CE67DD2BA08E790092A51D /* Components */,
 				D45B75002B99E22200359A22 /* Extensions */,
 				D45B752B2B99E22200359A22 /* Shared */,
 				D45B74FE2B99E22200359A22 /* Static */,
@@ -487,6 +570,7 @@
 				DB6E51A42B999AAD0053F5CE /* Alamofire */,
 				DB6E51A72B999ABF0053F5CE /* SwiftyJSON */,
 				D45B754F2B99E25500359A22 /* SVProgressHUD */,
+				D4CE67DB2BA081FE0092A51D /* PanModal */,
 			);
 			productName = Drevmass;
 			productReference = DBDAA7102B93A12100CD42BE /* Drevmass.app */;
@@ -566,6 +650,7 @@
 				DB6E51A32B999AA70053F5CE /* XCRemoteSwiftPackageReference "Alamofire" */,
 				DB6E51A62B999ABF0053F5CE /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				D45B754E2B99E25500359A22 /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
+				D4CE67DA2BA081FE0092A51D /* XCRemoteSwiftPackageReference "PanModal" */,
 			);
 			productRefGroup = DBDAA7112B93A12100CD42BE /* Products */;
 			projectDirPath = "";
@@ -615,9 +700,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D45B75412B99E22200359A22 /* CatalogMainViewController.swift in Sources */,
+				D4CE67D32B9F905B0092A51D /* InformationAboutAppViewController.swift in Sources */,
 				D45B75312B99E22200359A22 /* URLs.swift in Sources */,
 				D45B75432B99E22200359A22 /* MyBonusViewController.swift in Sources */,
 				DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */,
+				D4CE67C32B9B8FFD0092A51D /* TextFieldView.swift in Sources */,
 				D4CE67BA2B9A16AC0092A51D /* User.swift in Sources */,
 				D45B75362B99E22200359A22 /* UIFont + Extensions.swift in Sources */,
 				D45B754B2B99E22200359A22 /* Authentication.swift in Sources */,
@@ -626,10 +713,17 @@
 				D45B75472B99E22200359A22 /* ProfileViewController.swift in Sources */,
 				D45B753B2B99E22200359A22 /* RestorePassViewController.swift in Sources */,
 				D45B75452B99E22200359A22 /* NoTransactionsUIView.swift in Sources */,
+				D4CE67C62B9E2D9E0092A51D /* ChangePasswordViewController.swift in Sources */,
+				D4CE67CD2B9F8F3E0092A51D /* ContactUsViewController.swift in Sources */,
+				D4CE67C92B9F84E80092A51D /* NotificationViewController.swift in Sources */,
+				D4CE67E12BA09D160092A51D /* Contact.swift in Sources */,
 				D45B753C2B99E22200359A22 /* RestorePassModalViewController.swift in Sources */,
+				D4CE67D72BA07A250092A51D /* AboutAppViewController.swift in Sources */,
 				D45B754C2B99E22200359A22 /* Onboarding.swift in Sources */,
+				D4CE67DF2BA098A50092A51D /* SupportViewController.swift in Sources */,
 				D45B75482B99E22200359A22 /* UIButton.swift in Sources */,
 				D45B753E2B99E22200359A22 /* OnboardingViewController.swift in Sources */,
+				D4CE67D52BA071250092A51D /* AboutCompanyViewController.swift in Sources */,
 				D45B753D2B99E22200359A22 /* SignInViewController.swift in Sources */,
 				D45B75302B99E22200359A22 /* Transactions.swift in Sources */,
 				D45B75402B99E22200359A22 /* BasketViewController.swift in Sources */,
@@ -639,6 +733,8 @@
 				D45B75322B99E22200359A22 /* UIViewController + Extensions.swift in Sources */,
 				D45B753A2B99E22200359A22 /* SignUpViewController.swift in Sources */,
 				DBDAA7162B93A12100CD42BE /* SceneDelegate.swift in Sources */,
+				D4CE67D92BA07E160092A51D /* Social.swift in Sources */,
+				D4CE67C12B9B89880092A51D /* InfoAboutMeViewController.swift in Sources */,
 				D45B75352B99E22200359A22 /* SGSegmentedProgressBarProtocols.swift in Sources */,
 				D45B75332B99E22200359A22 /* Extensions.swift in Sources */,
 				D45B75372B99E22200359A22 /* UITextfield + Extensions.swift in Sources */,
@@ -998,6 +1094,14 @@
 				minimumVersion = 2.3.1;
 			};
 		};
+		D4CE67DA2BA081FE0092A51D /* XCRemoteSwiftPackageReference "PanModal" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/slackhq/PanModal";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.7;
+			};
+		};
 		DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -1037,6 +1141,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D45B754E2B99E25500359A22 /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
 			productName = SVProgressHUD;
+		};
+		D4CE67DB2BA081FE0092A51D /* PanModal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4CE67DA2BA081FE0092A51D /* XCRemoteSwiftPackageReference "PanModal" */;
+			productName = PanModal;
 		};
 		DB22E2712B95FE7E00694714 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
