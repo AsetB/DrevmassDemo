@@ -22,12 +22,18 @@ class RestorePassModalViewController: UIViewController, UIGestureRecognizerDeleg
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = """
-На почту \(emailText) мы отправили 
-инструкцию для сброса пароля.
-"""
-        label.font = .addFont(type: .SFProTextRegular, size: 16)
-        label.textColor = UIColor(resource: ColorResource.Colors._787878)
+        let stringEmail = " \(emailText) "
+        var labelStringEmail = NSMutableAttributedString(string: stringEmail, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextRegular, size: 16)])
+        labelStringEmail.addAttributes([NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._302_C_28)], range: NSRange(location: 0, length: stringEmail.count))
+        let stringOne = "На почту"
+        var labelStringOne = NSMutableAttributedString(string: stringOne, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextRegular, size: 16)])
+        labelStringOne.addAttributes([NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._787878)], range: NSRange(location: 0, length: stringOne.count))
+        let stringTwo = "мы отправили инструкцию для сброса пароля."
+        var labelStringTwo = NSMutableAttributedString(string: stringTwo, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextRegular, size: 16)])
+        labelStringTwo.addAttributes([NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._787878)], range: NSRange(location: 0, length: stringTwo.count))
+        labelStringOne.append(labelStringEmail)
+        labelStringOne.append(labelStringTwo)
+        label.attributedText = labelStringOne
         label.numberOfLines = 2
         return label
     }()

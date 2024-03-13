@@ -242,7 +242,7 @@ extension ProfileViewController {
         refreshAlert.addAction(UIAlertAction(title: "Остаться", style: .default, handler: { (action: UIAlertAction!) in
         }))
 
-        refreshAlert.addAction(UIAlertAction(title: "Выйти", style: .cancel, handler: { (action: UIAlertAction!) in
+        refreshAlert.addAction(UIAlertAction(title: "Выйти", style: .destructive, handler: { (action: UIAlertAction!) in
             AuthenticationService.shared.tokenClear()
             //тут прописать удаление данных пользователя если они хранятся в UserDefaults
             let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate

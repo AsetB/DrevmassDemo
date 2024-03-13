@@ -68,7 +68,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)//UIColor(resource: ColorResource.Colors.FFFFFF)
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         setSegmentBar()
         setViews()
         setConstraints()
@@ -76,10 +76,16 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
 
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         imageView.image = UIImage(resource: ImageResource.Onboarding.image1)
         self.segmentBar?.start()
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationItem.title = " "
         self.segmentBar?.reset()
     }
     //- MARK: - Set Views
