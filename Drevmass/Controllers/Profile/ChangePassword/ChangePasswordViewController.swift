@@ -26,7 +26,7 @@ class ChangePasswordViewController: UIViewController {
     lazy var leftButton: UIButton = {
         var button = UIButton()
         button.setImage(.Profile.iconBack, for: .normal)
-        button.tintColor = .Colors.B_5_A_380
+        button.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.contentMode = .scaleAspectFill
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         return button
@@ -37,15 +37,15 @@ class ChangePasswordViewController: UIViewController {
     var currentPasswordLabel: UILabel = {
         var label = UILabel()
         label.text = "  "
-        label.textColor = .Colors.B_5_A_380
+        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         label.font = .addFont(type: .SFProTextMedium, size: 13)
         return label
     }()
     
     var currentPasswordTextfield: UITextField = {
         var textfield = UITextField()
-        textfield.attributedPlaceholder = NSAttributedString(string: "Введите текущий пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors._989898])
-        textfield.textColor = .Colors._181715
+        textfield.attributedPlaceholder = NSAttributedString(string: "Введите текущий пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors._989898) ])
+        textfield.textColor = UIColor(resource: ColorResource.Colors._181715) 
         textfield.isSecureTextEntry = true
         textfield.font = .addFont(type: .SFProTextSemiBold, size: 17)
         textfield.addTarget(self, action: #selector(editingDidBeginCurrentPasswordTextfield), for: .editingDidBegin)
@@ -56,7 +56,7 @@ class ChangePasswordViewController: UIViewController {
     
     var viewUnderCurrentPassword: UIView = {
         var view = UIView()
-        view.backgroundColor = .Colors.E_0_DEDD
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         return view
     }()
     
@@ -72,7 +72,7 @@ class ChangePasswordViewController: UIViewController {
     var forgotPasswordButton: UIButton = {
         var button = UIButton()
         button.setTitle("Забыли пароль?", for: .normal)
-        button.setTitleColor(.Colors.B_5_A_380, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.B_5_A_380) , for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         return button
     }()
@@ -82,15 +82,15 @@ class ChangePasswordViewController: UIViewController {
     var newPasswordLabel: UILabel = {
         var label = UILabel()
         label.text = "  "
-        label.textColor = .Colors.B_5_A_380
+        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         label.font = .addFont(type: .SFProTextMedium, size: 13)
         return label
     }()
     
     var newPasswordTextfield: UITextField = {
         var textfield = UITextField()
-        textfield.attributedPlaceholder = NSAttributedString(string: "Введите новый пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors._989898])
-        textfield.textColor = .Colors._181715
+        textfield.attributedPlaceholder = NSAttributedString(string: "Введите новый пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors._989898) ])
+        textfield.textColor = UIColor(resource: ColorResource.Colors._181715) 
         textfield.font = .addFont(type: .SFProTextSemiBold, size: 17)
         textfield.isSecureTextEntry = true
         textfield.addTarget(self, action: #selector(editingDidBeginNewPasswordTextfield), for: .editingDidBegin)
@@ -101,7 +101,7 @@ class ChangePasswordViewController: UIViewController {
     
     var viewUnderNewPassword: UIView = {
         var view = UIView()
-        view.backgroundColor = .Colors.E_0_DEDD
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         return view
     }()
     
@@ -116,7 +116,7 @@ class ChangePasswordViewController: UIViewController {
     
     var saveButton: UIButton = {
         var button = UIButton()
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.setTitle("Продолжить", for: .normal)
         button.layer.cornerRadius = 24
         button.addTarget(self, action: #selector(resetPassword), for: .touchUpInside)
@@ -135,7 +135,7 @@ class ChangePasswordViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         saveButton.isEnabled = false
-        saveButton.backgroundColor = .Colors.D_3_C_8_B_3
+        saveButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3) 
     }
 }
 
@@ -185,10 +185,10 @@ extension ChangePasswordViewController {
     @objc func unlockSaveButton() {
         if currentPasswordLabel.text == "" || newPasswordTextfield.text == "" {
             saveButton.isEnabled = false
-            saveButton.backgroundColor = .Colors.D_3_C_8_B_3
+            saveButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3) 
         }else{
             saveButton.isEnabled = true
-            saveButton.backgroundColor = .Colors.B_5_A_380
+            saveButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         }
     }
     
@@ -196,31 +196,31 @@ extension ChangePasswordViewController {
         
         currentPasswordLabel.text = "Введите текущий пароль"
         currentPasswordTextfield.placeholder = "  "
-        viewUnderCurrentPassword.backgroundColor = .Colors.B_5_A_380
+        viewUnderCurrentPassword.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
     }
     @objc func editingDidBeginNewPasswordTextfield() {
         
         newPasswordLabel.text = "Введите новый пароль"
         newPasswordTextfield.placeholder = "  "
-        viewUnderNewPassword.backgroundColor = .Colors.B_5_A_380
+        viewUnderNewPassword.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
     }
     
     @objc func editingDidEndForPassword() {
         
         if currentPasswordTextfield.text == "" {
             currentPasswordLabel.text = "  "
-            currentPasswordTextfield.attributedPlaceholder = NSAttributedString(string: "Введите текущий пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors._989898])
+            currentPasswordTextfield.attributedPlaceholder = NSAttributedString(string: "Введите текущий пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors._989898) ])
         }
-        viewUnderCurrentPassword.backgroundColor = .Colors.E_0_DEDD
+        viewUnderCurrentPassword.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
     }
     
     @objc func editingDidEndForNewPassword() {
 
         if newPasswordTextfield.text == "" {
             newPasswordLabel.text = "  "
-            newPasswordTextfield.attributedPlaceholder = NSAttributedString(string: "Введите новый пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors._989898])
+            newPasswordTextfield.attributedPlaceholder = NSAttributedString(string: "Введите новый пароль", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors._989898) ])
         }
-        viewUnderNewPassword.backgroundColor = .Colors.E_0_DEDD
+        viewUnderNewPassword.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
     }
     
     @objc func toggleNewShowButton() {
@@ -246,7 +246,7 @@ extension ChangePasswordViewController {
     // - MARK: - setups
 
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(titleLabel)
         view.addSubview(leftButton)
         view.addSubview(currentPasswordLabel)

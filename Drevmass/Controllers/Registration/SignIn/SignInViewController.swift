@@ -19,7 +19,7 @@ class SignInViewController: UIViewController {
         let label = UILabel()
         label.text = "С возвращением!"
         label.font = .addFont(type: .SFProDisplayBold, size: 28)
-        label.textColor = .Colors._181715
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
         label.numberOfLines = 2
         return label
     }()
@@ -32,7 +32,7 @@ class SignInViewController: UIViewController {
 Древмасс.
 """
         label.font = .addFont(type: .SFProTextRegular, size: 15)
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.numberOfLines = 3
         return label
     }()
@@ -100,10 +100,10 @@ class SignInViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Войти", for: .normal)
         button.setTitle("", for: .disabled)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
-        button.backgroundColor = .Colors.B_5_A_380//.Colors.D_3_C_8_B_3
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)//.Colors.D_3_C_8_B_3
         button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
         return button
     }()
@@ -147,10 +147,10 @@ class SignInViewController: UIViewController {
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationItem.title = " "
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Registration.backArrowBrand, style: .done, target: self, action: #selector(dismissView))
-        navigationController?.navigationBar.tintColor = .Colors.B_5_A_380
+        navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         addViews()
         setViews()
         setConstraints()
@@ -272,10 +272,10 @@ class SignInViewController: UIViewController {
             return
         }
         if !email.isEmpty && !pass.isEmpty {
-            signInButton.backgroundColor = .Colors.B_5_A_380
+            signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             signInButton.isEnabled = true
         } else {
-            signInButton.backgroundColor = .Colors.D_3_C_8_B_3
+            signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
             signInButton.isEnabled = false
         }
     }
@@ -347,9 +347,9 @@ class SignInViewController: UIViewController {
     }
     private func showRedError() {
         emailTextfield.setIcon(UIImage(resource: ImageResource.Registration.mail24Red))
-        dividerEmailView.backgroundColor = .Colors.FA_5_C_5_C
+        dividerEmailView.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
         passTextfield.setIcon(UIImage(resource: ImageResource.Registration.lock24Red))
-        dividerPassView.backgroundColor = .Colors.FA_5_C_5_C
+        dividerPassView.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
     }
     private func hideRedError() {
         emailTextfield.setIcon(UIImage(resource: ImageResource.Registration.mail24))

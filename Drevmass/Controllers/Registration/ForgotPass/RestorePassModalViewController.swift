@@ -16,7 +16,7 @@ class RestorePassModalViewController: UIViewController, UIGestureRecognizerDeleg
         let label = UILabel()
         label.text = "Сбросить пароль"
         label.font = .addFont(type: .SFProDisplayBold, size: 22)
-        label.textColor = .Colors._302_C_28
+        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28) 
         return label
     }()
     
@@ -27,21 +27,21 @@ class RestorePassModalViewController: UIViewController, UIGestureRecognizerDeleg
 инструкцию для сброса пароля.
 """
         label.font = .addFont(type: .SFProTextRegular, size: 16)
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.numberOfLines = 2
         return label
     }()
     
     private let lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .Colors.E_0_DEDD
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         view.layer.cornerRadius = 3
         return view
     }()
     
     private lazy var modalView: UIView = {
         let view = UIView()
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.layer.cornerRadius = 24
         view.clipsToBounds = true
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -51,10 +51,10 @@ class RestorePassModalViewController: UIViewController, UIGestureRecognizerDeleg
     private lazy var confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("Понятно", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380) 
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         return button
     }()

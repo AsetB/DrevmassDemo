@@ -8,22 +8,36 @@
 import UIKit
 
 class CoursesViewController: UIViewController {
+    
+    //    MARK: UI elements
 
+    
+    //    MARK: Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .green
-        // Do any additional setup after loading the view.
+        
+        setupView()
+        setupConstraints()
     }
     
 
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension CoursesViewController {
+    
+    //    MARK: other funcs
+    
+    
+    
+    
+   //    MARK: - setups
+    
+    func setupView() {
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
     }
-    */
-
+    
+    func setupConstraints() {
+        
+    }
 }

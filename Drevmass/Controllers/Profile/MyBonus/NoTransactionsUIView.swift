@@ -12,7 +12,7 @@ class NoTransactionsUIView: UIView {
     
     var historyPointsLabel: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors._181715
+        label.textColor = UIColor(resource: ColorResource.Colors._181715) 
         label.font = UIFont(name: "SFProText-Semibold", size: 20)
         label.text = "История баллов"
         return label
@@ -27,7 +27,7 @@ class NoTransactionsUIView: UIView {
     
     var aboutBonusTitlteLabel: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors._181715
+        label.textColor = UIColor(resource: ColorResource.Colors._181715) 
         label.font = UIFont(name: "SFProText-Medium", size: 17)
         label.textAlignment = .center
         label.text = "В истории баллов пока пусто"
@@ -36,7 +36,7 @@ class NoTransactionsUIView: UIView {
     
     var aboutBonusSubtitlteLabel: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors._989898
+        label.textColor = UIColor(resource: ColorResource.Colors._989898) 
         label.font = UIFont(name: "SFProText-Regular", size: 16)
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -46,7 +46,7 @@ class NoTransactionsUIView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .Colors.FFFFFF
+        backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
 
         addSubview(historyPointsLabel)
         addSubview(twoEmptyBonusesEmageView)

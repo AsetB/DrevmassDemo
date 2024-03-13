@@ -25,7 +25,7 @@ class InformationViewController: UIViewController {
     
     var contentview: UIView = {
         var view = UIView()
-            view.backgroundColor = .Colors.FFFFFF
+            view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         return view
     }()
     
@@ -40,7 +40,7 @@ class InformationViewController: UIViewController {
    lazy var leftButton: UIButton = {
        var button = UIButton()
         button.setImage(.Profile.iconBack, for: .normal)
-        button.tintColor = .Colors.B_5_A_380
+        button.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.contentMode = .scaleAspectFill
        button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         return button
@@ -49,7 +49,7 @@ class InformationViewController: UIViewController {
     var fullDescriptionsLabel: UILabel = {
         var label = UILabel()
          label.font = UIFont(name: "SFProText-Regular", size: 16)
-         label.textColor = .Colors._181715
+         label.textColor = UIColor(resource: ColorResource.Colors._181715) 
          label.numberOfLines = 0
          label.contentMode = .topLeft
          return label
@@ -57,7 +57,7 @@ class InformationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(titleLabel)
         view.addSubview(leftButton)
         view.addSubview(scrollView)

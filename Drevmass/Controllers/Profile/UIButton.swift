@@ -38,7 +38,7 @@ class Button: UIButton {
 extension Button {
    func setupView() {
        
-       setTitleColor(.Colors._181715 , for: .normal)
+       setTitleColor(UIColor(resource: ColorResource.Colors._181715) , for: .normal)
        titleLabel?.font = UIFont(name: "SFProText-Semibold", size: 17)
        layer.borderWidth = 2
        layer.cornerRadius = 20

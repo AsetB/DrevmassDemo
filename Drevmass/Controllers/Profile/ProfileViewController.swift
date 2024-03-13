@@ -27,20 +27,20 @@ class ProfileViewController: UIViewController {
     }()
     var contentview: UIView = {
         var view = UIView()
-            view.backgroundColor = .Colors.B_5_A_380
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         return view
     }()
     
     var nameTitle: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProDisplay-Bold", size: 28)
         return label
     }() 
     
     var numberTitle: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProText-Semibold", size: 15)
         return label
     }()
@@ -48,7 +48,7 @@ class ProfileViewController: UIViewController {
      //    viewForBonus
     var viewForBonus: UIView = {
        var view = UIView()
-        view.backgroundColor = .Colors.CCB_995
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.CCB_995)
         view.layer.cornerRadius = 24
         view.clipsToBounds = true
         return view
@@ -57,7 +57,7 @@ class ProfileViewController: UIViewController {
     var myPointsButton: UIButton = {
        var button = UIButton()
         button.setTitle("Мои баллы", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = UIFont(name: "SFProText-Semibold", size: 15)
         button.addTarget(self, action: #selector(showMyPoints), for: .touchUpInside)
         return button
@@ -87,7 +87,7 @@ class ProfileViewController: UIViewController {
     
     var pointsLabel: UILabel = {
        var label = UILabel()
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProDisplay-Bold", size: 28)
         return label
     }()
@@ -96,7 +96,7 @@ class ProfileViewController: UIViewController {
     
     var viewMain: UIView = {
        var view = UIView()
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.layer.cornerRadius = 24
         view.clipsToBounds = true
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -215,7 +215,7 @@ class ProfileViewController: UIViewController {
         button.setTitle("Выйти", for: .normal)
         button.heightAnchor.constraint(equalToConstant: 48).isActive = true
         button.layer.borderWidth = 0
-        button.setTitleColor(.Colors._787878, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors._787878), for: .normal)
         button.leftIcon.image = .Profile.iconLogoutProfile
         button.rightIcon.isHidden = true
         return button
@@ -225,7 +225,7 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
 
         setupView()
         setupConstraints()
@@ -349,7 +349,7 @@ extension ProfileViewController {
     
     // - MARK: - Setups
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(scrollView)
         scrollView.addSubview(contentview)
         contentview.addSubview(nameTitle)

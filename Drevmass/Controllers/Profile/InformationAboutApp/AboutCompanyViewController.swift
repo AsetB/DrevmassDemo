@@ -26,7 +26,7 @@ class AboutCompanyViewController: UIViewController {
      var rightButton: UIButton = {
         var button = UIButton()
         button.setTitle("Закрыть", for: .normal)
-        button.setTitleColor(.Colors._007_AFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors._007_AFF) , for: .normal)
          button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         return button
@@ -44,7 +44,7 @@ class AboutCompanyViewController: UIViewController {
     }()
     var contentview: UIView = {
         var view = UIView()
-            view.backgroundColor = .Colors.FFFFFF
+            view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         return view
     }()
     
@@ -60,7 +60,7 @@ class AboutCompanyViewController: UIViewController {
     var textLabel: UILabel = {
        var label = UILabel()
         label.font = .addFont(type: .SFProTextRegular, size: 16)
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.numberOfLines = 0
         return label
     }()
@@ -115,7 +115,7 @@ extension AboutCompanyViewController {
     // - MARK: - setups
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(titleLabel)
         view.addSubview(rightButton)
         view.addSubview(scrollView)

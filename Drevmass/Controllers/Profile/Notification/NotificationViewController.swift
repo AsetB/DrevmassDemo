@@ -14,21 +14,21 @@ class NotificationViewController: UIViewController {
     var titleLabel: UILabel = {
        var label = UILabel()
         label.text = "Напоминание о занятиях"
-        label.textColor = .Colors._181715
+        label.textColor = UIColor(resource: ColorResource.Colors._181715) 
         label.font = .addFont(type: .SFProTextSemiBold, size: 17)
         return label
     }()
     
     var switchNotification: UISwitch = {
        var switchNotification = UISwitch()
-        switchNotification.onTintColor = .Colors.B_5_A_380
+        switchNotification.onTintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         return switchNotification
     }()
     
     var subtitleLabel: UILabel = {
        var label = UILabel()
         label.text = "Какой-то дескрипшн"
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.font = .addFont(type: .SFProTextMedium, size: 15)
         label.numberOfLines = 0
         return label
@@ -59,11 +59,11 @@ extension NotificationViewController {
     func setupNavigationBar(){
         navigationItem.title = "Уведомления"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Profile.iconBack, style: .done, target: self, action: #selector(dismissView))
-        navigationItem.leftBarButtonItem?.tintColor = .Colors.B_5_A_380
+        navigationItem.leftBarButtonItem?.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
     }
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(titleLabel)
         view.addSubview(switchNotification)
         view.addSubview(subtitleLabel)

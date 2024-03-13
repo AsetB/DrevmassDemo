@@ -15,15 +15,15 @@ class TextFieldView: UIView {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .addFont(type: .SFProTextMedium, size: 13)
-        label.textColor = .Colors._989898
+        label.textColor = UIColor(resource: ColorResource.Colors._989898) 
         return label
     }()
     
     var textfield: UITextField = {
         let textField = UITextField()
-        textField.textColor = .Colors._181715
+        textField.textColor = UIColor(resource: ColorResource.Colors._181715) 
         textField.font = .addFont(type: .SFProTextSemiBold, size: 17)
-        textField.attributedPlaceholder = NSAttributedString(string: "", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors.A_1_A_1_A_1])
+        textField.attributedPlaceholder = NSAttributedString(string: "", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors.A_1_A_1_A_1) ])
         textField.addTarget(self, action: #selector(editingDidBegin), for: .editingDidBegin)
         textField.addTarget(self, action: #selector(editingDidEnd), for: .editingDidEnd)
         textField.addTarget(self, action: #selector(changeColorToRed), for: .editingChanged)
@@ -32,7 +32,7 @@ class TextFieldView: UIView {
     
     var viewUnderLine: UIView = {
        var view = UIView()
-        view.backgroundColor = .Colors.E_0_DEDD
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         return view
     }()
     
@@ -58,21 +58,21 @@ class TextFieldView: UIView {
 extension TextFieldView {
     @objc  func changeColorToRed() {
         if textfield.text == "" {
-            titleLabel.textColor = .Colors.FA_5_C_5_C
-            viewUnderLine.backgroundColor = .Colors.FA_5_C_5_C
+            titleLabel.textColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C) 
+            viewUnderLine.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C) 
         }
      }
 
     
     @objc func editingDidBegin() {
-        titleLabel.textColor = .Colors.B_5_A_380
-        viewUnderLine.backgroundColor = .Colors.B_5_A_380
+        titleLabel.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380) 
+        viewUnderLine.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         clearButton.isHidden = false
     }
     
     @objc func editingDidEnd() {
-        titleLabel.textColor = .Colors._989898
-        viewUnderLine.backgroundColor = .Colors.E_0_DEDD
+        titleLabel.textColor = UIColor(resource: ColorResource.Colors._989898) 
+        viewUnderLine.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         clearButton.isHidden = true
     }
     

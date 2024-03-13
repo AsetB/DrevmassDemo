@@ -26,7 +26,7 @@ class SupportViewController: UIViewController {
     lazy var leftButton: UIButton = {
         var button = UIButton()
         button.setImage(.Profile.iconBack, for: .normal)
-        button.tintColor = .Colors.B_5_A_380
+        button.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.contentMode = .scaleAspectFill
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         return button
@@ -35,9 +35,9 @@ class SupportViewController: UIViewController {
     var textViewForText: UITextView = {
        var textview = UITextView()
         textview.textAlignment = .left
-        textview.textColor = .Colors._181715
+        textview.textColor = UIColor(resource: ColorResource.Colors._181715) 
         textview.font = .addFont(type: .SFProTextRegular, size: 17)
-        textview.tintColor = .Colors.B_5_A_380
+        textview.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         textview.textContainerInset = UIEdgeInsets(top: 0, left: 16, bottom: 30, right: 16)
         return textview
     }()
@@ -45,14 +45,14 @@ class SupportViewController: UIViewController {
     var placeholderLabel: UILabel = {
        var label = UILabel()
        label.text = "Опишите проблему"
-       label.textColor = .Colors.A_1_A_1_A_1
+       label.textColor = UIColor(resource: ColorResource.Colors.A_1_A_1_A_1)
        label.font = .addFont(type: .SFProTextRegular, size: 17)
         return label
     }()
     
     var sentButton: UIButton = {
         var button = UIButton()
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.setTitle("Отправить", for: .normal)
         button.layer.cornerRadius = 24
         button.addTarget(self, action: #selector(sentMessage), for: .touchUpInside)
@@ -135,7 +135,7 @@ extension SupportViewController {
     // - MARK: - setups
 
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(titleLabel)
         view.addSubview(leftButton)
         view.addSubview(textViewForText)

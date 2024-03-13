@@ -18,7 +18,7 @@ class InformationAboutAppViewController: UIViewController {
     var aboutCompanyButton: UIButton = {
        var button = UIButton()
         button.setTitle("О компании", for: .normal)
-        button.setTitleColor(.Colors._181715, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors._181715) , for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(showAboutCompanyViewController), for: .touchUpInside)
@@ -34,14 +34,14 @@ class InformationAboutAppViewController: UIViewController {
     
     var viewUnderCompany: UIView = {
         var view = UIView()
-        view.backgroundColor = .Colors.E_0_DEDD
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         return view
     }()   
     
     var aboutAppButton: UIButton = {
        var button = UIButton()
         button.setTitle("О приложении", for: .normal)
-        button.setTitleColor(.Colors._181715, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors._181715) , for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(showAboutAppViewController), for: .touchUpInside)
@@ -56,7 +56,7 @@ class InformationAboutAppViewController: UIViewController {
     
     var viewUnderApp: UIView = {
         var view = UIView()
-        view.backgroundColor = .Colors.E_0_DEDD
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
         return view
     }()
     
@@ -90,7 +90,7 @@ class InformationAboutAppViewController: UIViewController {
     var titleLabel: UILabel = {
        var label = UILabel()
         label.text = "Мы в соцсетях:"
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.font = .addFont(type: .SFProTextRegular, size: 15)
         return label
     }()
@@ -174,11 +174,11 @@ extension InformationAboutAppViewController {
     func setupNavigationBar(){
         navigationItem.title = "Информация"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Profile.iconBack, style: .done, target: self, action: #selector(dismissView))
-        navigationItem.leftBarButtonItem?.tintColor = .Colors.B_5_A_380
+        navigationItem.leftBarButtonItem?.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
     }
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(aboutCompanyButton)
         view.addSubview(arrowForCompanyButton)
         view.addSubview(viewUnderCompany)

@@ -11,7 +11,7 @@ class BonusHistoryTableViewCell: UITableViewCell {
     
     var titleLabel: UILabel = {
        var label = UILabel()
-        label.textColor = .Colors._302_C_28
+        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28) 
         label.font = UIFont(name: "SFProText-Regular", size: 15)
         label.numberOfLines = 2
         return label
@@ -19,14 +19,14 @@ class BonusHistoryTableViewCell: UITableViewCell {
     
     var subtitleLabel: UILabel = {
        var label = UILabel()
-        label.textColor = .Colors._989898
+        label.textColor = UIColor(resource: ColorResource.Colors._989898) 
         label.font = UIFont(name: "SFProText-Regular", size: 13)
         return label
     }()
     
     var bonusLabel: UILabel = {
        var label = UILabel()
-        label.textColor = .Colors._302_C_28
+        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28) 
         label.font = UIFont(name: "SFProText-Bold", size: 15)
         return label
     }()
@@ -40,7 +40,7 @@ class BonusHistoryTableViewCell: UITableViewCell {
     
     var dashedLineView: DashedLineView = {
        var view = DashedLineView()
-        view.dashColor = .Colors.D_6_D_1_CE
+        view.dashColor = UIColor(resource: ColorResource.Colors.D_6_D_1_CE) 
         view.backgroundColor = .clear
         view.spaceBetweenDash = 5
         view.perDashLength = 5
@@ -67,7 +67,7 @@ class BonusHistoryTableViewCell: UITableViewCell {
 
 extension BonusHistoryTableViewCell {
     func setupView() {
-        contentView.backgroundColor = .Colors.FFFFFF
+        contentView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         contentView.addSubview(titleLabel)
         contentView.addSubview(subtitleLabel)
         contentView.addSubview(bonusLabel)

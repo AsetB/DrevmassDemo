@@ -19,7 +19,7 @@ class SignUpViewController: UIViewController {
         let label = UILabel()
         label.text = "Регистрация"
         label.font = .addFont(type: .SFProDisplayBold, size: 28)
-        label.textColor = .Colors._181715
+        label.textColor = UIColor(resource: ColorResource.Colors._181715) 
         label.numberOfLines = 2
         return label
     }()
@@ -32,7 +32,7 @@ class SignUpViewController: UIViewController {
 Древмасс.
 """
         label.font = .addFont(type: .SFProTextRegular, size: 15)
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.numberOfLines = 3
         return label
     }()
@@ -128,35 +128,35 @@ class SignUpViewController: UIViewController {
     
     private lazy var dividerNameView: UIView = {
         let divider = UIView()
-        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.Colors.B_5_A_380)
+        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.UIColor(resource: ColorResource.Colors.B_5_A_380) )
         return divider
     }()
     
     private lazy var dividerEmailView: UIView = {
         let divider = UIView()
-        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.Colors.B_5_A_380)
+        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.UIColor(resource: ColorResource.Colors.B_5_A_380) )
         return divider
     }()
     
     private lazy var dividerPhoneView: UIView = {
         let divider = UIView()
-        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.Colors.B_5_A_380)
+        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.UIColor(resource: ColorResource.Colors.B_5_A_380) )
         return divider
     }()
     
     private lazy var dividerPassView: UIView = {
         let divider = UIView()
-        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.Colors.B_5_A_380)
+        divider.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1) //tint UIColor(resource: ColorResource.UIColor(resource: ColorResource.Colors.B_5_A_380) )
         return divider
     }()
     
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("Продолжить", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
-        button.backgroundColor = .Colors.D_3_C_8_B_3
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3) 
         button.addTarget(self, action: #selector(signUp), for: .touchUpInside)
         return button
     }()
@@ -180,10 +180,10 @@ class SignUpViewController: UIViewController {
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationItem.title = " "
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Registration.backArrowBrand, style: .done, target: self, action: #selector(dismissView))
-        navigationController?.navigationBar.tintColor = .Colors.B_5_A_380
+        navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         addViews()
         setConstraints()
         setViews()
@@ -355,10 +355,10 @@ class SignUpViewController: UIViewController {
             return
         }
         if !name.isEmpty && !email.isEmpty && !phone.isEmpty && !pass.isEmpty {
-            signUpButton.backgroundColor = .Colors.B_5_A_380
+            signUpButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             signUpButton.isEnabled = true
         } else {
-            signUpButton.backgroundColor = .Colors.D_3_C_8_B_3
+            signUpButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3) 
             signUpButton.isEnabled = false
         }
     }

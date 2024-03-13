@@ -34,7 +34,7 @@ class RestorePassViewController: UIViewController {
         let label = UILabel()
         label.text = "Введите email для сброса пароля."
         label.font = .addFont(type: .SFProTextRegular, size: 15)
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         return label
     }()
     
@@ -42,7 +42,7 @@ class RestorePassViewController: UIViewController {
         let label = UILabel()
         label.text = "Email"
         label.font = .addFont(type: .SFProTextMedium, size: 13)
-        label.textColor = .Colors.B_5_A_380
+        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         return label
     }()
     
@@ -76,10 +76,10 @@ class RestorePassViewController: UIViewController {
     private lazy var resetPassButton: UIButton = {
         let button = UIButton()
         button.setTitle("Сбросить пароль", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.layer.cornerRadius = 24
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.addTarget(self, action: #selector(resetPass), for: .touchUpInside)
         return button
     }()
@@ -87,7 +87,7 @@ class RestorePassViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Сбросить пароль"//cделай как лейбл на верху
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         setViews()
         setConstraints()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -199,10 +199,10 @@ class RestorePassViewController: UIViewController {
             return
         }
         if !email.isEmpty {
-            resetPassButton.backgroundColor = .Colors.B_5_A_380
+            resetPassButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             resetPassButton.isEnabled = true
         } else {
-            resetPassButton.backgroundColor = .Colors.D_3_C_8_B_3
+            resetPassButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
             resetPassButton.isEnabled = false
         }
     }

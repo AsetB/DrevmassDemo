@@ -22,7 +22,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         let label = UILabel()
         label.text = ""
         label.font = .addFont(type: .SFProDisplayBold, size: 28)
-        label.textColor = .Colors._181715
+        label.textColor = UIColor(resource: ColorResource.Colors._181715) 
         label.numberOfLines = 2
         return label
     }()
@@ -30,7 +30,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = .addFont(type: .SFProTextRegular, size: 17)
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.numberOfLines = 3
         return label
     }()
@@ -38,10 +38,10 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     private lazy var signInButton: UIButton = {
         let button = UIButton()
         button.setTitle("Вход", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.addTarget(self, action: #selector(goToSignIn), for: .touchUpInside)
         return button
     }()
@@ -49,7 +49,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("Регистрация", for: .normal)
-        button.setTitleColor(.Colors.B_5_A_380, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.B_5_A_380) , for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
         button.layer.borderWidth = 2
@@ -68,7 +68,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         setSegmentBar()
         setViews()
         setConstraints()
@@ -168,7 +168,7 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     
     var trackColor: UIColor { return .Colors._302C28A30 }
     
-    var progressColor: UIColor {  return .Colors.FFFFFF }
+    var progressColor: UIColor {  return UIColor(resource: ColorResource.Colors.FFFFFF) }
     
     var roundCornerType: SGCornerType { return .roundCornerBar(cornerRadious: 5) }
 }

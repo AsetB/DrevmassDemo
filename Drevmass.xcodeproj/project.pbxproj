@@ -35,6 +35,7 @@
 		D45B754C2B99E22200359A22 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B752E2B99E22200359A22 /* Onboarding.swift */; };
 		D45B754D2B99E22200359A22 /* BurningBonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45B752F2B99E22200359A22 /* BurningBonus.swift */; };
 		D45B75502B99E25500359A22 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = D45B754F2B99E25500359A22 /* SVProgressHUD */; };
+		D462A6EF2BA2154C00BC610F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D462A6EE2BA2154C00BC610F /* SnapKit */; };
 		D4CE67BA2B9A16AC0092A51D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67B92B9A16AC0092A51D /* User.swift */; };
 		D4CE67BD2B9A27E30092A51D /* PromoCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67BC2B9A27E30092A51D /* PromoCodeViewController.swift */; };
 		D4CE67C12B9B89880092A51D /* InfoAboutMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CE67C02B9B89880092A51D /* InfoAboutMeViewController.swift */; };
@@ -55,9 +56,6 @@
 		DB22E2592B95C1FB00694714 /* SF-Pro-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2542B95C1FB00694714 /* SF-Pro-Text-Medium.otf */; };
 		DB22E25A2B95C1FB00694714 /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DB22E2552B95C1FB00694714 /* SF-Pro-Text-Semibold.otf */; };
 		DB22E25C2B95CFBB00694714 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB22E25B2B95CFBB00694714 /* TabBarController.swift */; };
-		DB22E2722B95FE7E00694714 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2712B95FE7E00694714 /* SnapKit */; };
-		DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; };
-		DB22E2752B95FE8200694714 /* SnapKit-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = DB22E2732B95FE8200694714 /* SnapKit-Dynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DB6E51A22B999A810053F5CE /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DB6E51A12B999A810053F5CE /* KeychainSwift */; };
 		DB6E51A52B999AAD0053F5CE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DB6E51A42B999AAD0053F5CE /* Alamofire */; };
 		DB6E51A82B999ABF0053F5CE /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = DB6E51A72B999ABF0053F5CE /* SwiftyJSON */; };
@@ -94,7 +92,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				DB22E2752B95FE8200694714 /* SnapKit-Dynamic in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -170,9 +167,8 @@
 				D45B75502B99E25500359A22 /* SVProgressHUD in Frameworks */,
 				DB6E51A22B999A810053F5CE /* KeychainSwift in Frameworks */,
 				DB6E51A52B999AAD0053F5CE /* Alamofire in Frameworks */,
-				DB22E2722B95FE7E00694714 /* SnapKit in Frameworks */,
+				D462A6EF2BA2154C00BC610F /* SnapKit in Frameworks */,
 				DB6E51A82B999ABF0053F5CE /* SwiftyJSON in Frameworks */,
-				DB22E2742B95FE8200694714 /* SnapKit-Dynamic in Frameworks */,
 				D4CE67DC2BA081FE0092A51D /* PanModal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,13 +560,12 @@
 			);
 			name = Drevmass;
 			packageProductDependencies = (
-				DB22E2712B95FE7E00694714 /* SnapKit */,
-				DB22E2732B95FE8200694714 /* SnapKit-Dynamic */,
 				DB6E51A12B999A810053F5CE /* KeychainSwift */,
 				DB6E51A42B999AAD0053F5CE /* Alamofire */,
 				DB6E51A72B999ABF0053F5CE /* SwiftyJSON */,
 				D45B754F2B99E25500359A22 /* SVProgressHUD */,
 				D4CE67DB2BA081FE0092A51D /* PanModal */,
+				D462A6EE2BA2154C00BC610F /* SnapKit */,
 			);
 			productName = Drevmass;
 			productReference = DBDAA7102B93A12100CD42BE /* Drevmass.app */;
@@ -1142,20 +1137,15 @@
 			package = D45B754E2B99E25500359A22 /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
 			productName = SVProgressHUD;
 		};
-		D4CE67DB2BA081FE0092A51D /* PanModal */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D4CE67DA2BA081FE0092A51D /* XCRemoteSwiftPackageReference "PanModal" */;
-			productName = PanModal;
-		};
-		DB22E2712B95FE7E00694714 /* SnapKit */ = {
+		D462A6EE2BA2154C00BC610F /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
-		DB22E2732B95FE8200694714 /* SnapKit-Dynamic */ = {
+		D4CE67DB2BA081FE0092A51D /* PanModal */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DB22E26F2B95FE4B00694714 /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
+			package = D4CE67DA2BA081FE0092A51D /* XCRemoteSwiftPackageReference "PanModal" */;
+			productName = PanModal;
 		};
 		DB6E51A12B999A810053F5CE /* KeychainSwift */ = {
 			isa = XCSwiftPackageProductDependency;

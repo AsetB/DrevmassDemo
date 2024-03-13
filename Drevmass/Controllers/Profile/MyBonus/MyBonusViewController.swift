@@ -30,7 +30,7 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
     }()
     var contentview: UIView = {
         var view = UIView()
-        view.backgroundColor = .Colors.B_5_A_380
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         return view
     }()
     
@@ -52,7 +52,7 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var pointsLabel: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProDisplay-Bold", size: 34)
         label.text = "0"
         return label
@@ -67,7 +67,7 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var bonusToRUBLabel: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProText-Semibold", size: 15)
         label.text = "1 балл = 1 ₽"
         return label
@@ -75,9 +75,9 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
 
    lazy var burningBonusLabel: UILabel = {
         var label = UILabel()
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProText-Regular", size: 13)
-        label.backgroundColor = .Colors._302C28A20
+        label.backgroundColor = UIColor(resource: ColorResource.Colors._302C28A20) 
         label.heightAnchor.constraint(equalToConstant: 30).isActive = true
         label.layer.cornerRadius = 8
         label.clipsToBounds = true
@@ -96,7 +96,7 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
     // UI TableView
     lazy var tableView: UITableView = {
         var tableView = UITableView()
-        tableView.backgroundColor = .Colors.FFFFFF
+        tableView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         tableView.separatorStyle = .none
         tableView.register(BonusHistoryTableViewCell.self, forCellReuseIdentifier: "BonusHistoryCell")
         tableView.delegate = self
@@ -117,8 +117,8 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
             burningBonusLabel.isHidden = true
         }else{
       //            ПРОВЕРИТЬ ПРАВИЛЬНО ЛИ ПЕРЕДАЮТСЯ ДАННЫЕ
-            let firstAttributedString = NSAttributedString(string: " 🔥 \(burningBonus.bonus)", attributes: [.font : UIFont.addFont(type: .SFProTextBold , size: 13), .foregroundColor : UIColor.Colors.FFFFFF ])
-            let secondAttributedString = NSAttributedString(string: "\(burningBonus.burning_date) ", attributes: [.font : UIFont.addFont(type: .SFProTextRegular , size: 13), .foregroundColor : UIColor.Colors.FFFFFF ])
+            let firstAttributedString = NSAttributedString(string: " 🔥 \(burningBonus.bonus)", attributes: [.font : UIFont.addFont(type: .SFProTextBold , size: 13), .foregroundColor : UIColor(resource: ColorResource.Colors.FFFFFF) ])
+            let secondAttributedString = NSAttributedString(string: "\(burningBonus.burning_date) ", attributes: [.font : UIFont.addFont(type: .SFProTextRegular , size: 13), .foregroundColor : UIColor(resource: ColorResource.Colors.FFFFFF) ])
             
             let combinedString = NSMutableAttributedString()
             combinedString.append(firstAttributedString)
@@ -147,7 +147,7 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         if transactionBonusArray[indexPath.row].transaction_type == "-" {
-            cell.bonusLabel.textColor = .Colors.FA_5_C_5_C
+            cell.bonusLabel.textColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C) 
         }
         
            let dateFormatter = DateFormatter()
@@ -239,7 +239,7 @@ extension MyBonusViewController {
     // - MARK: - setups
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(scrollView)
         scrollView.addSubview(contentview)
         contentview.addSubview(patternTreeImageview)
@@ -259,7 +259,7 @@ extension MyBonusViewController {
         rightBarButton.tintColor = .white
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Profile.iconBack, style: .done, target: self, action: #selector(dismissView))
-        navigationItem.leftBarButtonItem?.tintColor = .Colors.FFFFFF
+        navigationItem.leftBarButtonItem?.tintColor = UIColor(resource: ColorResource.Colors.FFFFFF)
     }
     
     func setupConstraints() {

@@ -16,7 +16,7 @@ class PromoCodeViewController: UIViewController {
 
     var viewForPromocode: UIView = {
       var view = UIView()
-        view.backgroundColor = .Colors._765657
+        view.backgroundColor = UIColor(resource: ColorResource.Colors._765657) 
         view.layer.cornerRadius = 24
         return view
     }()
@@ -24,14 +24,14 @@ class PromoCodeViewController: UIViewController {
     var titleLabel: UILabel = {
        var label = UILabel()
         label.text = "Промокод для друга"
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = .addFont(type: .SFProTextBold, size: 20)
         return label
     }()
     
     var subtitleLabel: UILabel = {
        var label = UILabel()
-        label.textColor = .Colors.ffffffA60
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = .addFont(type: .SFProTextRegular, size: 15)
         return label
     }()
@@ -39,7 +39,7 @@ class PromoCodeViewController: UIViewController {
     var codeLabel: UILabel = {
        var label = UILabel()
         label.text = "JD58KA6H"
-        label.textColor = .Colors.FFFFFF
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = .addFont(type: .SFProDisplayBold, size: 22)
         label.textAlignment = .center
         return label
@@ -48,7 +48,7 @@ class PromoCodeViewController: UIViewController {
     var dashedLineView: DashedLineView = {
        var view = DashedLineView()
         view.backgroundColor = .clear
-        view.dashColor = .Colors.FFFFFF
+        view.dashColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.spaceBetweenDash = 8
         view.perDashLength = 8
         return view
@@ -64,7 +64,7 @@ class PromoCodeViewController: UIViewController {
     var shareButton: UIButton = {
        var button = UIButton()
         button.setTitle("Поделиться", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.setImage(.Profile.iconShare, for: .normal)
         button.contentHorizontalAlignment = .left
@@ -78,7 +78,7 @@ class PromoCodeViewController: UIViewController {
     var copyButton: UIButton = {
        var button = UIButton()
         button.setTitle("Скопировать", for: .normal)
-        button.setTitleColor(.Colors.FFFFFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.setImage(.Profile.iconCopy, for: .normal)
         button.titleLabel?.textAlignment = .left
@@ -91,7 +91,7 @@ class PromoCodeViewController: UIViewController {
     
     var existPromoButton: UIButton = {
        var button = UIButton()
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.setTitle("У меня есть промокод", for: .normal)
         button.layer.cornerRadius = 28
         button.addTarget(self, action: #selector(showAddPromocodeVC), for: .touchUpInside)
@@ -182,14 +182,14 @@ extension PromoCodeViewController {
         navigationItem.title = "Промокоды"
         let rightBarButton = UIBarButtonItem(image: .Profile.iconInfoBeigeProfile, style: .plain, target: self, action: #selector(showInfoVC))
         navigationItem.setRightBarButton(rightBarButton, animated: true)
-        rightBarButton.tintColor = .Colors.B_5_A_380
+        rightBarButton.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Profile.iconBack, style: .done, target: self, action: #selector(dismissView))
-        navigationItem.leftBarButtonItem?.tintColor = .Colors.B_5_A_380
+        navigationItem.leftBarButtonItem?.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
     }
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(viewForPromocode)
         viewForPromocode.addSubview(titleLabel)
         viewForPromocode.addSubview(subtitleLabel)

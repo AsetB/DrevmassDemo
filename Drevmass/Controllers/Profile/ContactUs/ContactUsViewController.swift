@@ -25,13 +25,13 @@ class ContactUsViewController: UIViewController, PanModalPresentable {
         return .maxHeightWithTopInset(40)
     }
     var panModalBackgroundColor: UIColor {
-        return .Colors._302C28A65
+        return UIColor(resource: ColorResource.Colors._302C28A65)
     }
     var cornerRadius: CGFloat {
         return 24
     }
     var dragIndicatorBackgroundColor: UIColor {
-        return .Colors.FFFFFF
+        return UIColor(resource: ColorResource.Colors.FFFFFF)
     }
     
     //    MARK: - UI element
@@ -40,7 +40,7 @@ class ContactUsViewController: UIViewController, PanModalPresentable {
        var label = UILabel()
         label.text = "Связаться с нами"
         label.font = .addFont(type: .SFProTextSemiBold, size: 20)
-        label.textColor = .Colors._302_C_28
+        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28) 
         return label
     }()
     
@@ -154,7 +154,7 @@ extension ContactUsViewController {
     //    MARK: - setups
     func setupView() {
         
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
 //        view.layer.cornerRadius = 24
 //        view.layer.masksToBounds = true
         view.addSubview(titlLabel)

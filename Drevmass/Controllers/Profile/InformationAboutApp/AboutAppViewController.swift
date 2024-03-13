@@ -22,7 +22,7 @@ class AboutAppViewController: UIViewController {
      var rightButton: UIButton = {
         var button = UIButton()
         button.setTitle("Закрыть", for: .normal)
-        button.setTitleColor(.Colors._007_AFF, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors._007_AFF) , for: .normal)
          button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         return button
@@ -40,7 +40,7 @@ class AboutAppViewController: UIViewController {
     var DrevmassLabel: UILabel = {
        var label = UILabel()
         label.text = "Древмасс"
-        label.textColor = .Colors._302_C_28
+        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28) 
         label.font = .addFont(type: .SFProDisplayBold, size: 22)
         return label
     }()  
@@ -48,7 +48,7 @@ class AboutAppViewController: UIViewController {
     var versionLabel: UILabel = {
        var label = UILabel()
         label.text = "Версия 1.0.4"
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.font = .addFont(type: .SFProTextRegular, size: 15)
         return label
     }() 
@@ -58,7 +58,7 @@ class AboutAppViewController: UIViewController {
         label.text = "© 2023 Name Inc\nВсе права защищены"
         label.numberOfLines = 2
         label.textAlignment = .center
-        label.textColor = .Colors._787878
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.font = .addFont(type: .SFProTextRegular, size: 15)
         return label
     }()
@@ -86,7 +86,7 @@ extension AboutAppViewController {
     // - MARK: - setups
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(titleLabel)
         view.addSubview(rightButton)
         view.addSubview(imageView)

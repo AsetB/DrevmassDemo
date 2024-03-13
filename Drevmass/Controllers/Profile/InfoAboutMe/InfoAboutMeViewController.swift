@@ -28,7 +28,7 @@ class InfoAboutMeViewController: UIViewController {
     }()
     var contentview: UIView = {
         var view = UIView()
-            view.backgroundColor = .Colors.FFFFFF
+            view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         return view
     }()
     
@@ -54,6 +54,7 @@ class InfoAboutMeViewController: UIViewController {
         var textfieldView = TextFieldView()
         textfieldView.titleLabel.text = "Номер телефона"
         textfieldView.textfield.keyboardType = .numberPad
+        
         return textfieldView
     }() 
     
@@ -74,7 +75,7 @@ class InfoAboutMeViewController: UIViewController {
     var genderLabel: UILabel = {
         let label = UILabel()
         label.font = .addFont(type: .SFProTextMedium, size: 13)
-        label.textColor = .Colors._989898
+        label.textColor = UIColor(resource: ColorResource.Colors._989898) 
         label.text = "Пол"
         return label
     }()
@@ -84,7 +85,7 @@ class InfoAboutMeViewController: UIViewController {
         segmentedControl.insertSegment(withTitle: "Не указано", at: 0, animated: false)
         segmentedControl.insertSegment(withTitle: "Мужской", at: 1, animated: false)
         segmentedControl.insertSegment(withTitle: "Женский", at: 2, animated: false)
-        segmentedControl.backgroundColor = .Colors.EFEBE_9
+        segmentedControl.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9) 
         return segmentedControl
     }()
     
@@ -98,7 +99,7 @@ class InfoAboutMeViewController: UIViewController {
     var heightTextField: TextFieldView = {
        var textfieldview = TextFieldView()
         textfieldview.titleLabel.text = "  "
-        textfieldview.textfield.attributedPlaceholder = NSAttributedString(string: "Рост", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors.A_1_A_1_A_1])
+        textfieldview.textfield.attributedPlaceholder = NSAttributedString(string: "Рост", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors.A_1_A_1_A_1) ])
         textfieldview.widthAnchor.constraint(equalToConstant: 159.5).isActive = true
         textfieldview.textfield.keyboardType = .numberPad
         return textfieldview
@@ -107,7 +108,7 @@ class InfoAboutMeViewController: UIViewController {
     var weightTextField: TextFieldView = {
        var textfieldview = TextFieldView()
         textfieldview.titleLabel.text = "  "
-        textfieldview.textfield.attributedPlaceholder = NSAttributedString(string: "Вес", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor.Colors.A_1_A_1_A_1])
+        textfieldview.textfield.attributedPlaceholder = NSAttributedString(string: "Вес", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 17), .foregroundColor: UIColor(resource: ColorResource.Colors.A_1_A_1_A_1) ])
         textfieldview.widthAnchor.constraint(equalToConstant: 159.5).isActive = true
         textfieldview.textfield.keyboardType = .numberPad
         return textfieldview
@@ -116,7 +117,7 @@ class InfoAboutMeViewController: UIViewController {
     var yourActivityLabel: UILabel = {
         let label = UILabel()
         label.font = .addFont(type: .SFProTextMedium, size: 13)
-        label.textColor = .Colors._989898
+        label.textColor = UIColor(resource: ColorResource.Colors._989898) 
         label.text = "Ваша активность"
         return label
     }()
@@ -126,14 +127,14 @@ class InfoAboutMeViewController: UIViewController {
         segmentedControl.insertSegment(withTitle: "Низкая", at: 0, animated: false)
         segmentedControl.insertSegment(withTitle: "Средняя", at: 1, animated: false)
         segmentedControl.insertSegment(withTitle: "Высокая", at: 2, animated: false)
-        segmentedControl.backgroundColor = .Colors.EFEBE_9
+        segmentedControl.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9) 
         return segmentedControl
     }()
     
     var deleteAccountButton: UIButton = {
        var button = UIButton()
         button.setTitle("Удалить аккаунт", for: .normal)
-        button.setTitleColor(.Colors.FA_5_C_5_C, for: .normal)
+        button.setTitleColor(UIColor(resource: ColorResource.Colors.FA_5_C_5_C) , for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.addTarget(self, action: #selector(showAlertForDeleteAccount), for: .touchUpInside)
         return button
@@ -141,7 +142,7 @@ class InfoAboutMeViewController: UIViewController {
     
     var saveButton: UIButton = {
        var button = UIButton()
-        button.backgroundColor = .Colors.B_5_A_380
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.setTitle("Сохранить изменения", for: .normal)
         button.layer.cornerRadius = 24
         button.addTarget(self, action: #selector(postUserInfo), for: .touchUpInside)
@@ -297,10 +298,10 @@ extension InfoAboutMeViewController {
    @objc  func activationSaveButton() {
        if nameTextFieldView.textfield.text == "" {
            saveButton.isEnabled = false
-           saveButton.backgroundColor = .Colors.D_3_C_8_B_3
+           saveButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3) 
        }else{
            saveButton.isEnabled = true
-           saveButton.backgroundColor = .Colors.B_5_A_380
+           saveButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
        }
     }
     
@@ -324,11 +325,11 @@ extension InfoAboutMeViewController {
     func setupNavigationBar(){
         navigationItem.title = "Мои данные"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .Profile.iconBack, style: .done, target: self, action: #selector(dismissView))
-        navigationItem.leftBarButtonItem?.tintColor = .Colors.B_5_A_380
+        navigationItem.leftBarButtonItem?.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
     }
     
     func setupView() {
-        view.backgroundColor = .Colors.FFFFFF
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         view.addSubview(scrollView)
         scrollView.addSubview(contentview)
         contentview.addSubview(stackViewForTextfiels)
@@ -356,7 +357,7 @@ extension InfoAboutMeViewController {
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         // сама кнопка
         let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonAction))
-        doneButton.tintColor = .Colors.B_5_A_380
+        doneButton.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         
         
         doneToolbar.items = [flexSpace, doneButton]
