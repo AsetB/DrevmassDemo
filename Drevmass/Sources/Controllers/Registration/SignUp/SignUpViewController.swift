@@ -68,7 +68,7 @@ class SignUpViewController: UIViewController {
         return textfield
     }()
     
-    private lazy var phoneTextfield: TextFieldWithPadding = {
+    lazy var phoneTextfield: TextFieldWithPadding = {
         let textfield = TextFieldWithPadding()
         let placeholderText = "Номер телефона"
         textfield.defaultTextAttributes = [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._181715)]
@@ -80,6 +80,7 @@ class SignUpViewController: UIViewController {
         textfield.addTarget(self, action: #selector(textfieldEditingChanged), for: .editingChanged)
         textfield.addTarget(self, action: #selector(textfieldAllEditing), for: .allEditingEvents)
         textfield.delegate = self
+        textfield.keyboardType = .phonePad
         return textfield
     }()
     
@@ -301,7 +302,6 @@ class SignUpViewController: UIViewController {
             make.height.equalTo(56)
         }
     }
-    //- MARK: - Set Data
     //- MARK: - Button actions
     @objc func goToSignIn() {
         if let previousVC = previousVC, previousVC is SignInViewController {
@@ -371,6 +371,10 @@ class SignUpViewController: UIViewController {
         self.signUpBottomToSignInTop?.update(inset: 68)
     }
     @objc private func signUp() {
+        nameTextfield.resignFirstResponder()
+        emailTextfield.resignFirstResponder()
+        phoneTextfield.resignFirstResponder()
+        passTextfield.resignFirstResponder()
         guard let name = nameTextfield.text else { return }
         guard let phone = phoneTextfield.text else { return }
         guard let pass = passTextfield.text else { return }
@@ -378,6 +382,7 @@ class SignUpViewController: UIViewController {
         
         if !email.isEmail() {
             showAlertMessage(title: "Некорректный email", message: "Попробуйте снова")
+            showRedError()
             return
         }
         
@@ -397,6 +402,7 @@ class SignUpViewController: UIViewController {
                     self.showAlertMessage(title: "Успех", message: "Для завершения регистрации проверьте почту")
                 }
             } else {
+                self.showRedError()
                 var resultString = ""
                 if let data = response.data {
                     resultString = String(data: data, encoding: .utf8)!
@@ -411,6 +417,26 @@ class SignUpViewController: UIViewController {
         }
     }
     //- MARK: - Textfield actions
+    private func showRedError() {
+        nameTextfield.setIcon(UIImage(resource: ImageResource.Registration.profile24Red))
+        dividerNameView.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+        emailTextfield.setIcon(UIImage(resource: ImageResource.Registration.mail24Red))
+        dividerEmailView.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+        phoneTextfield.setIcon(UIImage(resource: ImageResource.Registration.phone24Red))
+        dividerPhoneView.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+        passTextfield.setIcon(UIImage(resource: ImageResource.Registration.lock24Red))
+        dividerPassView.backgroundColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+    }
+    private func hideRedError() {
+        nameTextfield.setIcon(UIImage(resource: ImageResource.Registration.profile24))
+        dividerNameView.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        emailTextfield.setIcon(UIImage(resource: ImageResource.Registration.mail24))
+        dividerEmailView.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1)
+        phoneTextfield.setIcon(UIImage(resource: ImageResource.Registration.phone24))
+        dividerPhoneView.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        passTextfield.setIcon(UIImage(resource: ImageResource.Registration.lock24))
+        dividerPassView.backgroundColor = UIColor(red: 223/255, green: 222/255, blue: 221/255, alpha: 1)
+    }
     @objc func textfieldEditBegin(textField: TextFieldWithPadding) {
         switch textField {
         case nameTextfield:
@@ -423,6 +449,7 @@ class SignUpViewController: UIViewController {
                 } else {
                     clearNameButton.isHidden = false
                 }
+                nameTextfield.setIcon(UIImage(resource: ImageResource.Registration.profile24))
                 dividerNameView.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             }()
         case emailTextfield:
@@ -435,6 +462,7 @@ class SignUpViewController: UIViewController {
                 } else {
                     clearEmailButton.isHidden = false
                 }
+                emailTextfield.setIcon(UIImage(resource: ImageResource.Registration.mail24))
                 dividerEmailView.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             }()
         case phoneTextfield:
@@ -447,10 +475,12 @@ class SignUpViewController: UIViewController {
                 } else {
                     clearPhoneButton.isHidden = false
                 }
+                phoneTextfield.setIcon(UIImage(resource: ImageResource.Registration.phone24))
                 dividerPhoneView.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             }()
         case passTextfield:
             return {
+                passTextfield.setIcon(UIImage(resource: ImageResource.Registration.lock24))
                 dividerPassView.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             }()
         default:
@@ -545,23 +575,5 @@ class SignUpViewController: UIViewController {
                 enableSignUp()
             }()
         }
-    }
-}
-//- MARK: - Phone number mask
-extension SignUpViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == phoneTextfield {
-            let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
-            
-            let formattedText = newText.applyPatternOnNumbers(pattern: "+# (###) ###-####", replacementCharacter: "#")
-            
-            let maxLength = "+# ### ### ## ##".count
-                if formattedText.count > maxLength {
-                return false
-            }
-            textField.text = formattedText
-            return false
-        }
-        return true
     }
 }

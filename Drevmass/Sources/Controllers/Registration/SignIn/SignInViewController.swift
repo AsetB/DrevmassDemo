@@ -147,7 +147,7 @@ class SignInViewController: UIViewController {
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)//UIColor(resource: ColorResource.Colors.FFFFFF)
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationItem.title = " "
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(resource: ImageResource.Registration.backArrowBrand), style: .done, target: self, action: #selector(dismissView))
         navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
