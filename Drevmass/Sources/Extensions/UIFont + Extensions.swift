@@ -10,6 +10,7 @@ import UIKit
 extension UIFont {
     public enum FontType: String {
         case SFProDisplayBold = "SFProDisplay-Bold"
+        case SFProDisplaySemibold = "SFProDisplay-Semibold"
         case SFProTextRegular = "SFProText-Regular"
         case SFProTextMedium = "SFProText-Medium"
         case SFProTextSemiBold = "SFProText-Semibold"

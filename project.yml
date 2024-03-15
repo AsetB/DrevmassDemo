@@ -41,6 +41,7 @@ targets:
             NSAllowsArbitraryLoads: true
           UIAppFonts:
             - SF-Pro-Display-Bold.otf
+            - SF-Pro-Display-Semibold.otf
             - SF-Pro-Text-Bold.otf
             - SF-Pro-Text-Medium.otf
             - SF-Pro-Text-Regular.otf

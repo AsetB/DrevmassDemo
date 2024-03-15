@@ -123,6 +123,19 @@ class CatalogMainViewController: UIViewController {
         let appearance = UINavigationBarAppearance()
         appearance.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
         appearance.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        
+        /*
+         https://stackoverflow.com/questions/69924596/swift-navigation-navigation-bar-changes-its-background-color-when-scroll-the
+             let navigationBarAppearance = UINavigationBarAppearance()
+             navigationBarAppearance.configureWithOpaqueBackground()
+             navigationBarAppearance.titleTextAttributes = [
+                 NSAttributedString.Key.foregroundColor : UIColor.white
+             ]
+             navigationBarAppearance.backgroundColor = UIColor.blue
+             UINavigationBar.appearance().standardAppearance = navigationBarAppearance
+             UINavigationBar.appearance().compactAppearance = navigationBarAppearance
+             UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+         */
 
         navigationItem.standardAppearance = appearance
         //navigationItem.scrollEdgeAppearance = appearance
