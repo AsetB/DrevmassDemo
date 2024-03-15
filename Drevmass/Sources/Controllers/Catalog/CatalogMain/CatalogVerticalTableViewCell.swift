@@ -75,9 +75,15 @@ class CatalogVerticalTableViewCell: UITableViewCell {
             make.height.equalTo(22)
         }
         basketButton.snp.makeConstraints { make in
-            make.top.equalTo(goodsImage.snp.bottom)
+            make.top.equalTo(goodsImage.snp.bottom).offset(12)
             make.trailing.equalToSuperview()
             make.size.equalTo(48)
         }
+    }
+    //- MARK: - Set Data
+    func setCell(image: UIImage, price: String, name: String) {
+        goodsImage.image = image
+        priceLabel.text = price
+        nameLabel.text = name
     }
 }

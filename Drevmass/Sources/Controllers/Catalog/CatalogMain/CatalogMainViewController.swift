@@ -9,14 +9,27 @@ import UIKit
 import SnapKit
 
 class CatalogMainViewController: UIViewController {
+    //- MARK: - Variables
+    enum CatalogView {
+        case collectionView
+        case verticalTableView
+        case horizontalTableView
+    }
+    var currentView: CatalogView = .collectionView
     //- MARK: - Local outlets
-    private lazy var catalogTitle: UILabel = {
-        let label = UILabel()
-        label.text = "Каталог"
-        label.font = .addFont(type: .SFProDisplayBold, size: 28)
-        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
-        label.textAlignment = .left
-        return label
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.isScrollEnabled = true
+        scrollView.bounces = true
+        scrollView.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
+        scrollView.showsVerticalScrollIndicator = true
+        //scrollView.contentInsetAdjustmentBehavior = .never
+        return scrollView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        return view
     }()
     
     private lazy var backView: UIView = {
@@ -47,11 +60,12 @@ class CatalogMainViewController: UIViewController {
     private lazy var changeCatalogViewButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.tile24), for: .normal)
+        button.addTarget(self, action: #selector(changeCatalogView), for: .touchUpInside)
         return button
     }()
     
-    private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
+    private lazy var collectionView: SelfSizingCollectionView = {
+        let collectionView = SelfSizingCollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CatalogCollectionViewCell.self, forCellWithReuseIdentifier: "catalogCell")
@@ -67,51 +81,100 @@ class CatalogMainViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
-        
+        collectionView.isScrollEnabled = false
+        collectionView.bounces = false
         return collectionView
     }()
     
-//    private lazy var verticalTableView: UITableView = {
-//        let tableView = UITableView()
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.separatorStyle = .none
-//        tableView.register(CatalogVerticalTableViewCell.self, forCellReuseIdentifier: "verticalCell")
-//        return tableView
-//    }()
-//    
-//    private lazy var horizontalTableView: UITableView = {
-//        let tableView = UITableView()
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.separatorStyle = .none
-//        tableView.register(CatalogHorizontalTableViewCell.self, forCellReuseIdentifier: "horizontalCell")
-//        return tableView
-//    }()
+    private lazy var verticalTableView: SelfSizingTableView = {
+        let tableView = SelfSizingTableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.register(CatalogVerticalTableViewCell.self, forCellReuseIdentifier: "verticalCell")
+        tableView.isScrollEnabled = false
+        tableView.bounces = false
+        return tableView
+    }()
+    
+    private lazy var horizontalTableView: SelfSizingTableView = {
+        let tableView = SelfSizingTableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.register(CatalogHorizontalTableViewCell.self, forCellReuseIdentifier: "horizontalCell")
+        tableView.isScrollEnabled = false
+        tableView.bounces = false
+        return tableView
+    }()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
         addViews()
         setConstraints()
+        showCatalogView(currentView)
+        horizontalTableView.isHidden = true
+        verticalTableView.isHidden = true
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let appearance = UINavigationBarAppearance()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        appearance.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+
+        navigationItem.standardAppearance = appearance
+        //navigationItem.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Каталог"
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        let contentHeight = max(collectionView.contentSize.height, verticalTableView.contentSize.height, horizontalTableView.contentSize.height)
+//        contentView.snp.updateConstraints { make in
+//            make.height.equalTo(contentHeight)
+//        }
+//    }
     //- MARK: - Add & Set Views
     private func addViews() {
-        view.addSubview(catalogTitle)
-        view.addSubview(backView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(backView)
         backView.addSubview(sortButton)
         backView.addSubview(changeCatalogViewButton)
         backView.addSubview(collectionView)
+        backView.addSubview(verticalTableView)
+        backView.addSubview(horizontalTableView)
     }
     //- MARK: - Constraints
     private func setConstraints() {
-        catalogTitle.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(92)
-            make.horizontalEdges.equalToSuperview().inset(16)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//            make.top.equalToSuperview()
+//            make.horizontalEdges.equalToSuperview()
+        }
+        contentView.snp.makeConstraints { make in
+            make.edges.horizontalEdges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+            make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
+//            make.top.equalToSuperview()
+//            make.bottom.horizontalEdges.equalTo(scrollView.contentLayoutGuide)
+//            make.width.equalTo(scrollView.frameLayoutGuide)
+//            make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
         }
         backView.snp.makeConstraints { make in
-            make.top.equalTo(catalogTitle.snp.bottom).offset(23)
-            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalToSuperview().offset(16)
+            make.bottom.horizontalEdges.equalToSuperview()
+            //make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
         sortButton.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().inset(16)
@@ -123,14 +186,66 @@ class CatalogMainViewController: UIViewController {
         }
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(sortButton.snp.bottom).offset(16)
-            make.bottom.horizontalEdges.equalToSuperview()
+            make.horizontalEdges.equalToSuperview()
+            make.bottom.equalToSuperview().inset(36)
+        }
+        verticalTableView.snp.makeConstraints { make in
+            make.top.equalTo(sortButton.snp.bottom).offset(16)
+            make.bottom.equalToSuperview().inset(36)
+            make.horizontalEdges.equalToSuperview().inset(16)
+        }
+        horizontalTableView.snp.makeConstraints { make in
+            make.top.equalTo(sortButton.snp.bottom).offset(16)
+            make.bottom.equalToSuperview().inset(36)
+            make.horizontalEdges.equalToSuperview().inset(16)
+        }
+    }
+    //- MARK: - Button actions
+    @objc private func changeCatalogView() {
+        hideCatalogView(currentView)
+        switch currentView {
+        case .collectionView:
+            currentView = .verticalTableView
+            changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.verticalList24), for: .normal)
+        case .verticalTableView:
+            currentView = .horizontalTableView
+            changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.gorizontalList24), for: .normal)
+        case .horizontalTableView:
+            currentView = .collectionView
+            changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.tile24), for: .normal)
+        }
+        showCatalogView(currentView)
+        if currentView == .horizontalTableView {
+            horizontalTableView.reloadData()
+        } else {
+            verticalTableView.reloadData()
+        }
+    }
+    private func showCatalogView(_ catalogView: CatalogView) {
+        switch catalogView {
+        case .collectionView:
+            collectionView.isHidden = false
+        case .horizontalTableView:
+            horizontalTableView.isHidden = false
+        case .verticalTableView:
+            verticalTableView.isHidden = false
+        }
+    }
+    private func hideCatalogView(_ catalogView: CatalogView) {
+        switch catalogView {
+        case .collectionView:
+            collectionView.isHidden = true
+        case .horizontalTableView:
+            horizontalTableView.isHidden = true
+        case .verticalTableView:
+            verticalTableView.isHidden = true
         }
     }
 }
 //- MARK: - UICollectionViewDelegate & UICollectionViewDataSource
 extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 22
+        return 14
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -142,15 +257,58 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
     
 }
 //- MARK: - UITableViewDelegate, UITableViewDataSource
-//extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 1
-//    }
-//    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = CatalogVerticalTableViewCell()
-//        return cell
-//    }
-//    
-//    
-//}
+extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 14
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if currentView == .horizontalTableView {
+            return 120
+        }
+        return 292
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if currentView == .horizontalTableView {
+            let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
+            cell.setCell(image: UIImage(resource: ImageResource.Hardcode.goods), price: "12 900 ₽", name: "Массажёр эконом")
+            return cell
+        }
+        let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
+        cell.setCell(image: UIImage(resource: ImageResource.Hardcode.goods), price: "12 900 ₽", name: "Массажёр эконом")
+        return cell
+    }
+    
+    
+}
+
+class SelfSizingTableView: UITableView {
+    override var contentSize: CGSize {
+        didSet {
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+        }
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let height = min(.infinity, contentSize.height)
+        return CGSize(width: contentSize.width, height: height)
+    }
+}
+
+class SelfSizingCollectionView: UICollectionView {
+    override var contentSize: CGSize {
+        didSet {
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+        }
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let height = min(.infinity, contentSize.height)
+        return CGSize(width: contentSize.width, height: height)
+    }
+}

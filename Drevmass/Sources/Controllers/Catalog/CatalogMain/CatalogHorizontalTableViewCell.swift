@@ -82,4 +82,10 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
             make.size.equalTo(36)
         }
     }
+    //- MARK: - Set Data
+    func setCell(image: UIImage, price: String, name: String) {
+        goodsImage.image = image
+        priceLabel.text = price
+        nameLabel.text = name
+    }
 }
