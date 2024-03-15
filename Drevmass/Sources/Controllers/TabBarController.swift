@@ -21,6 +21,8 @@ class TabBarController: UITabBarController {
     // - MARK: - Settings
     func setupTabs() {
         tabBar.backgroundColor = UIColor(resource: ColorResource.Colors.F_9_F_9_F_9)
+        tabBar.barTintColor = UIColor(resource: ColorResource.Colors.F_9_F_9_F_9)
+        tabBar.isTranslucent = false
 
         coursesVC.tabBarItem = UITabBarItem(title: "", image: UIImage(resource: ImageResource.TabBarIcon.course), selectedImage: UIImage(resource: ImageResource.TabBarIcon.courseSelected).withRenderingMode(.alwaysOriginal))
         catalogVC.tabBarItem = UITabBarItem(title: "", image: UIImage(resource: ImageResource.TabBarIcon.catalog), selectedImage: UIImage(resource: ImageResource.TabBarIcon.catalogSelected).withRenderingMode(.alwaysOriginal))

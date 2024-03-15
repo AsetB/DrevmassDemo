@@ -64,6 +64,18 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         return container
     }()
     
+    private lazy var leftView: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(tappedLeftOfView), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var rightView: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(tappedRightOfView), for: .touchUpInside)
+        return button
+    }()
+    
     private var segmentBar: SGSegmentedProgressBar?
     //- MARK: - Lifecycle
     override func viewDidLoad() {
@@ -94,6 +106,8 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         view.addSubview(self.segmentBar!)
         view.addSubview(topLabel)
         view.addSubview(descriptionLabel)
+        view.addSubview(leftView)
+        view.addSubview(rightView)
         view.addSubview(buttonContainer)
         buttonContainer.addSubview(signInButton)
         buttonContainer.addSubview(signUpButton)
@@ -110,6 +124,18 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(topLabel.snp.bottom).offset(8)
             make.horizontalEdges.equalTo(imageView).inset(24)
+        }
+        leftView.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.top)
+            make.bottom.equalTo(imageView.snp.bottom)
+            make.leading.equalTo(imageView.snp.leading)
+            make.trailing.equalToSuperview().inset(220)
+        }
+        rightView.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.top)
+            make.bottom.equalTo(imageView.snp.bottom)
+            make.trailing.equalTo(imageView.snp.trailing)
+            make.leading.equalToSuperview().inset(220)
         }
         buttonContainer.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(16)
@@ -149,6 +175,27 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         let signUpVC = SignUpViewController()
         navigationController?.show(signUpVC, sender: self)
     }
+    @objc func tappedLeftOfView() {
+        self.segmentBar?.previousSegment()
+        guard let currentPlayingIndex = self.segmentBar?.currentIndex else { return }
+        if currentPlayingIndex == 0 {
+            imageView.image = UIImage(resource: ImageResource.Onboarding.image1)
+            topLabel.text = Onboarding.topLabel1
+        }
+        if currentPlayingIndex == 1 {
+            imageView.image = UIImage(resource: ImageResource.Onboarding.image2)
+            topLabel.text = Onboarding.topLabel2
+        }
+        if currentPlayingIndex == 2 {
+            imageView.image = UIImage(resource: ImageResource.Onboarding.image3)
+            topLabel.text = Onboarding.topLabel3
+        }
+    }
+
+    @objc func tappedRightOfView() {
+        segmentedProgressBarFinished(finishedIndex: 0, isLastIndex: false)
+        self.segmentBar?.nextSegment()
+    }
     //- MARK: - Set SegmentBar
     func setSegmentBar() {
         let rect = CGRect(x: 20, y: 100, width: self.view.frame.size.width-40, height: 2)
@@ -178,3 +225,6 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     
     var roundCornerType: SGCornerType { return .roundCornerBar(cornerRadious: 5) }
 }
+    
+    
+
