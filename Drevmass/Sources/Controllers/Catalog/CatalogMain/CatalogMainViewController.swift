@@ -16,6 +16,9 @@ class CatalogMainViewController: UIViewController {
         case horizontalTableView
     }
     var currentView: CatalogView = .collectionView
+    var collectionViewBottom: Constraint? = nil
+    var horizontalTableViewBottom: Constraint? = nil
+    var verticalTableViewBottom: Constraint? = nil
     //- MARK: - Local outlets
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -120,41 +123,19 @@ class CatalogMainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let appearance = UINavigationBarAppearance()
-        appearance.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
-        appearance.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
-        
-        /*
-         https://stackoverflow.com/questions/69924596/swift-navigation-navigation-bar-changes-its-background-color-when-scroll-the
-             let navigationBarAppearance = UINavigationBarAppearance()
-             navigationBarAppearance.configureWithOpaqueBackground()
-             navigationBarAppearance.titleTextAttributes = [
-                 NSAttributedString.Key.foregroundColor : UIColor.white
-             ]
-             navigationBarAppearance.backgroundColor = UIColor.blue
-             UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-             UINavigationBar.appearance().compactAppearance = navigationBarAppearance
-             UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
-         */
-
-        navigationItem.standardAppearance = appearance
-        //navigationItem.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = false
+        //navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.title = " "
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        let contentHeight = max(collectionView.contentSize.height, verticalTableView.contentSize.height, horizontalTableView.contentSize.height)
-//        contentView.snp.updateConstraints { make in
-//            make.height.equalTo(contentHeight)
-//        }
-//    }
+
     //- MARK: - Add & Set Views
     private func addViews() {
         view.addSubview(scrollView)
@@ -171,23 +152,15 @@ class CatalogMainViewController: UIViewController {
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
-//            make.top.equalToSuperview()
-//            make.horizontalEdges.equalToSuperview()
         }
         contentView.snp.makeConstraints { make in
             make.edges.horizontalEdges.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
             make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
-//            make.top.equalToSuperview()
-//            make.bottom.horizontalEdges.equalTo(scrollView.contentLayoutGuide)
-//            make.width.equalTo(scrollView.frameLayoutGuide)
-//            make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
         }
         backView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.bottom.horizontalEdges.equalToSuperview()
-            //make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
         sortButton.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().inset(16)
@@ -200,16 +173,16 @@ class CatalogMainViewController: UIViewController {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(sortButton.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview()
-            make.bottom.equalToSuperview().inset(36)
+            self.collectionViewBottom =  make.bottom.equalToSuperview().inset(36).priority(.medium).constraint
         }
         verticalTableView.snp.makeConstraints { make in
             make.top.equalTo(sortButton.snp.bottom).offset(16)
-            make.bottom.equalToSuperview().inset(36)
+            self.verticalTableViewBottom =  make.bottom.equalToSuperview().inset(36).priority(.low).constraint
             make.horizontalEdges.equalToSuperview().inset(16)
         }
         horizontalTableView.snp.makeConstraints { make in
             make.top.equalTo(sortButton.snp.bottom).offset(16)
-            make.bottom.equalToSuperview().inset(36)
+            self.horizontalTableViewBottom =  make.bottom.equalToSuperview().inset(36).priority(.low).constraint
             make.horizontalEdges.equalToSuperview().inset(16)
         }
     }
@@ -220,12 +193,18 @@ class CatalogMainViewController: UIViewController {
         case .collectionView:
             currentView = .verticalTableView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.verticalList24), for: .normal)
+            collectionViewBottom?.update(priority: .low)
+            verticalTableViewBottom?.update(priority: .high)
         case .verticalTableView:
             currentView = .horizontalTableView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.gorizontalList24), for: .normal)
+            verticalTableViewBottom?.update(priority: .low)
+            horizontalTableViewBottom?.update(priority: .medium)
         case .horizontalTableView:
             currentView = .collectionView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.tile24), for: .normal)
+            horizontalTableViewBottom?.update(priority: .low)
+            collectionViewBottom?.update(priority: .medium)
         }
         showCatalogView(currentView)
         if currentView == .horizontalTableView {
@@ -266,7 +245,11 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
         cell.setCell(image: UIImage(resource: ImageResource.Hardcode.goods), price: "12 900 ₽", name: "Массажёр эконом")
         return cell
     }
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let vc = ProductViewController()
+        navigationController?.show(vc, sender: self)
+    }
     
 }
 //- MARK: - UITableViewDelegate, UITableViewDataSource
