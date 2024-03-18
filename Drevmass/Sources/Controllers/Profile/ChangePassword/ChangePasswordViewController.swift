@@ -9,8 +9,11 @@ import UIKit
 import SVProgressHUD
 import Alamofire
 import SwiftyJSON
+import SnapKit
 
 class ChangePasswordViewController: UIViewController {
+    
+    var saveButtonBottomConstraint: Constraint?
     
     // - MARK: - UI elements
     
@@ -20,6 +23,7 @@ class ChangePasswordViewController: UIViewController {
         label.font = UIFont(name: "SFProText-Semibold", size: 17)
         label.textColor = .black
         label.textAlignment = .center
+        
         return label
     }()
     
@@ -131,6 +135,8 @@ class ChangePasswordViewController: UIViewController {
         
         setupView()
         setupConstraints()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -242,6 +248,20 @@ extension ChangePasswordViewController {
             showPasswordButton.setImage(UIImage(resource: ImageResource.Registration.eyeOff24), for: .normal)
         }
     }
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+               saveButtonBottomConstraint?.update(inset: -16 + keyboardSize.height)
+            }
+        }
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        saveButtonBottomConstraint?.update(inset: 16)
+    }
+    @objc func doneButtonAction(){
+        currentPasswordTextfield.resignFirstResponder()
+        newPasswordTextfield.resignFirstResponder()
+        
+    }
    
     // - MARK: - setups
 
@@ -259,6 +279,23 @@ extension ChangePasswordViewController {
         view.addSubview(viewUnderNewPassword)
         view.addSubview(showNewPasswordButton)
         view.addSubview(saveButton)
+        
+        //кнопка готово, его ширина равно ширине экрана
+        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 40))
+        doneToolbar.barStyle = .default
+        
+                // кнопка готово справа
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        // сама кнопка
+        let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonAction))
+        doneButton.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        
+        
+        doneToolbar.items = [flexSpace, doneButton]
+        
+        //скрывать клаву или тулбар
+        currentPasswordTextfield.inputAccessoryView = doneToolbar
+        newPasswordTextfield.inputAccessoryView = doneToolbar
     }
     
     func setupConstraints() {
@@ -314,8 +351,8 @@ extension ChangePasswordViewController {
             make.right.equalTo(newPasswordTextfield.snp.right)
         }
         saveButton.snp.makeConstraints { make in
+            self.saveButtonBottomConstraint =  make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16).constraint
             make.horizontalEdges.equalToSuperview().inset(16)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
             make.height.equalTo(48)
         }
     }
