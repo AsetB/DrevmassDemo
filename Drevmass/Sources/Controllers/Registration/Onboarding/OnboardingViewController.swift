@@ -10,6 +10,22 @@ import SnapKit
 
 class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSource, SGSegmentedProgressBarDelegate {
     //- MARK: - Local outlets
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.isScrollEnabled = true
+        scrollView.bounces = false
+        scrollView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.contentInsetAdjustmentBehavior = .never
+        return scrollView
+    }()
+    
+    lazy var contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     private lazy var imageView: UIImageView = {
         var image = UIImageView()
         image.layer.cornerRadius = 16
@@ -102,20 +118,33 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
     }
     //- MARK: - Set Views
     private func setViews() {
-        view.addSubview(imageView)
-        view.addSubview(self.segmentBar!)
-        view.addSubview(topLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(leftView)
-        view.addSubview(rightView)
-        view.addSubview(buttonContainer)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(imageView)
+        contentView.addSubview(self.segmentBar!)
+        contentView.addSubview(topLabel)
+        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(leftView)
+        contentView.addSubview(rightView)
+        contentView.addSubview(buttonContainer)
         buttonContainer.addSubview(signInButton)
         buttonContainer.addSubview(signUpButton)
     }
     //- MARK: - Constraints
     private func setConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+        }
+        contentView.snp.makeConstraints { make in
+            make.edges.horizontalEdges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+            make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
+        }
         imageView.snp.makeConstraints { make in
+            //make.top.equalToSuperview()
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            //make.height.equalTo(646)
         }
         topLabel.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.top).inset(30)
@@ -139,8 +168,9 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         }
         buttonContainer.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(16)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.bottom.equalToSuperview().inset(16)
             make.width.equalTo(327)
+            //make.height.equalTo(56)
             make.centerX.equalToSuperview()
         }
         signInButton.snp.makeConstraints { make in

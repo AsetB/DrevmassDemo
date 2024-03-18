@@ -10,12 +10,6 @@ import SnapKit
 
 class ProductViewController: UIViewController, UIScrollViewDelegate {
     //- MARK: - Variables
-    var isButtonBeyondScreen = false
-    var basketButtonBottomToPrice: Constraint? = nil
-    var basketButtonBottomToScreen: Constraint? = nil
-    var tutorialButtonBottomToPrice: Constraint? = nil
-    var tutorialButtonBottomToBasketButton: Constraint? = nil
-    var originFrame: CGRect!
     //- MARK: - Local outlets
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -75,6 +69,31 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         //button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var addToBasketPriceButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 28
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        //button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var buttonMainLabel: UILabel = {
+        let label = UILabel()
+        label.text = "В корзину"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        return label
+    }()
+    
+    private lazy var buttonPriceLabel: UILabel = {
+        let label = UILabel()
+        label.text = "12 900 ₽"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        return label
+    }()
+    
     
     private lazy var openTutorialButton: UIButton = {
         let button = UIButton()
@@ -237,12 +256,12 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         setConstraints()
         scrollView.delegate = self
         scrollView.contentSize = contentView.bounds.size
-        originFrame = addToBasketButton.frame
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         //navigationController?.isNavigationBarHidden = true
+        addToBasketPriceButton.isHidden = true
         gradientView.isHidden = true
         gradientView.updateColors()
         gradientView.updateLocations()
@@ -265,8 +284,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(similarGoodsTitleLabel)
         contentView.addSubview(collectionView)
-        contentView.addSubview(gradientView)
         contentView.addSubview(addToBasketButton)
+        view.addSubview(gradientView)
+        view.addSubview(addToBasketPriceButton)
+        addToBasketPriceButton.addSubview(buttonMainLabel)
+        addToBasketPriceButton.addSubview(buttonPriceLabel)
     }
     //- MARK: - Set Constraints
     private func setConstraints() {
@@ -295,14 +317,12 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(34)
         }
         addToBasketButton.snp.makeConstraints { make in
-            self.basketButtonBottomToPrice =  make.bottom.equalTo(priceLabel.snp.bottom).offset(72).priority(.high).constraint
-            self.basketButtonBottomToScreen = make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16).priority(.low).constraint
+            make.bottom.equalTo(priceLabel.snp.bottom).offset(72)
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(56)
         }
         openTutorialButton.snp.makeConstraints { make in
-            self.tutorialButtonBottomToBasketButton =  make.top.equalTo(addToBasketButton.snp.bottom).offset(4).priority(.high).constraint
-            self.tutorialButtonBottomToPrice =  make.bottom.equalTo(priceLabel.snp.bottom).offset(124).priority(.low).constraint
+            make.top.equalTo(addToBasketButton.snp.bottom).offset(4)
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(48)
         }
@@ -331,11 +351,27 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(220)
             make.bottom.equalToSuperview().inset(32)
         }
+        addToBasketPriceButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(56)
+        }
         gradientView.snp.makeConstraints { make in
-            make.bottom.equalTo(addToBasketButton.snp.bottom).offset(16)
+            make.bottom.equalTo(addToBasketPriceButton.snp.bottom).offset(16)
             make.height.equalTo(137)
             make.horizontalEdges.equalToSuperview()
         }
+        buttonPriceLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(24)
+            make.height.equalTo(22)
+        }
+        buttonMainLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().inset(24)
+            make.height.equalTo(22)
+        }
+        
     }
     
     //- MARK: - Button Actions
@@ -351,36 +387,21 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+    
         guard let navBar = navigationController?.navigationBar else { return }
         
-        let navBarVisibleRect = CGRect(origin: navBar.superview!.convert(navBar.frame.origin, to: nil),
-                                       size: navBar.frame.size)
-        
-        guard let buttonSuperview = addToBasketButton.superview else { return }
-        let buttonFrameInSuperview = buttonSuperview.convert(addToBasketButton.frame, to: nil)
-        
-        let visibleRect = CGRect(origin: scrollView.contentOffset, size: scrollView.bounds.size)
-            
-        
-        if CGRectIntersectsRect(navBarVisibleRect, buttonFrameInSuperview) {}
-        if buttonFrameInSuperview.minY < navBarVisibleRect.maxY {}
-        // Check if the button's frame is hidden by the navigation bar
-        if CGRectIntersectsRect(navBarVisibleRect, buttonFrameInSuperview) {
-            basketButtonBottomToPrice?.update(priority: .low)
-            basketButtonBottomToScreen?.update(priority: .high)
-            tutorialButtonBottomToPrice?.update(priority: .high)
-            tutorialButtonBottomToBasketButton?.update(priority: .low)
+        let navBarHeight = navBar.frame.height
+        let offsetY = scrollView.contentOffset.y + navBarHeight
+        let buttonY = addToBasketButton.frame.maxY - navBarHeight
+        if offsetY > buttonY {
+            addToBasketButton.isHidden = true
+            addToBasketPriceButton.isHidden = false
             gradientView.isHidden = false
-        }
-        if CGRectContainsRect(visibleRect, originFrame) {
-            basketButtonBottomToPrice?.update(priority: .high)
-            basketButtonBottomToScreen?.update(priority: .low)
-            tutorialButtonBottomToPrice?.update(priority: .low)
-            tutorialButtonBottomToBasketButton?.update(priority: .high)
+        } else {
+            addToBasketButton.isHidden = false
+            addToBasketPriceButton.isHidden = true
             gradientView.isHidden = true
         }
-        
     }
 }
 
