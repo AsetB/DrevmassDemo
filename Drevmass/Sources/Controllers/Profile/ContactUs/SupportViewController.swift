@@ -9,8 +9,11 @@ import UIKit
 import SwiftyJSON
 import SVProgressHUD
 import Alamofire
+import SnapKit
 
 class SupportViewController: UIViewController {
+    
+    var sentButtonBottomConstraint: Constraint?
     
     // - MARK: - UI elements
     
@@ -69,8 +72,8 @@ class SupportViewController: UIViewController {
         setupConstraints()
         
         textViewForText.delegate = self
-        
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
@@ -130,6 +133,14 @@ extension SupportViewController {
     func backToProfile() {
         navigationController?.popToRootViewController(animated: true)
     }
+    @objc private func keyboardWillShow(notification: NSNotification) {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+               sentButtonBottomConstraint?.update(inset: -16 + keyboardSize.height)
+            }
+        }
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        sentButtonBottomConstraint?.update(inset: 16)
+    }
     
    
     // - MARK: - setups
@@ -163,8 +174,8 @@ extension SupportViewController {
             make.left.equalToSuperview().inset(16)
         }
         sentButton.snp.makeConstraints { make in
+            self.sentButtonBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16).constraint
             make.horizontalEdges.equalToSuperview().inset(16)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
             make.height.equalTo(48)
         }
     }

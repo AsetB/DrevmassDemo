@@ -221,10 +221,6 @@ class ProfileViewController: UIViewController {
         button.setTitleColor(UIColor(resource: ColorResource.Colors._787878), for: .normal)
         button.leftIcon.image = UIImage(resource: ImageResource.Profile.iconLogoutProfile)
 
-
-        button.setTitleColor(UIColor(resource: ColorResource.Colors._787878), for: .normal)
-        button.leftIcon.image = UIImage(resource: ImageResource.Profile.iconLogoutProfile)
-
         button.rightIcon.isHidden = true
         button.addTarget(self, action: #selector(logout), for: .touchUpInside)
         return button
@@ -246,9 +242,9 @@ class ProfileViewController: UIViewController {
     }
 }
 
-// - MARK: - extension
-
 extension ProfileViewController {
+    
+    // - MARK: - other funcs
     
     @objc func showPromoCodeViewController(){
         let promoCodeVC = PromoCodeViewController()

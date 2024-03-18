@@ -9,12 +9,16 @@ import UIKit
 import SVProgressHUD
 import Alamofire
 import SwiftyJSON
+import SnapKit
 
 class InfoAboutMeViewController: UIViewController {
     
-    var user = User()
+//    uipickerview
     
+    var user = User()
+    var scrollViewBottomConstraint: Constraint?
     // - MARK: - UI elements
+    
     
     var scrollView: UIScrollView = {
        var scrollview = UIScrollView()
@@ -168,6 +172,9 @@ class InfoAboutMeViewController: UIViewController {
         setupConstraints()
         setupNavigationBar()
         getUserInfo()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
@@ -320,6 +327,15 @@ extension InfoAboutMeViewController {
         weightTextField.textfield.resignFirstResponder()
     }
     
+    @objc private func keyboardWillShow(notification: NSNotification) {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+               scrollViewBottomConstraint?.update(inset: keyboardSize.height)
+            }
+        }
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        scrollViewBottomConstraint?.update(inset: 0)
+    }
+    
     // - MARK: - Setups
     
     func setupNavigationBar(){
@@ -375,12 +391,12 @@ extension InfoAboutMeViewController {
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            scrollViewBottomConstraint = make.bottom.equalToSuperview().constraint
         }
         contentview.snp.makeConstraints { make in
             make.horizontalEdges.top.bottom.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
-            
+            make.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
         }
         stackViewForTextfiels.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview().inset(16)
@@ -410,8 +426,8 @@ extension InfoAboutMeViewController {
             make.left.equalToSuperview().inset(16)
         }
         saveButton.snp.makeConstraints { make in
-            make.top.equalTo(deleteAccountButton.snp.bottom).inset(-62)
-            make.bottom.equalToSuperview().inset(16)
+            make.bottom.equalTo(contentview.safeAreaLayoutGuide).inset(16)
+            make.top.greaterThanOrEqualTo(deleteAccountButton.snp.bottom).offset(32)
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(48)
         }
