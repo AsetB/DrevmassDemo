@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
 
 class CatalogVerticalTableViewCell: UITableViewCell {
     //- MARK: - Local Outlets
@@ -30,6 +31,7 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         label.font = .addFont(type: .SFProTextRegular, size: 14)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.textAlignment = .left
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -72,6 +74,7 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(priceLabel.snp.bottom).offset(4)
             make.leading.equalToSuperview()
+            make.width.equalTo(279)
             make.height.equalTo(22)
         }
         basketButton.snp.makeConstraints { make in
@@ -81,9 +84,10 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         }
     }
     //- MARK: - Set Data
-    func setCell(image: UIImage, price: String, name: String) {
-        goodsImage.image = image
-        priceLabel.text = price
-        nameLabel.text = name
+    func setCell(catalog: CatalogMain) {
+        let transformer = SDImageResizingTransformer(size: CGSize(width: 343, height: 202), scaleMode: .aspectFill)
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        priceLabel.text = formatPrice(catalog.price)
+        nameLabel.text = catalog.title
     }
 }

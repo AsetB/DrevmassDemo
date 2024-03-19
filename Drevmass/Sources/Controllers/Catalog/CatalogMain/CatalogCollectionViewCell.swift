@@ -7,8 +7,11 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
 
 class CatalogCollectionViewCell: UICollectionViewCell {
+    //- MARK: - Variables
+    var mainCatalog: [CatalogMain] = []
     //- MARK: - Local outlets
     private lazy var goodsImage: UIImageView = {
         let image = UIImageView()
@@ -27,9 +30,11 @@ class CatalogCollectionViewCell: UICollectionViewCell {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .addFont(type: .SFProTextBold, size: 15)
+        label.font = .addFont(type: .SFProTextRegular, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.textAlignment = .left
+        label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -70,6 +75,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(priceLabel.snp.bottom).offset(4)
             make.leading.equalToSuperview()
+            make.width.equalTo(117)
             make.height.equalTo(40)
         }
         basketButton.snp.makeConstraints { make in
@@ -79,9 +85,10 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         }
     }
     //- MARK: - Set Data
-    func setCell(image: UIImage, price: String, name: String) {
-        goodsImage.image = image
-        priceLabel.text = price
-        nameLabel.text = name
+    func setCell(catalog: CatalogMain) {
+        let transformer = SDImageResizingTransformer(size: CGSize(width: 167, height: 100), scaleMode: .aspectFill)
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        priceLabel.text = formatPrice(catalog.price)
+        nameLabel.text = catalog.title
     }
 }

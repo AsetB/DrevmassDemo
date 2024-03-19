@@ -24,6 +24,12 @@ enum URLs {
     static let POST_SUPPORT_URL = BASE_URL + "support"
     static let GET_COURSE_URL = BASE_URL + "course"
     static let GET_COURSE_BONUS_URL = BASE_URL + "course/bonus"
+    static let GET_PRODUCT_FAMOUS = BASE_URL + "products/famous"
+    static let GET_PRODUCT_PRICEDOWN = BASE_URL + "products/pricedown"
+    static let GET_PRODUCT_PRICEUP = BASE_URL + "products/priceup"
+}
 
+enum imageSource {
+    static let BASE_URL = "http://45.12.74.158/"
 }
 

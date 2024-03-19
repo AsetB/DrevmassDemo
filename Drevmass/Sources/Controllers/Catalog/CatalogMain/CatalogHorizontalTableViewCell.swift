@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
 
 class CatalogHorizontalTableViewCell: UITableViewCell {
     //- MARK: - Local Outlets
@@ -30,6 +31,8 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         label.font = .addFont(type: .SFProTextRegular, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.textAlignment = .left
+        label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -69,6 +72,7 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         nameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(20)
             make.leading.equalTo(goodsImage.snp.trailing).offset(12)
+            make.trailing.equalToSuperview()
             make.height.equalTo(40)
         }
         priceLabel.snp.makeConstraints { make in
@@ -83,9 +87,10 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         }
     }
     //- MARK: - Set Data
-    func setCell(image: UIImage, price: String, name: String) {
-        goodsImage.image = image
-        priceLabel.text = price
-        nameLabel.text = name
+    func setCell(catalog: CatalogMain) {
+        let transformer = SDImageResizingTransformer(size: CGSize(width: 146, height: 88), scaleMode: .aspectFill)
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        priceLabel.text = formatPrice(catalog.price)
+        nameLabel.text = catalog.title
     }
 }

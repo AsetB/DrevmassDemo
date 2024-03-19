@@ -8,18 +8,6 @@
 import Foundation
 import SwiftyJSON
 
-/*
- "id": 17,
- "title": "Ролик для прямой осанки",
- "description": "Используется после основного комплекса на Древмасс для более глубокой работы с поясничным, грудным и шейным отделом. 4-6 прокатов позволяют более глубоко проработать и расслабить паравертебральные мышцы спины и расправить осанку. Комфортная проработка шейного отдела.",
- "price": 2390,
- "height": "для всех",
- "size": "10.2 x 20.5 см",
- "basket_count": 0,
- "image_src": "images/1690447073.png",
- "video_src": "qEKlbrmQ6BM",
- "viewed": 224
- */
 class CatalogMain {
     public var id: Int = 0
     public var title: String = ""
