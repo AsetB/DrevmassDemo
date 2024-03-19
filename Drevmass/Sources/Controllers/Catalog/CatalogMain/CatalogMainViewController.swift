@@ -26,6 +26,8 @@ class CatalogMainViewController: UIViewController {
     var famousCatalog: [CatalogMain] = []
     var pricedownCatalog: [CatalogMain] = []
     var priceupCatalog: [CatalogMain] = []
+    
+    var currentSortMain: SortType = .famous
     //- MARK: - Local outlets
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -64,6 +66,7 @@ class CatalogMainViewController: UIViewController {
         config.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
         button.contentHorizontalAlignment = .center
         button.configuration = config
+        button.addTarget(self, action: #selector(sortAction), for: .touchUpInside)
         return button
     }()
     
@@ -221,6 +224,7 @@ class CatalogMainViewController: UIViewController {
             verticalTableView.reloadData()
         }
     }
+    
     private func showCatalogView(_ catalogView: CatalogView) {
         switch catalogView {
         case .collectionView:
@@ -231,6 +235,7 @@ class CatalogMainViewController: UIViewController {
             verticalTableView.isHidden = false
         }
     }
+    
     private func hideCatalogView(_ catalogView: CatalogView) {
         switch catalogView {
         case .collectionView:
@@ -240,6 +245,13 @@ class CatalogMainViewController: UIViewController {
         case .verticalTableView:
             verticalTableView.isHidden = true
         }
+    }
+    
+    @objc private func sortAction() {
+        let sortVC = SortCatalogViewController()
+        sortVC.delegate = self
+        sortVC.currentSort = currentSortMain
+        presentPanModal(sortVC)
     }
     //- MARK: - Data loading
     private func downloadFamousCatalog() {
@@ -376,6 +388,17 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if currentSortMain == .pricedown {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
+            cell.setCell(catalog: pricedownCatalog[indexPath.item])
+            return cell
+        }
+        if currentSortMain == .priceup {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
+            cell.setCell(catalog: priceupCatalog[indexPath.item])
+            return cell
+        }
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
         cell.setCell(catalog: famousCatalog[indexPath.item])
         return cell
@@ -393,6 +416,12 @@ extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource 
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if currentSortMain == .pricedown {
+            return pricedownCatalog.count
+        }
+        if currentSortMain == .priceup {
+            return priceupCatalog.count
+        }
         return famousCatalog.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -404,12 +433,61 @@ extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if currentView == .horizontalTableView {
+            if currentSortMain == .pricedown {
+                let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
+                cell.setCell(catalog: pricedownCatalog[indexPath.item])
+                return cell
+            }
+            if currentSortMain == .priceup {
+                let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
+                cell.setCell(catalog: priceupCatalog[indexPath.item])
+                return cell
+            }
             let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
             cell.setCell(catalog: famousCatalog[indexPath.item])
+            return cell
+        }
+        if currentSortMain == .pricedown {
+            let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
+            cell.setCell(catalog: pricedownCatalog[indexPath.item])
+            return cell
+        }
+        if currentSortMain == .priceup {
+            let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
+            cell.setCell(catalog: priceupCatalog[indexPath.item])
             return cell
         }
         let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
         cell.setCell(catalog: famousCatalog[indexPath.item])
         return cell
     }
+}
+//- MARK: - Protocol SortSelecting
+extension CatalogMainViewController: SortSelecting {
+    func sortDidSelected(_ sortSelected: SortType) {
+        switch sortSelected {
+        case .famous:
+            print("famous in main")
+            currentSortMain = .famous
+            downloadFamousCatalog()
+            sortButton.setAttributedTitle(NSAttributedString(AttributedString("По популярности", attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.addFont(type: .SFProDisplayBold, size: 15) ]))), for: .normal)
+            sortButton.configuration?.image = UIImage(resource: ImageResource.Catalog.sortUp24)
+            sortButton.configuration?.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
+        case .priceup:
+            print("priceup in main")
+            currentSortMain = .priceup
+            downloadPriceupCatalog()
+            sortButton.setAttributedTitle(NSAttributedString(AttributedString("По возрастанию цены", attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.addFont(type: .SFProDisplayBold, size: 15) ]))), for: .normal)
+            sortButton.configuration?.image = UIImage(resource: ImageResource.Catalog.sortUp24)
+            sortButton.configuration?.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
+        case .pricedown:
+            print("pricedown in main")
+            currentSortMain = .pricedown
+            downloadPricedownCatalog()
+            sortButton.setAttributedTitle(NSAttributedString(AttributedString("По убыванию цены", attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.addFont(type: .SFProDisplayBold, size: 15) ]))), for: .normal)
+            sortButton.configuration?.image = UIImage(resource: ImageResource.Catalog.sortDown24)
+            sortButton.configuration?.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
+        }
+    }
+    
 }
