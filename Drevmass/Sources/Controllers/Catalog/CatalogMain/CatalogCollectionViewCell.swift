@@ -10,17 +10,15 @@ import SnapKit
 import SDWebImage
 
 class CatalogCollectionViewCell: UICollectionViewCell {
-    //- MARK: - Variables
-    var mainCatalog: [CatalogMain] = []
     //- MARK: - Local outlets
-    private lazy var goodsImage: UIImageView = {
+    lazy var goodsImage: UIImageView = {
         let image = UIImageView()
         image.layer.cornerRadius = 16
         image.clipsToBounds = true
         return image
     }()
     
-    private lazy var priceLabel: UILabel = {
+    lazy var priceLabel: UILabel = {
         let label = UILabel()
         label.font = .addFont(type: .SFProTextBold, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
@@ -28,7 +26,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = .addFont(type: .SFProTextRegular, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
@@ -38,7 +36,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var basketButton: UIButton = {
+    lazy var basketButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton36), for: .normal)
         return button
@@ -50,6 +48,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         setupViews()
         setupConstraints()
+        self.isSelected = false
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -85,7 +84,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         }
     }
     //- MARK: - Set Data
-    func setCell(catalog: CatalogMain) {
+    func setCell(catalog: Product) {
         let transformer = SDImageResizingTransformer(size: CGSize(width: 167, height: 100), scaleMode: .aspectFill)
         goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
         priceLabel.text = formatPrice(catalog.price)

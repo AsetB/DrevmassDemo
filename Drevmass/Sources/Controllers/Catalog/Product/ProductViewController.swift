@@ -7,9 +7,18 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
+import Alamofire
+import SwiftyJSON
+import SVProgressHUD
 
 class ProductViewController: UIViewController, UIScrollViewDelegate {
     //- MARK: - Variables
+    private var heightCentimeterLabel: UILabel?
+    private var sizeCentimeterLabel: UILabel?
+    var productDetail = Product()
+    var productSimilarArray: [Product] = []
+    var productID: Int = 0
     //- MARK: - Local outlets
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -111,7 +120,9 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         return button
     }()
     
-    private lazy var specificationView: UIView = {
+    private lazy var specificationView: UIView = { [weak self] in
+        guard let self = self else { return UIView() }
+        
         let view = UIView()
         view.layer.cornerRadius = 24
         view.layer.borderWidth = 2
@@ -125,10 +136,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         heightLabel.font = .addFont(type: .SFProTextRegular, size: 15)
         heightLabel.textColor = UIColor(resource: ColorResource.Colors._787878)
         
-        let heightCentimeterLabel = UILabel()
-        heightCentimeterLabel.text = "от 50-180 см"
-        heightCentimeterLabel.font = .addFont(type: .SFProTextSemiBold, size: 15)
-        heightCentimeterLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        let heightCentLabel = UILabel()
+        heightCentLabel.text = "от 50-180 см"
+        heightCentLabel.font = .addFont(type: .SFProTextSemiBold, size: 15)
+        heightCentLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        self.heightCentimeterLabel = heightCentLabel
         
         //Lower Part
         let sizeImage = UIImageView()
@@ -139,10 +151,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         sizeLabel.font = .addFont(type: .SFProTextRegular, size: 15)
         sizeLabel.textColor = UIColor(resource: ColorResource.Colors._787878)
         
-        let sizeCentimeterLabel = UILabel()
-        sizeCentimeterLabel.text = "16 см х 8 см"
-        sizeCentimeterLabel.font = .addFont(type: .SFProTextSemiBold, size: 15)
-        sizeCentimeterLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        let sizeCentLabel = UILabel()
+        sizeCentLabel.text = "16 см х 8 см"
+        sizeCentLabel.font = .addFont(type: .SFProTextSemiBold, size: 15)
+        sizeCentLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        self.sizeCentimeterLabel = sizeCentLabel
         
         //Dashed Line
         var dashedLineView: DashedLineView = {
@@ -156,11 +169,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         
         view.addSubview(heightImage)
         view.addSubview(heightLabel)
-        view.addSubview(heightCentimeterLabel)
+        view.addSubview(heightCentLabel)
         view.addSubview(dashedLineView)
         view.addSubview(sizeImage)
         view.addSubview(sizeLabel)
-        view.addSubview(sizeCentimeterLabel)
+        view.addSubview(sizeCentLabel)
         
         heightImage.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().inset(18)
@@ -171,7 +184,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(20)
             make.centerY.equalTo(heightImage.snp.centerY)
         }
-        heightCentimeterLabel.snp.makeConstraints { make in
+        heightCentLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(18)
             make.height.equalTo(20)
             make.centerY.equalTo(heightImage.snp.centerY)
@@ -190,7 +203,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(20)
             make.centerY.equalTo(sizeImage.snp.centerY)
         }
-        sizeCentimeterLabel.snp.makeConstraints { make in
+        sizeCentLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(18)
             make.height.equalTo(20)
             make.centerY.equalTo(sizeImage.snp.centerY)
@@ -212,6 +225,13 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         label.font = .addFont(type: .SFProTextRegular, size: 16)
         label.textColor = UIColor(resource: ColorResource.Colors._787878)
         label.numberOfLines = 0
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6.5
+        paragraphStyle.alignment = .left
+        let attributedString = NSMutableAttributedString(string: label.text ?? "default value")
+        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        label.attributedText = attributedString
         return label
     }()
     
@@ -252,10 +272,12 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(resource: ImageResource.Catalog.share24), style: .done, target: self, action: #selector(shareAction))
+        downloadProductDetail()
         setViews()
         setConstraints()
         scrollView.delegate = self
         scrollView.contentSize = contentView.bounds.size
+        navigationItem.title = productDetail.title
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -265,6 +287,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         gradientView.isHidden = true
         gradientView.updateColors()
         gradientView.updateLocations()
+        navigationItem.title = productDetail.title
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -349,7 +372,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(similarGoodsTitleLabel.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview()
             make.height.equalTo(220)
-            make.bottom.equalToSuperview().inset(32)
+            make.bottom.equalToSuperview().inset(81)
         }
         addToBasketPriceButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
@@ -373,6 +396,90 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         }
         
     }
+    //- MARK: - Data loading
+    private func downloadProductDetail() {
+        SVProgressHUD.show()
+        
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        
+        AF.request(URLs.GET_PRODUCT_BY_ID + String(productID), method: .get, headers: headers).responseData { [self] response in
+            
+            SVProgressHUD.dismiss()
+            
+            var resultString = ""
+            if let data = response.data {
+                resultString = String(data: data, encoding: .utf8)!
+                print(resultString)
+            }
+            
+            if response.response?.statusCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                if let productID = json["Product"]["id"].int {
+                    self.productDetail.id = productID
+                }
+                if let productTitle = json["Product"]["title"].string {
+                    self.productDetail.title = productTitle
+                }
+                if let productDesc = json["Product"]["description"].string {
+                    self.productDetail.description = productDesc
+                }
+                if let productPrice = json["Product"]["price"].int {
+                    self.productDetail.price = productPrice
+                }
+                if let productHeight = json["Product"]["height"].string {
+                    self.productDetail.height = productHeight
+                }
+                if let productSize = json["Product"]["size"].string {
+                    self.productDetail.size = productSize
+                }
+                if let productBasketCount = json["Product"]["basket_count"].int {
+                    self.productDetail.basketCount = productBasketCount
+                }
+                if let productImage = json["Product"]["image_src"].string {
+                    self.productDetail.imageSource = productImage
+                }
+                if let productVideo = json["Product"]["video_src"].string {
+                    self.productDetail.videoSource = productVideo
+                }
+                if let productViewed = json["Product"]["viewed"].int {
+                    self.productDetail.viewed = productViewed
+                }
+                self.setData()
+                if let array = json["Recommend"].array {
+                    self.productSimilarArray.removeAll()
+                    for item in array {
+                        let similarProduct = Product(json: item)
+                        self.productSimilarArray.append(similarProduct)
+                        print(self.productSimilarArray.count)
+                    }
+                    self.collectionView.reloadData()
+                } else {
+                    SVProgressHUD.showError(withStatus: "Error with updating data")
+                }
+            } else {
+                var ErrorString = "CONNECTION_ERROR"
+                if let sCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(sCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+            }
+        }
+    }
+    //- MARK: - Set data
+    func setData() {
+        let transformer = SDImageResizingTransformer(size: CGSize(width: 357, height: 220), scaleMode: .aspectFill)
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + productDetail.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        nameLabel.text = productDetail.title
+        let priceRouble = formatPrice(productDetail.price)
+        priceLabel.text = priceRouble
+        buttonPriceLabel.text = priceRouble
+        descriptionLabel.text = productDetail.description
+        heightCentimeterLabel?.text = productDetail.height
+        sizeCentimeterLabel?.text = productDetail.size
+    }
     
     //- MARK: - Button Actions
     @objc func shareAction() {
@@ -383,10 +490,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
-    
-    
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == collectionView {
+            return
+        }
     
         guard let navBar = navigationController?.navigationBar else { return }
         
@@ -408,13 +516,20 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
 //- MARK: - UICollectionViewDataSource & UICollectionViewDelegate
 extension ProductViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 14
+        return productSimilarArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
-        //cell.setCell(image: UIImage(resource: ImageResource.Hardcode.goods), price: "12 900 ₽", name: "Массажёр эконом")
+        cell.setCell(catalog: productSimilarArray[indexPath.item])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let productVC = ProductViewController()
+        productVC.productID = productSimilarArray[indexPath.item].id
+        navigationController?.show(productVC, sender: self)
     }
     
     

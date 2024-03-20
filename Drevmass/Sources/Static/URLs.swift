@@ -27,6 +27,7 @@ enum URLs {
     static let GET_PRODUCT_FAMOUS = BASE_URL + "products/famous"
     static let GET_PRODUCT_PRICEDOWN = BASE_URL + "products/pricedown"
     static let GET_PRODUCT_PRICEUP = BASE_URL + "products/priceup"
+    static let GET_PRODUCT_BY_ID = BASE_URL + "products/"
 }
 
 enum imageSource {

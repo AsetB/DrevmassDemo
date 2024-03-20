@@ -47,6 +47,11 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         self.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         setupViews()
         setupConstraints()
+        self.selectedBackgroundView = {
+            let view = UIView()
+            view.backgroundColor = UIColor.clear
+            return view
+        }()
     }
     
     required init?(coder: NSCoder) {
@@ -87,7 +92,7 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         }
     }
     //- MARK: - Set Data
-    func setCell(catalog: CatalogMain) {
+    func setCell(catalog: Product) {
         let transformer = SDImageResizingTransformer(size: CGSize(width: 146, height: 88), scaleMode: .aspectFill)
         goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
         priceLabel.text = formatPrice(catalog.price)

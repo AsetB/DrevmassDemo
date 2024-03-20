@@ -23,9 +23,9 @@ class CatalogMainViewController: UIViewController {
     var horizontalTableViewBottom: Constraint? = nil
     var verticalTableViewBottom: Constraint? = nil
     
-    var famousCatalog: [CatalogMain] = []
-    var pricedownCatalog: [CatalogMain] = []
-    var priceupCatalog: [CatalogMain] = []
+    var famousCatalog: [Product] = []
+    var pricedownCatalog: [Product] = []
+    var priceupCatalog: [Product] = []
     
     var currentSortMain: SortType = .famous
     //- MARK: - Local outlets
@@ -276,7 +276,7 @@ class CatalogMainViewController: UIViewController {
                 if let array = json.array {
                     self.famousCatalog.removeAll()
                     for item in array {
-                        let famousProduct = CatalogMain(json: item)
+                        let famousProduct = Product(json: item)
                         self.famousCatalog.append(famousProduct)
                     }
                     self.collectionView.reloadData()
@@ -318,7 +318,7 @@ class CatalogMainViewController: UIViewController {
                 if let array = json.array {
                     self.priceupCatalog.removeAll()
                     for item in array {
-                        let priceupProduct = CatalogMain(json: item)
+                        let priceupProduct = Product(json: item)
                         self.priceupCatalog.append(priceupProduct)
                     }
                     self.collectionView.reloadData()
@@ -360,7 +360,7 @@ class CatalogMainViewController: UIViewController {
                 if let array = json.array {
                     self.pricedownCatalog.removeAll()
                     for item in array {
-                        let pricedownProduct = CatalogMain(json: item)
+                        let pricedownProduct = Product(json: item)
                         self.pricedownCatalog.append(pricedownProduct)
                     }
                     self.collectionView.reloadData()
@@ -384,6 +384,12 @@ class CatalogMainViewController: UIViewController {
 //- MARK: - UICollectionViewDelegate & UICollectionViewDataSource
 extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if currentSortMain == .pricedown {
+            return pricedownCatalog.count
+        }
+        if currentSortMain == .priceup {
+            return priceupCatalog.count
+        }
         return famousCatalog.count
     }
     
@@ -403,10 +409,24 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
         cell.setCell(catalog: famousCatalog[indexPath.item])
         return cell
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        let vc = ProductViewController()
-        navigationController?.show(vc, sender: self)
+        collectionView.deselectItem(at: indexPath, animated: false)
+        if currentSortMain == .pricedown {
+            let productVC = ProductViewController()
+            productVC.productID = pricedownCatalog[indexPath.item].id
+            navigationController?.show(productVC, sender: self)
+            return
+        }
+        if currentSortMain == .priceup {
+            let productVC = ProductViewController()
+            productVC.productID = priceupCatalog[indexPath.item].id
+            navigationController?.show(productVC, sender: self)
+            return
+        }
+        let productVC = ProductViewController()
+        productVC.productID = famousCatalog[indexPath.item].id
+        navigationController?.show(productVC, sender: self)
     }
     
 }
@@ -461,6 +481,26 @@ extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource 
         cell.setCell(catalog: famousCatalog[indexPath.item])
         return cell
     }
+
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if currentSortMain == .pricedown {
+            let productVC = ProductViewController()
+            productVC.productID = pricedownCatalog[indexPath.item].id
+            navigationController?.show(productVC, sender: self)
+            return
+        }
+        if currentSortMain == .priceup {
+            let productVC = ProductViewController()
+            productVC.productID = priceupCatalog[indexPath.item].id
+            navigationController?.show(productVC, sender: self)
+            return
+        }
+        let productVC = ProductViewController()
+        productVC.productID = famousCatalog[indexPath.item].id
+        navigationController?.show(productVC, sender: self)
+    }
 }
 //- MARK: - Protocol SortSelecting
 extension CatalogMainViewController: SortSelecting {
@@ -489,5 +529,4 @@ extension CatalogMainViewController: SortSelecting {
             sortButton.configuration?.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
         }
     }
-    
 }

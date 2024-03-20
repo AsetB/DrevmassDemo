@@ -1,5 +1,5 @@
 //
-//  CatalogMain.swift
+//  Product.swift
 //  Drevmass
 //
 //  Created by Aset Bakirov on 11.03.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftyJSON
 
-class CatalogMain {
+class Product {
     public var id: Int = 0
     public var title: String = ""
     public var description: String = ""
