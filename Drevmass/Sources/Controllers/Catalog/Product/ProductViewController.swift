@@ -277,7 +277,6 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         setConstraints()
         scrollView.delegate = self
         scrollView.contentSize = contentView.bounds.size
-        navigationItem.title = productDetail.title
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -287,7 +286,6 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         gradientView.isHidden = true
         gradientView.updateColors()
         gradientView.updateLocations()
-        navigationItem.title = productDetail.title
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -447,6 +445,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
                     self.productDetail.viewed = productViewed
                 }
                 self.setData()
+                self.title = productDetail.title
                 if let array = json["Recommend"].array {
                     self.productSimilarArray.removeAll()
                     for item in array {
