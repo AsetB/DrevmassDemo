@@ -13,17 +13,19 @@ import SDWebImage
 
                 // добавить закладку в навигейшн при скроллинге!!!!
                 // добавить бонусы для каждой ячейки с апи
+                // добавить cкролл что бы проверить largetitle на появление в навигейшн
+                // как в в pageofcource делать кнопку старт цвет 
 
 class CoursesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var course: [Course] = []
-//    var bonusInfo: [CourseBonus] = []
+    var bonusInfo: [CourseBonus] = []
     
     //    MARK: UI elements
     var scrollView: UIScrollView = {
        var scrollview = UIScrollView()
            scrollview.backgroundColor = .clear
-           scrollview.showsVerticalScrollIndicator = true
+           scrollview.showsVerticalScrollIndicator = false
            scrollview.isScrollEnabled = true
            scrollview.clipsToBounds = true
            scrollview.contentMode = .scaleAspectFill
@@ -34,14 +36,6 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         var view = UIView()
             view.backgroundColor =  UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
         return view
-    }()
-    
-    var titleLabel: UILabel = {
-       var label = UILabel()
-        label.text = "Курсы"
-        label.font = .addFont(type: .SFProDisplayBold, size: 28)
-        label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
-        return label
     }()
     
     var backgroundView: UIView = {
@@ -94,20 +88,20 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .vertical
-            layout.minimumLineSpacing = 16
-            layout.minimumInteritemSpacing = 16
-            layout.estimatedItemSize.width = 343
-            layout.estimatedItemSize.height = 124
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 16
+        layout.minimumInteritemSpacing = 16
+        layout.estimatedItemSize.width = 343
+        layout.estimatedItemSize.height = 124
         
       var collectionview = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            collectionview.backgroundColor = .clear
-            collectionview.dataSource = self
-            collectionview.delegate = self
-            collectionview.isPagingEnabled = true
-            collectionview.isScrollEnabled = true
-            collectionview.showsHorizontalScrollIndicator = false
-            collectionview.bounces = false
+        collectionview.backgroundColor = .clear
+        collectionview.dataSource = self
+        collectionview.delegate = self
+        collectionview.isPagingEnabled = true
+        collectionview.isScrollEnabled = true
+        collectionview.showsHorizontalScrollIndicator = false
+        collectionview.bounces = false
             collectionview.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         return collectionview
     }()
@@ -122,6 +116,18 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         setupConstraints()
         getCourseInfo()
         getCourseBonusInfo()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        navigationController?.navigationBar.barTintColor = .white
+        navigationItem.title = "Курсы"
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationItem.title = " "
     }
     
     //    MARK: CollectionView
@@ -168,26 +174,19 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
             subtitleLabel.numberOfLines = 2
             subtitleLabel.text = course[indexPath.row].name
         
-        let viewForBonus = UIView()
-        viewForBonus.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
-        viewForBonus.layer.cornerRadius = 12
-        
-        let bonusImageview = UIImageView()
-        bonusImageview.image = UIImage(resource: ImageResource.Profile.iconBonusBeige)
-        
-        let bonusTitleLabel = UILabel()
-//        надо сделать запрос с апи, помощь Нурасыла
-        bonusTitleLabel.text = "+500"
-        
-        bonusTitleLabel.font = .addFont(type: .SFProTextBold, size: 13)
-        bonusTitleLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        let viewForBonus: BonusUIView = {
+            var view = BonusUIView()
+            view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
+            view.layer.cornerRadius = 12
+            view.bonusTitleLabel.text = "+500"
+            view.bonusImageview.image = UIImage(resource: ImageResource.Profile.iconBonusBeige)
+            return view
+        }()
 
         cell.addSubview(imageview)
         cell.addSubview(titleLabel)
         cell.addSubview(subtitleLabel)
         cell.addSubview(viewForBonus)
-        viewForBonus.addSubview(bonusImageview)
-        viewForBonus.addSubview(bonusTitleLabel)
 
         imageview.snp.makeConstraints { make in
             make.top.left.equalToSuperview().inset(8)
@@ -207,16 +206,6 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
             make.top.right.equalToSuperview().inset(8)
             make.height.equalTo(24)
         }
-        bonusImageview.snp.makeConstraints { make in
-            make.height.width.equalTo(20)
-            make.right.equalToSuperview().inset(2)
-            make.centerY.equalToSuperview()
-        }
-        bonusTitleLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(8)
-            make.right.equalTo(bonusImageview.snp.left).inset(-4)
-        }
         
        return cell
    }
@@ -232,6 +221,8 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
 extension CoursesViewController {
     
     //    MARK: other funcs
+    
+    
     
     //    MARK: network
     func getCourseInfo() {
@@ -306,7 +297,6 @@ extension CoursesViewController {
         view.backgroundColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
         view.addSubview(scrollView)
         scrollView.addSubview(contentview)
-        contentview.addSubview(titleLabel)
         contentview.addSubview(backgroundView)
         backgroundView.addSubview(favoriteButton)
         backgroundView.addSubview(bannerImageView)
@@ -319,23 +309,19 @@ extension CoursesViewController {
         scrollView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(1500)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).priority(.medium)
         }
         contentview.snp.makeConstraints { make in
             make.horizontalEdges.top.bottom.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
-//            make.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
+//            make.height.equalTo(2000)
             make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
         }
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(48)
-            make.horizontalEdges.equalToSuperview().inset(16)
-        }
         backgroundView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).inset(-16)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(16)
             make.horizontalEdges.equalToSuperview()
-//            make.bottom.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
         }
         favoriteButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(24)

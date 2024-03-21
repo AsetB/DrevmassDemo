@@ -19,6 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController = AuthenticationService.shared.isAuthorized ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
+        
+//        let pageOfCourseVC = PageOfCourseViewController()
+//        let isSwitchOn = UserDefaults.standard.bool(forKey: "switchCalendar")
+//        pageOfCourseVC.switchForCalendar.isOn = isSwitchOn
     }
     
     func setRootViewController(_ viewController: UIViewController){

@@ -111,9 +111,10 @@ class PromoCodeViewController: UIViewController {
     }
 }
 
-// - MARK: - extension
 
 extension PromoCodeViewController {
+    
+    // - MARK: - network
     
     func getPromocodeInfo() {
         
@@ -147,6 +148,8 @@ extension PromoCodeViewController {
         
         
     }
+    
+    // - MARK: - other funcs
     
     @objc func showAddPromocodeVC() {
 //        дописать действие для кнопки и переименовать функцию в название VC

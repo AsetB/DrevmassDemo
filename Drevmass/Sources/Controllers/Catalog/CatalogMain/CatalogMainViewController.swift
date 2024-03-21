@@ -307,4 +307,5 @@ class SelfSizingCollectionView: UICollectionView {
         let height = min(.infinity, contentSize.height)
         return CGSize(width: contentSize.width, height: height)
     }
+    
 }

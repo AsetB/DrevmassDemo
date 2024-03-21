@@ -15,7 +15,7 @@ class CourseBonus {
     var description: String = ""
     var deadline: String = ""
     
-    init(){
+    init() {
         
     }
     
