@@ -10,6 +10,7 @@ import UIKit
 import SwiftyJSON
 
 class Course {
+    var id: Int = 0
     var name: String = ""
     var description: String = ""
     var duration: Int = 0
@@ -18,6 +19,7 @@ class Course {
     var completed: Bool = false
     var is_started: Bool = false
     var bonus_info: [CourseBonus] = []
+    var lessons: [Lesson] = []
     
     init(){
         
@@ -26,6 +28,9 @@ class Course {
     init(json: JSON) {
         if let temp = json["name"].string{
             self.name = temp
+        }
+        if let temp = json["id"].int{
+            self.id = temp
         }
         if let temp = json["description"].string{
             self.description = temp
@@ -49,6 +54,12 @@ class Course {
             for item in array{
                 let temp = CourseBonus(json: item)
                 self.bonus_info.append(temp)
+            }
+        } 
+        if let array = json["lessons"].array{
+            for item in array{
+                let temp = Lesson(json: item)
+                self.lessons.append(temp)
             }
         }
     }

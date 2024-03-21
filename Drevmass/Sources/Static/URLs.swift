@@ -23,6 +23,7 @@ enum URLs {
     static let CONTACT_URL = BASE_URL + "contacts"
     static let POST_SUPPORT_URL = BASE_URL + "support"
     static let GET_COURSE_URL = BASE_URL + "course"
+    static let GET_COURSE_BY_ID_URL = BASE_URL + "course/"
     static let GET_COURSE_BONUS_URL = BASE_URL + "course/bonus"
     static let GET_PRODUCT_FAMOUS = BASE_URL + "products/famous"
     static let GET_PRODUCT_PRICEDOWN = BASE_URL + "products/pricedown"
