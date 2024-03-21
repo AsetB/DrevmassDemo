@@ -529,27 +529,4 @@ extension CatalogMainViewController: SortSelecting {
             sortButton.configuration?.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
         }
     }
-<<<<<<< HEAD
-=======
-
-    override var intrinsicContentSize: CGSize {
-        let height = min(.infinity, contentSize.height)
-        return CGSize(width: contentSize.width, height: height)
-    }
-}
-
-class SelfSizingCollectionView: UICollectionView {
-    override var contentSize: CGSize {
-        didSet {
-            invalidateIntrinsicContentSize()
-            setNeedsLayout()
-        }
-    }
-
-    override var intrinsicContentSize: CGSize {
-        let height = min(.infinity, contentSize.height)
-        return CGSize(width: contentSize.width, height: height)
-    }
-    
->>>>>>> madinabranch
 }
