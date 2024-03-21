@@ -56,12 +56,14 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         return imageview
     }()
     
-    var gradientView: GradientView = {
-       var gradient = GradientView()
-        gradient.endColor = UIColor(resource: ColorResource.Colors._161616)
-        gradient.startColor = UIColor(resource: ColorResource.Colors._161616A0)
-        return gradient
-    }()
+    var gradientView = CustomGradientView(startColor:  UIColor(resource: ColorResource.Colors._161616A0), midColor: UIColor(resource: ColorResource.Colors._161616), endColor: UIColor(resource: ColorResource.Colors._161616), startLocation: 0.1, midLocation: 0.9, endLocation: 1.0, horizontalMode: false, diagonalMode: false)
+    
+//    var gradientView: CustomGradientView = {
+//       var gradient = CustomGradientView()
+//        gradient.endColor = UIColor(resource: ColorResource.Colors._161616)
+//        gradient.startColor = UIColor(resource: ColorResource.Colors._161616A0)
+//        return gradient
+//    }()
     
     var titleLabelOnPoster: UILabel = {
        var label = UILabel()
@@ -264,6 +266,11 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         setupConstraints()
         setData()
         setupNavigation()
+        
+        gradientView.updateColors()
+        
+        gradientView.updateLocations()
+        
         
     }
     
