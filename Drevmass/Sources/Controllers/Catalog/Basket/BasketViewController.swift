@@ -104,6 +104,128 @@ class BasketViewController: UIViewController {
         
         return view
     }()
+    
+    private lazy var basketTableView: SelfSizingTableView = {
+        let tableView = SelfSizingTableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.register(BasketTableViewCell.self, forCellReuseIdentifier: "basketCell")
+        tableView.isScrollEnabled = false
+        tableView.bounces = false
+        return tableView
+    }()
+    
+    private lazy var topLabel: UILabel = {
+        let topLabel = UILabel()
+        topLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        topLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        topLabel.text = "Списать бонусы"
+        return topLabel
+    }()
+    
+    
+    private lazy var bonusLabel: UILabel = {
+        let bonusLabel = UILabel()
+        bonusLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        bonusLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        bonusLabel.text = "500"
+        return bonusLabel
+    }()
+    
+    
+    private lazy var bonusIcon: UIImageView = {
+        let bonusIcon = UIImageView()
+        bonusIcon.image = UIImage(resource: ImageResource.Basket.bonus)
+        return bonusIcon
+    }()
+    
+    
+    private lazy var descriptionLabel: UILabel = {
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = "Баллами можно оплатить до 30% от стоимости заказа."
+        descriptionLabel.font = .addFont(type: .SFProTextRegular, size: 15)
+        descriptionLabel.textColor = UIColor(resource: ColorResource.Colors._787878)
+        descriptionLabel.numberOfLines = 2
+        descriptionLabel.textAlignment  = .left
+        return descriptionLabel
+    }()
+    
+    private lazy var bonusSwitch: UISwitch = {
+        let bonusSwitch = UISwitch()
+        bonusSwitch.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD)
+        bonusSwitch.onTintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        bonusSwitch.addTarget(self, action: #selector(applyBonus), for: .valueChanged)
+        return bonusSwitch
+    }()
+    
+    private lazy var enterPromocode: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 20
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0).cgColor
+        
+        let icon = UIImageView()
+        icon.image = UIImage(resource: ImageResource.Basket.promocode)
+        
+        let arrow = UIImageView()
+        arrow.image = UIImage(resource: ImageResource.Basket.rightArrow)
+        
+        let label = UILabel()
+        label.text = "Ввести промокод"
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        
+        view.addSubview(icon)
+        view.addSubview(arrow)
+        view.addSubview(label)
+        
+        icon.snp.makeConstraints { make in
+            make.size.equalTo(24)
+            make.leading.equalToSuperview().inset(14)
+            make.centerY.equalToSuperview()
+        }
+        label.snp.makeConstraints { make in
+            make.leading.equalTo(icon.snp.trailing).offset(12)
+            make.height.equalTo(22)
+            make.centerY.equalToSuperview()
+        }
+        arrow.snp.makeConstraints { make in
+            make.size.equalTo(16)
+            make.trailing.equalToSuperview().inset(14)
+            make.centerY.equalToSuperview()
+        }
+        
+        button.addTarget(self, action: #selector(openPromocodeModal), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var backGroundView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 20
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
+        
+        var dashedLineView: DashedLineView = {
+            var view = DashedLineView()
+            view.dashColor = UIColor(resource: ColorResource.Colors.D_6_D_1_CE)
+            view.backgroundColor = .clear
+            view.spaceBetweenDash = 5
+            view.perDashLength = 5
+            return view
+        }()
+        
+        view.addSubview(dashedLineView)
+        
+        dashedLineView.snp.makeConstraints { make in
+            make.height.equalTo(1)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(53.5)
+        }
+        return view
+    }()
+        
+        
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,6 +234,7 @@ class BasketViewController: UIViewController {
         setNavBar()
         addViews()
         setConstraints()
+        emptyBasketView.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -151,6 +274,8 @@ class BasketViewController: UIViewController {
         scrollView.addSubview(contentView)
         contentView.addSubview(backView)
         backView.addSubview(emptyBasketView)
+        backView.addSubview(basketTableView)
+        ///add views
         
     }
     //- MARK: - Constraints
@@ -174,6 +299,11 @@ class BasketViewController: UIViewController {
             make.horizontalEdges.equalToSuperview().inset(56)
             make.height.equalTo(280)
         }
+        basketTableView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(32)
+        }
         
     }
     //- MARK: - Button actions
@@ -186,6 +316,38 @@ class BasketViewController: UIViewController {
             tabBarController.selectedIndex = 1
         }
     }
+    @objc func applyBonus() {
+        if bonusSwitch.isOn {
+            print("apply Bonus")
+        } else {
+            print("Do not apply Bonus")
+        }
+    }
+    @objc func openPromocodeModal() {
+        print("enter promocode tapped")
+    }
+}
+//- MARK: - UITableViewDelegate & UITableViewDataSource
+extension BasketViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = basketTableView.dequeueReusableCell(withIdentifier: "basketCell") as! BasketTableViewCell
+        cell.goodsImage.image = UIImage(resource: ImageResource.Hardcode.goods)
+        cell.nameLabel.text = "5-ти роликовый массажёр"
+        cell.priceLabel.text = "12 900 ₽"
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 108
+    }
+    
+    
 }
 
 private struct Const {
