@@ -12,9 +12,7 @@ import SwiftyJSON
 import SDWebImage
 
                 // добавить закладку в навигейшн при скроллинге!!!!
-                // добавить бонусы для каждой ячейки с апи
                 // добавить cкролл что бы проверить largetitle на появление в навигейшн
-                // как в в pageofcource делать кнопку старт цвет 
 
 class CoursesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -53,6 +51,7 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         button.leftIcon.image = UIImage(resource: ImageResource.Courses.icFavorite)
         button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
         button.layer.borderColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0).cgColor
+        button.addTarget(self, action: #selector(showFavoriteVc), for: .touchUpInside)
         return button
     }()
     
@@ -65,6 +64,13 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         imageview.clipsToBounds = true
         imageview.layer.cornerRadius = 24
         return imageview
+    }()
+    
+    var clearButtonForBanner: UIButton = {
+       var button = UIButton()
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(showInfoVC), for: .touchUpInside)
+        return button
     }()
     
     var titleForBannerLabel: UILabel = {
@@ -91,8 +97,9 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 16
-        layout.estimatedItemSize.width = 343
-        layout.estimatedItemSize.height = 124
+//        layout.estimatedItemSize.width = 343
+//        layout.estimatedItemSize.height = 124
+//        layout.estimatedItemSize = .zero
         
       var collectionview = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionview.backgroundColor = .clear
@@ -175,14 +182,16 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
             subtitleLabel.text = course[indexPath.row].name
         
         let viewForBonus: BonusUIView = {
-            var view = BonusUIView()
+            let view = BonusUIView()
             view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
             view.layer.cornerRadius = 12
-            view.bonusTitleLabel.text = "+500"
+            view.bonusTitleLabel.text = "+999"
+//            view.bonusTitleLabel.text = "\(course[indexPath.row].bonus_info.price)"
+            
             view.bonusImageview.image = UIImage(resource: ImageResource.Profile.iconBonusBeige)
             return view
         }()
-
+        
         cell.addSubview(imageview)
         cell.addSubview(titleLabel)
         cell.addSubview(subtitleLabel)
@@ -214,6 +223,8 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
        collectionView.deselectItem(at: indexPath, animated: true)
       let pageOfCourse = PageOfCourseViewController()
        pageOfCourse.course = course[indexPath.row]
+       pageOfCourse.navigationItem.largeTitleDisplayMode = .never
+//       pageOfCourse.navigationItem.title = "Урок \(course[indexPath.row].id)"
        navigationController?.show(pageOfCourse, sender: self)
    }
 }
@@ -222,7 +233,16 @@ extension CoursesViewController {
     
     //    MARK: other funcs
     
+    @objc func showFavoriteVc() {
+        let favoriteVC = FavoriteViewController()
+        navigationController?.pushViewController(favoriteVC, animated: true)
+    }
     
+    @objc func showInfoVC() {
+        print("tapped")
+        let infoVC = InformationViewController()
+        navigationController?.pushViewController(infoVC, animated: true)
+    }
     
     //    MARK: network
     func getCourseInfo() {
@@ -245,7 +265,13 @@ extension CoursesViewController {
                         for item in array {
                             let course = Course(json: item)
                             self.course.append(course)
-                            
+                        }
+                        if let array = json["bonus_info"].array{
+                            for item in array {
+                                let bonus = CourseBonus(json: item)
+                                self.bonusInfo.append(bonus)
+                                print(self.bonusInfo.count)
+                            }
                         }
                         self.collectionView.reloadData()
                     }
@@ -300,6 +326,7 @@ extension CoursesViewController {
         contentview.addSubview(backgroundView)
         backgroundView.addSubview(favoriteButton)
         backgroundView.addSubview(bannerImageView)
+//        bannerImageView.addSubview(clearButtonForBanner)
         backgroundView.addSubview(titleForBannerLabel)
         backgroundView.addSubview(subtitleForBannerLabel)
         backgroundView.addSubview(collectionView)
@@ -308,9 +335,9 @@ extension CoursesViewController {
     func setupConstraints() {
         scrollView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(1500)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).priority(.medium)
+            make.horizontalEdges.equalToSuperview()
+//            make.height.equalTo(1500)
+            make.bottom.equalToSuperview()
         }
         contentview.snp.makeConstraints { make in
             make.horizontalEdges.top.bottom.equalTo(scrollView.contentLayoutGuide)
@@ -333,6 +360,9 @@ extension CoursesViewController {
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(128)
         }
+//        clearButtonForBanner.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
         titleForBannerLabel.snp.makeConstraints { make in
             make.top.equalTo(bannerImageView.snp.top).inset(20)
             make.left.equalTo(bannerImageView.snp.left).inset(20)
@@ -344,8 +374,16 @@ extension CoursesViewController {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(bannerImageView.snp.bottom).inset(-24)
             make.horizontalEdges.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().inset(24)
         }
     }
 }
 
+extension CoursesViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = UIScreen.main.bounds.width - 32
+        return CGSize(width: width, height: 124)
+    }
+//    layout.estimatedItemSize.width = 343
+//    layout.estimatedItemSize.height = 124
+}

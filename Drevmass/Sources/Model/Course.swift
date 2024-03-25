@@ -19,7 +19,7 @@ class Course {
     var completed: Bool = false
     var is_started: Bool = false
     var bonus_info: [CourseBonus] = []
-    var lessons: [Lesson] = []
+    var lessons: [LessonsById] = []
     
     init(){
         
@@ -58,7 +58,7 @@ class Course {
         } 
         if let array = json["lessons"].array{
             for item in array{
-                let temp = Lesson(json: item)
+                let temp = LessonsById(json: item)
                 self.lessons.append(temp)
             }
         }
