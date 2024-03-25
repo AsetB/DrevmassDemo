@@ -1,8 +1,8 @@
 //
-//  LessonCollectionViewCell.swift
+//  FavoriteCollectionViewCell.swift
 //  Drevmass
 //
-//  Created by Madina Olzhabek on 18.03.2024.
+//  Created by Madina Olzhabek on 22.03.2024.
 //
 
 import UIKit
@@ -12,12 +12,8 @@ import Alamofire
 import SVProgressHUD
 import SwiftyJSON
 
-class LessonCollectionViewCell: UICollectionViewCell {
-    
-    
+class FavoriteCollectionViewCell: UICollectionViewCell {
     var lesson = LessonsById()
-    var completedLessonCount = 0
-    var allLessonCount = 0
     
      // MARK: - UI elements
     
@@ -26,15 +22,8 @@ class LessonCollectionViewCell: UICollectionViewCell {
         imageview.contentMode = .scaleAspectFill
         imageview.clipsToBounds = true
         imageview.layer.cornerRadius = 24
-//        imageview.frame.size = CGSize(width: 327, height: 185)
+        imageview.frame.size = CGSize(width: 246, height: 148)
         return imageview
-    }()
-    
-    var stackView: UIStackView = {
-       var stackview = UIStackView()
-        stackview.axis = .horizontal
-        stackview.spacing = 5
-        return stackview
     }()
     
     var titleLabel: UILabel = {
@@ -42,21 +31,14 @@ class LessonCollectionViewCell: UICollectionViewCell {
         label.font = .addFont(type: .SFProTextMedium, size: 13)
         label.textColor = UIColor(resource: ColorResource.Colors._989898)
         return label
-    }() 
-    
-    var doneImageView: UIImageView = {
-        var imageview = UIImageView()
-        imageview.image = UIImage(resource: ImageResource.Courses.icCheck)
-        imageview.frame.size = CGSize(width: 16, height: 16)
-        imageview.isHidden = true
-        return imageview
     }()
     
     var subtitleLabel: UILabel = {
        var label = UILabel()
         label.numberOfLines = 0
-        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.font = .addFont(type: .SFProDisplaySemibold, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        label.numberOfLines = 2
         return label
     }()
     
@@ -85,9 +67,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
         layer.borderColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0).cgColor
         layer.cornerRadius = 24
         contentView.addSubview(imageView)
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(doneImageView)
-        stackView.addArrangedSubview(titleLabel)
+        contentView.addSubview(titleLabel)
         contentView.addSubview(subtitleLabel)
         imageView.addSubview(favoriteButton)
         imageView.addSubview(playButton)
@@ -124,27 +104,8 @@ class LessonCollectionViewCell: UICollectionViewCell {
         }else{
             self.imageView.sd_setImage(with: URL(string: "http://45.12.74.158/\(lesson.image_src)"))
         }
-        
         self.titleLabel.text = "\(lesson.id) урок · \(lesson.duration/60) мин"
         self.subtitleLabel.text = lesson.title
-        
-        if lesson.completed {
-            completedLessonCount += 1
-            doneImageView.isHidden = false
-            let lessonAttribute = NSAttributedString(string: "\(lesson.id) урок ", attributes: [.font: UIFont.addFont(type: .SFProTextMedium, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._3_ABD_5_B)])
-            let minAttribute = NSAttributedString(string: "· \(lesson.duration/60) мин", attributes: [.font: UIFont.addFont(type: .SFProTextMedium, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)])
-            let mutating = NSMutableAttributedString()
-            mutating.append(lessonAttribute)
-            mutating.append(minAttribute)
-            self.titleLabel.attributedText = mutating
-            
-//            var pageVc = PageOfCourseViewController()
-//            pageVc.progressView.countLabel.text = "\(completedLessonCount) из \(allLessonCount)"
-            
-        }else{
-            self.titleLabel.text = "\(lesson.id) урок · \(lesson.duration/60) мин"
-            doneImageView.isHidden = true
-        }
     }
     
     
@@ -166,7 +127,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
                     if response.response?.statusCode == 200 {
                         let json = JSON(response.data!)
                         print("JSON: \(json)")
-                        
+                        // добавить обновление ячеек после удаления
                     }else{
                         var ErrorString = "CONNECTION_ERROR"
                         if let sCode = response.response?.statusCode{
@@ -177,6 +138,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
                     }
             }
             lesson.is_favorite = false
+            print(lesson.id)
         }else{
             favoriteButton.setImage(UIImage(resource: ImageResource.Courses.favoriteSelected), for: .normal)
             lesson.is_favorite = true
@@ -186,7 +148,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
                 "Authorization": "Bearer \(AuthenticationService.shared.token)"
             ]
             
-            var parameters = ["lesson_id": lesson.id]
+            let parameters = ["lesson_id": lesson.id]
             AF.upload(multipartFormData: {(multipartFormData) in
                 for (key, value) in parameters {
                     multipartFormData.append(Data(value.description.utf8), withName: key)
@@ -199,7 +161,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
                 if responseCode == 200 {
                     let json = JSON(response.data!)
                     print("JSON: \(json)")
-                   
+                    
                 } else {
                     var resultString = ""
                     if let data = response.data {
@@ -222,17 +184,15 @@ class LessonCollectionViewCell: UICollectionViewCell {
     func setupConstraints() {
         imageView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview().inset(8)
-//            make.width.equalTo(327)
-            make.height.equalTo(185)
+            make.height.equalTo(148)
         }
-        stackView.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).inset(-8)
-            make.left.equalToSuperview().inset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
         }
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).inset(-8)
             make.horizontalEdges.equalToSuperview().inset(16)
-//            make.bottom.equalToSuperview().inset(12)
         }
         favoriteButton.snp.makeConstraints { make in
             make.top.right.equalToSuperview().inset(12)
@@ -244,5 +204,3 @@ class LessonCollectionViewCell: UICollectionViewCell {
         }
     }
 }
-
-

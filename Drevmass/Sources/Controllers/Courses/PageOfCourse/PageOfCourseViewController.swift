@@ -13,22 +13,14 @@ import Alamofire
 import SwiftyJSON
 import PanModal
 
-protocol DidSelectCellDayProtocol {
-    func chanceLabel(array: [String])
-}
-
 class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate{
     
-//    func chanceLabel(array: [String]) {
-//        <#code#>
-//    }
-    
-
     var course = Course()
     var courseBonus = CourseBonus()
     var courseById = CourseById()
-    var lessonArray: [Lesson] = []
-    
+    var lessonArray: [LessonsById] = []
+    var days = Days()
+    var daysForTitle: [String] = []
     
     // MARK: - UI elements
     
@@ -57,13 +49,6 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
     }()
     
     var gradientView = CustomGradientView(startColor:  UIColor(resource: ColorResource.Colors._161616A0), midColor: UIColor(resource: ColorResource.Colors._161616), endColor: UIColor(resource: ColorResource.Colors._161616), startLocation: 0.1, midLocation: 0.9, endLocation: 1.0, horizontalMode: false, diagonalMode: false)
-    
-//    var gradientView: CustomGradientView = {
-//       var gradient = CustomGradientView()
-//        gradient.endColor = UIColor(resource: ColorResource.Colors._161616)
-//        gradient.startColor = UIColor(resource: ColorResource.Colors._161616A0)
-//        return gradient
-//    }()
     
     var titleLabelOnPoster: UILabel = {
        var label = UILabel()
@@ -96,6 +81,7 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         button.backgroundColor = UIColor(resource: ColorResource.Colors.ffffffA20)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.layer.cornerRadius = 24
+        button.addTarget(self, action: #selector(hideStartButton), for: .touchUpInside)
         return button
     }()
     
@@ -107,6 +93,22 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         view.layer.cornerRadius = 24
         view.clipsToBounds = true
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        return view
+    }()
+    
+    var stackViewForProgressAndDescription: UIStackView = {
+       var stackview = UIStackView()
+        stackview.axis = .vertical
+        stackview.spacing = 12
+        return stackview
+    }()
+    
+    var progressView: ProgressView = {
+       var view = ProgressView()
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
+        view.heightAnchor.constraint(equalToConstant: 66).isActive = true
+        view.layer.cornerRadius = 16
+        view.isHidden = true
         return view
     }()
     
@@ -152,77 +154,12 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
     
     // calendar
     
-    var stackViewForCalendar: UIStackView = {
-       var stackview = UIStackView()
-        stackview.axis = .vertical
-        stackview.layer.cornerRadius = 20
-        stackview.layer.borderWidth = 2
-        stackview.layer.borderColor = UIColor(resource: ColorResource.Colors.EFEBE_9).cgColor
-//        stackview.layoutMargins = UIEdgeInsets(top: 4, left: 0, bottom: 8, right: 0)
-        return stackview
-    }()
-    
-    var calendarWithSwitch: Button = {
-        var button = Button()
-        button.setTitle("Календарь занятий", for: .normal)
-        button.leftIcon.image = UIImage(resource: ImageResource.Courses.icCalendar)
-        button.setTitleColor(UIColor(resource: ColorResource.Colors._302_C_28), for: .normal)
-        button.heightAnchor.constraint(equalToConstant: 63).isActive = true
-        button.layer.borderWidth = 0
-        return button
-    }()
-    
-    var switchForCalendar: UISwitch = {
-       var switchForCalendar = UISwitch()
-        switchForCalendar.onTintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        switchForCalendar.frame.size = CGSize(width: 51, height: 31)
-        switchForCalendar.addTarget(self, action: #selector(switchValueChanged), for: .valueChanged)
-        return switchForCalendar
-    }()
-    
-    var dayOfClassButton: Button = {
-       var button = Button()
-        button.setTitle("Дни занятий", for: .normal)
-        button.titleLabel?.font = .addFont(type: .SFProTextRegular, size: 17)
-        button.setTitleColor(UIColor(resource: ColorResource.Colors._302_C_28), for: .normal)
-        button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
-        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        button.layer.borderWidth = 0
-        button.leftIcon.isHidden = true
-        button.contentEdgeInsets.left = 16
-        button.isHidden = true
-        button.addTarget(self, action: #selector(showSelectDayViewController), for: .touchUpInside)
-        return button
-    }()
-    
-    var titleForDayLabel: UILabel = {
-       var label = UILabel()
-        label.text = "Пн"
-        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
-        return label
-    }()   
-    
-    var timeOfClassButton: Button = {
-       var button = Button()
-        button.setTitle("Время", for: .normal)
-        button.titleLabel?.font = .addFont(type: .SFProTextRegular, size: 17)
-        button.setTitleColor(UIColor(resource: ColorResource.Colors._302_C_28), for: .normal)
-        button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
-        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        button.layer.borderWidth = 0
-        button.leftIcon.isHidden = true
-        button.contentEdgeInsets.left = 16
-        button.isHidden = true
-        return button
-    }()
-    
-    var titleForTimeLabel: UILabel = {
-       var label = UILabel()
-        label.text = "9:00"
-        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
-        return label
+    var calendarView: CalendarView = {
+        var view = CalendarView()
+        view.switchForCalendar.addTarget(self, action: #selector(switchValueChanged), for: .valueChanged)
+        view.dayOfClassButton.addTarget(self, action: #selector(showSelectDayViewController), for: .touchUpInside)
+        view.timeOfClassButton.addTarget(self, action: #selector(showSelectTimeViewController), for: .touchUpInside)
+        return view
     }()
     
     // lessons
@@ -250,7 +187,7 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
        collectionView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
        collectionView.isScrollEnabled = false
        collectionView.bounces = false
-       collectionView.contentSize.height = 331
+//       collectionView.contentSize.height = 331
           return collectionView
     }()
     
@@ -264,16 +201,22 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         getCourseInfo()
         setupView()
         setupConstraints()
-        setData()
+        updateData()
         setupNavigation()
-        
         gradientView.updateColors()
-        
         gradientView.updateLocations()
         
+        if course.is_started {
+            hideStartButton()
+        }
         
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        calendarView.titleForDayLabel.text = ""
+        daysForTitle = []
+        getDays()
+    }
+   
     // MARK: - collectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -285,6 +228,15 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! LessonCollectionViewCell
         
         cell.setData(lesson: lessonArray[indexPath.row])
+        cell.lesson = lessonArray[indexPath.row]
+        cell.allLessonCount = lessonArray.count
+        
+        if lessonArray[indexPath.row].is_favorite {
+            cell.favoriteButton.setImage(UIImage(resource: ImageResource.Courses.favoriteSelected), for: .normal)
+            print(lessonArray[indexPath.row].name)
+        }else{
+            cell.favoriteButton.setImage(UIImage(resource: ImageResource.Courses.icFavoriteWhite), for: .normal)
+        }
         
         return cell
     }
@@ -293,7 +245,9 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let detailLessonVC = DetailLessonViewController()
-        detailLessonVC.lesson = lessonArray[indexPath.row]
+        detailLessonVC.lessonId = lessonArray[indexPath.row].id
+        detailLessonVC.courseId = course.id
+        detailLessonVC.courseName = course.name
         navigationController?.pushViewController(detailLessonVC, animated: true)
         
     }
@@ -302,6 +256,27 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
 extension PageOfCourseViewController {
     
     // MARK: - other funcs
+    
+    @objc func hideStartButton() {
+        
+        titleLabelOnPoster.snp.remakeConstraints { make in
+            make.top.equalToSuperview().inset(256)
+            make.horizontalEdges.equalToSuperview().inset(16)
+        }
+        stackViewForPosterSubtitle.snp.remakeConstraints { make in
+            make.top.equalTo(titleLabelOnPoster.snp.bottom).inset(-12)
+            make.left.equalToSuperview().inset(16)
+        }
+        startButton.snp.remakeConstraints { make in
+            make.top.equalTo(stackViewForPosterSubtitle.snp.bottom).inset(-12)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(0)
+        }
+        startButton.isHidden = true
+        progressView.isHidden = false
+        
+   
+    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
@@ -321,7 +296,7 @@ extension PageOfCourseViewController {
         }
     }
     
-    func setData() {
+    func updateData() {
         
         posterImageView.sd_setImage(with: URL(string: "http://45.12.74.158/\(course.image_src)"))
         titleLabelOnPoster.text = course.name
@@ -342,6 +317,15 @@ extension PageOfCourseViewController {
         
         subtitleLabel.attributedText = combinedAttributedString
         
+        var count = 0
+        for lesson in lessonArray {
+            if lesson.completed {
+                count += 1
+            }
+        }
+        progressView.countLabel.text = "\(count) из \(lessonArray.count)"
+        progressView.progressView.progress = Float(count) / Float(lessonArray.count)
+        
     }
     
     @objc func goBack() {
@@ -355,27 +339,136 @@ extension PageOfCourseViewController {
     }
     
     @objc func switchValueChanged() {
-        if switchForCalendar.isOn {
-            dayOfClassButton.isHidden = false
-            timeOfClassButton.isHidden = false
+        if calendarView.switchForCalendar.isOn {
+            calendarView.dayOfClassButton.isHidden = false
+            calendarView.timeOfClassButton.isHidden = false
+            calendarView.dayOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(48)
+                make.top.equalTo(calendarView.calendarWithSwitch.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.timeOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(48)
+                make.top.equalTo(calendarView.dayOfClassButton.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.snp.remakeConstraints { make in
+                make.top.equalTo(BonusView.snp.bottom).inset(-24)
+                make.horizontalEdges.equalToSuperview().inset(16)
+                make.height.equalTo(163)
+            }
         }else{
-            dayOfClassButton.isHidden = true
-            timeOfClassButton.isHidden = true
+            calendarView.dayOfClassButton.isHidden = true
+            calendarView.timeOfClassButton.isHidden = true
+            calendarView.dayOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(0)
+                make.top.equalTo(calendarView.calendarWithSwitch.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.timeOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(0)
+                make.top.equalTo(calendarView.dayOfClassButton.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.snp.remakeConstraints { make in
+                make.top.equalTo(BonusView.snp.bottom).inset(-24)
+                make.horizontalEdges.equalToSuperview().inset(16)
+                make.height.equalTo(63)
+            }
+            
+            let parameters: [String: Any] = ["course_id": course.id, "notificationIsSelected": false]
+                
+                let headers: HTTPHeaders = [
+                    "Authorization": "Bearer \(AuthenticationService.shared.token)"
+                ]
+                AF.request(URLs.GET_DAY_URL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
+                    SVProgressHUD.dismiss()
+                    var resultString = ""
+                    if let data = response.data{
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                        if response.response?.statusCode == 200 {
+                            let json = JSON(response.data!)
+                            print("JSON: \(json)")
+                        }else{
+                            var ErrorString = "CONNECTION_ERROR"
+                            if let sCode = response.response?.statusCode{
+                                ErrorString = ErrorString + "\(sCode)"
+                            }
+                            ErrorString = ErrorString + "\(resultString)"
+                            SVProgressHUD.showError(withStatus: "\(ErrorString)")
+                        }
+                }
         }
-        
-//        let userDefaults = UserDefaults.standard.setValue(switchForCalendar.isOn, forKey: "switchCalendar")
     }
-    
     
     @objc func showSelectDayViewController() {
         
         let selectDayVC = SelectDayViewController()
         selectDayVC.hidesBottomBarWhenPushed = true
         selectDayVC.modalPresentationStyle = .overFullScreen
+        selectDayVC.courseId = course.id
         presentPanModal(selectDayVC)
+    }
+    @objc func showSelectTimeViewController() {
+        
+        let selectTimeVC = SelectTimeViewController()
+        selectTimeVC.hidesBottomBarWhenPushed = true
+        selectTimeVC.modalPresentationStyle = .overFullScreen
+        selectTimeVC.courseId = course.id
+        presentPanModal(selectTimeVC)
     }
     
     // MARK: - network
+    
+    func getDays() {
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(AuthenticationService.shared.token)"
+        ]
+        AF.request(URLs.GET_DAY_URL + "/\(course.id)", method: .get, headers: headers).responseData { response in
+            SVProgressHUD.dismiss()
+            var resultString = ""
+            if let data = response.data{
+                resultString = String(data: data, encoding: .utf8)!
+            }
+                if response.response?.statusCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                    self.days = Days(json: json)
+                    
+                    if self.days.mon { self.daysForTitle.append("Пн") }
+                    if self.days.tue { self.daysForTitle.append("Вт") }
+                    if self.days.wed { self.daysForTitle.append("Ср") }
+                    if self.days.thu { self.daysForTitle.append("Чт") }
+                    if self.days.fri { self.daysForTitle.append("Пт") }
+                    if self.days.sat { self.daysForTitle.append("Сб") }
+                    if self.days.sun { self.daysForTitle.append("Вс") }
+                   
+                    if self.daysForTitle.count == 7 {
+                        self.calendarView.titleForDayLabel.text = "Каждый день"
+                    }else{
+                        for day in self.daysForTitle {
+                            self.calendarView.titleForDayLabel.text! += " \(day),"
+                        }
+                        // удалить последнюю запятую
+                    }
+                    
+                    self.calendarView.titleForTimeLabel.text = self.days.time
+                    if self.days.notificationIsSelected {
+                        self.calendarView.switchForCalendar.isOn = true
+                        self.switchValueChanged()
+                    }
+                }else{
+                    var ErrorString = "CONNECTION_ERROR"
+                    if let sCode = response.response?.statusCode{
+                        ErrorString = ErrorString + "\(sCode)"
+                    }
+                    ErrorString = ErrorString + "\(resultString)"
+                    SVProgressHUD.showError(withStatus: "\(ErrorString)")
+                }
+        }
+    }
     
     func getCourseInfo() {
         SVProgressHUD.show()
@@ -401,10 +494,11 @@ extension PageOfCourseViewController {
                     descriptionLabel.text = course.description
                     if let array = json["course"]["lessons"].array {
                         for item in array {
-                            let lesson = Lesson(json: item)
+                            let lesson = LessonsById(json: item)
                             self.lessonArray.append(lesson)
                         }
                     }
+                    updateData()
                     collectionView.reloadData()
                     
                 }else{
@@ -446,20 +540,15 @@ extension PageOfCourseViewController {
         contentview.addSubview(startButton)
         contentview.addSubview(backgroundView)
         
-        backgroundView.addSubview(descriptionLabel)
+        backgroundView.addSubview(stackViewForProgressAndDescription)
+        stackViewForProgressAndDescription.addArrangedSubview(progressView)
+        stackViewForProgressAndDescription.addArrangedSubview(descriptionLabel)
+        
         backgroundView.addSubview(BonusView)
         BonusView.addSubview(patternImageView)
         BonusView.addSubview(bonusLabel)
         BonusView.addSubview(plusBonusUIView)
-        backgroundView.addSubview(stackViewForCalendar)
-        
-        stackViewForCalendar.addArrangedSubview(calendarWithSwitch)
-        calendarWithSwitch.addSubview(switchForCalendar)
-        stackViewForCalendar.addArrangedSubview(dayOfClassButton)
-        dayOfClassButton.addSubview(titleForDayLabel)
-        stackViewForCalendar.addArrangedSubview(timeOfClassButton)
-        timeOfClassButton.addSubview(titleForTimeLabel)
-        
+        backgroundView.addSubview(calendarView)
         backgroundView.addSubview(lessonsLabel)
         backgroundView.addSubview(collectionView)
         
@@ -502,7 +591,7 @@ extension PageOfCourseViewController {
             make.horizontalEdges.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-        descriptionLabel.snp.makeConstraints { make in
+        stackViewForProgressAndDescription.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(16)
             make.horizontalEdges.equalToSuperview().inset(16)
         }
@@ -525,24 +614,22 @@ extension PageOfCourseViewController {
             make.left.equalToSuperview().inset(20)
             make.width.equalTo(205)
         }
-        stackViewForCalendar.snp.makeConstraints { make in
-            make.top.equalTo(BonusView.snp.bottom).inset(-24)
-            make.horizontalEdges.equalToSuperview().inset(16)
-        }
-        switchForCalendar.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(16)
-        }
-        titleForDayLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(40)
-        } 
-        titleForTimeLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(40)
+        
+        if days.notificationIsSelected {
+            calendarView.snp.makeConstraints { make in
+                make.top.equalTo(BonusView.snp.bottom).inset(-24)
+                make.horizontalEdges.equalToSuperview().inset(16)
+                make.height.equalTo(163)
+            }
+        }else {
+            calendarView.snp.makeConstraints { make in
+                make.top.equalTo(BonusView.snp.bottom).inset(-24)
+                make.horizontalEdges.equalToSuperview().inset(16)
+                make.height.equalTo(63)
+            }
         }
         lessonsLabel.snp.makeConstraints { make in
-            make.top.equalTo(stackViewForCalendar.snp.bottom).inset(-24)
+            make.top.equalTo(calendarView.snp.bottom).inset(-24)
             make.left.equalToSuperview().inset(16)
         }
         collectionView.snp.makeConstraints { make in
@@ -556,7 +643,7 @@ extension PageOfCourseViewController {
 extension PageOfCourseViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width - 32
-            return CGSize(width: width, height: width)
+        return CGSize(width: width, height: width)
     }
    
 }
