@@ -58,6 +58,7 @@ targets:
         - package: SwiftyJSON
         - package: PanModal
         - package: SDWebImage
+        - package: YouTubePlayerKit
 
 packages:
   Alamofire:
@@ -81,3 +82,6 @@ packages:
   SDWebImage:
     url: https://github.com/SDWebImage/SDWebImage.git
     from: 5.19.0
+  YouTubePlayerKit:
+    url: https://github.com/SvenTiigi/YouTubePlayerKit.git
+    from: 1.7.0
