@@ -360,6 +360,8 @@ extension CoursesViewController {
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(128)
         }
+        
+        
 //        clearButtonForBanner.snp.makeConstraints { make in
 //            make.edges.equalToSuperview()
 //        }
@@ -387,3 +389,4 @@ extension CoursesViewController: UICollectionViewDelegateFlowLayout {
 //    layout.estimatedItemSize.width = 343
 //    layout.estimatedItemSize.height = 124
 }
+ //dkovk-ok-rbk
