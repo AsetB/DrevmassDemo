@@ -103,7 +103,6 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
-    
     private lazy var openTutorialButton: UIButton = {
         let button = UIButton()
         var config = UIButton.Configuration.plain()
@@ -369,7 +368,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(similarGoodsTitleLabel.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview()
-            make.height.equalTo(220)
+            make.height.equalTo(180)
             make.bottom.equalToSuperview().inset(81)
         }
         addToBasketPriceButton.snp.makeConstraints { make in

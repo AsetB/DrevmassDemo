@@ -124,7 +124,6 @@ class BasketViewController: UIViewController {
         return topLabel
     }()
     
-    
     private lazy var bonusLabel: UILabel = {
         let bonusLabel = UILabel()
         bonusLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
@@ -133,17 +132,18 @@ class BasketViewController: UIViewController {
         return bonusLabel
     }()
     
-    
     private lazy var bonusIcon: UIImageView = {
         let bonusIcon = UIImageView()
         bonusIcon.image = UIImage(resource: ImageResource.Basket.bonus)
         return bonusIcon
     }()
     
-    
     private lazy var descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
-        descriptionLabel.text = "Баллами можно оплатить до 30% от стоимости заказа."
+        descriptionLabel.text = """
+Баллами можно оплатить до 30% от 
+стоимости заказа.
+"""
         descriptionLabel.font = .addFont(type: .SFProTextRegular, size: 15)
         descriptionLabel.textColor = UIColor(resource: ColorResource.Colors._787878)
         descriptionLabel.numberOfLines = 2
@@ -153,13 +153,17 @@ class BasketViewController: UIViewController {
     
     private lazy var bonusSwitch: UISwitch = {
         let bonusSwitch = UISwitch()
-        bonusSwitch.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD)
+        //off state
+        bonusSwitch.subviews.first?.subviews.first?.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD)
+        bonusSwitch.tintColor = UIColor(resource: ColorResource.Colors.E_0_DEDD)
+        
+        //on state
         bonusSwitch.onTintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         bonusSwitch.addTarget(self, action: #selector(applyBonus), for: .valueChanged)
         return bonusSwitch
     }()
     
-    private lazy var enterPromocode: UIButton = {
+    private lazy var enterPromocodeButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 20
         button.layer.borderWidth = 2
@@ -176,9 +180,9 @@ class BasketViewController: UIViewController {
         label.textColor = UIColor(resource: ColorResource.Colors._181715)
         label.font = .addFont(type: .SFProTextSemiBold, size: 17)
         
-        view.addSubview(icon)
-        view.addSubview(arrow)
-        view.addSubview(label)
+        button.addSubview(icon)
+        button.addSubview(arrow)
+        button.addSubview(label)
         
         icon.snp.makeConstraints { make in
             make.size.equalTo(24)
@@ -224,8 +228,113 @@ class BasketViewController: UIViewController {
         }
         return view
     }()
+    
+    private lazy var similarProductsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProDisplaySemibold, size: 20)
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        label.text = "С этим товаром покупают"
+        return label
+    }()
+    
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(CatalogCollectionViewCell.self, forCellWithReuseIdentifier: "catalogCell")
         
-        
+        let layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        layout.minimumInteritemSpacing = 12
+        layout.minimumLineSpacing = 24
+        layout.estimatedItemSize.width = 165
+        layout.estimatedItemSize.height = 180
+        layout.scrollDirection = .horizontal
+        collectionView.collectionViewLayout = layout
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        collectionView.isScrollEnabled = true
+        collectionView.bounces = false
+        return collectionView
+    }()
+    
+    private lazy var orderButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 28
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        //button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var orderButtonLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Оформить"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        return label
+    }()
+    
+    private lazy var orderButtonPriceLabel: UILabel = {
+        let label = UILabel()
+        label.text = "15 390 ₽"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        return label
+    }()
+    
+    private var gradientView = CustomGradientView(startColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0), midColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1), endColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1), startLocation: 0.1, midLocation: 0.5, endLocation: 1.0, horizontalMode: false, diagonalMode: false)
+    
+    // MARK: Background view labels
+    private lazy var amountOfProductsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProTextRegular, size: 13)
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
+        label.text = "1 товар"
+        return label
+    }()
+    
+    private lazy var payWithBonusLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProTextRegular, size: 13)
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
+        label.text = "Оплата бонусами"
+        return label
+    }()
+    
+    private lazy var priceForProductsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProTextRegular, size: 13)
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        label.text = "12 900 ₽"
+        label.textAlignment = .right
+        return label
+    }()
+    
+    private lazy var bonusToPayLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProTextRegular, size: 13)
+        label.textColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+        label.text = "0 ₽"
+        label.textAlignment = .right
+        return label
+    }()
+    
+    private lazy var totalForProductsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProTextSemiBold, size: 15)
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        label.text = "Итого"
+        return label
+    }()
+    
+    private lazy var totalPriceForProductsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .addFont(type: .SFProTextBold, size: 15)
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        label.text = "12 900 ₽"
+        return label
+    }()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -239,7 +348,8 @@ class BasketViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        gradientView.updateColors()
+        gradientView.updateLocations()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -275,8 +385,25 @@ class BasketViewController: UIViewController {
         contentView.addSubview(backView)
         backView.addSubview(emptyBasketView)
         backView.addSubview(basketTableView)
-        ///add views
-        
+        backView.addSubview(topLabel)
+        backView.addSubview(bonusLabel)
+        backView.addSubview(bonusIcon)
+        backView.addSubview(bonusSwitch)
+        backView.addSubview(descriptionLabel)
+        backView.addSubview(enterPromocodeButton)
+        backView.addSubview(backGroundView)
+        backGroundView.addSubview(amountOfProductsLabel)
+        backGroundView.addSubview(payWithBonusLabel)
+        backGroundView.addSubview(priceForProductsLabel)
+        backGroundView.addSubview(bonusToPayLabel)
+        backGroundView.addSubview(totalForProductsLabel)
+        backGroundView.addSubview(totalPriceForProductsLabel)
+        backView.addSubview(similarProductsLabel)
+        backView.addSubview(collectionView)
+        view.addSubview(gradientView)
+        view.addSubview(orderButton)
+        orderButton.addSubview(orderButtonLabel)
+        orderButton.addSubview(orderButtonPriceLabel)
     }
     //- MARK: - Constraints
     private func setConstraints() {
@@ -302,9 +429,113 @@ class BasketViewController: UIViewController {
         basketTableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(32)
+            make.bottom.equalTo(topLabel.snp.top).offset(36.5).priority(.medium)
         }
-        
+        topLabel.snp.makeConstraints { make in
+            make.top.equalTo(basketTableView.snp.bottom).offset(36.5)
+            make.height.equalTo(22)
+            make.leading.equalToSuperview().inset(16)
+        }
+        bonusLabel.snp.makeConstraints { make in
+            make.height.equalTo(22)
+            make.leading.equalTo(topLabel.snp.trailing).offset(4)
+            make.centerY.equalTo(topLabel.snp.centerY)
+        }
+        bonusIcon.snp.makeConstraints { make in
+            make.size.equalTo(20)
+            make.leading.equalTo(bonusLabel.snp.trailing).offset(4)
+            make.centerY.equalTo(bonusLabel.snp.centerY)
+        }
+        bonusSwitch.snp.makeConstraints { make in
+            make.width.equalTo(51)
+            make.height.equalTo(31)
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalTo(bonusIcon.snp.centerY)
+        }
+        descriptionLabel.snp.makeConstraints { make in
+            make.top.equalTo(topLabel.snp.bottom).offset(8.5)
+            make.leading.equalTo(topLabel.snp.leading)
+            make.height.equalTo(40)
+        }
+        enterPromocodeButton.snp.makeConstraints { make in
+            make.top.equalTo(descriptionLabel.snp.bottom).offset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(64)
+        }
+        backGroundView.snp.makeConstraints { make in
+            make.top.equalTo(enterPromocodeButton.snp.bottom).offset(32)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(134)
+        }
+        similarProductsLabel.snp.makeConstraints { make in
+            make.top.equalTo(backGroundView.snp.bottom).offset(32)
+            make.height.equalTo(24)
+            make.horizontalEdges.equalToSuperview().inset(16)
+        }
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(similarProductsLabel.snp.bottom).offset(16)
+            make.horizontalEdges.equalToSuperview()
+            make.height.equalTo(180)
+            make.bottom.equalToSuperview().inset(81)
+        }
+        orderButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(56)
+        }
+        gradientView.snp.makeConstraints { make in
+            make.bottom.equalTo(orderButton.snp.bottom).offset(16)
+            make.height.equalTo(137)
+            make.horizontalEdges.equalToSuperview()
+        }
+        orderButtonPriceLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(24)
+            make.height.equalTo(22)
+        }
+        orderButtonLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().inset(24)
+            make.height.equalTo(22)
+        }
+        /*
+         backGroundView.addSubview(amountOfProductsLabel)
+         backGroundView.addSubview(payWithBonusLabel)
+         backGroundView.addSubview(priceForProductsLabel)
+         backGroundView.addSubview(bonusToPayLabel)
+         backGroundView.addSubview(totalForProductsLabel)
+         backGroundView.addSubview(totalPriceForProductsLabel)
+         */
+        amountOfProductsLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(18)
+            make.leading.equalToSuperview().inset(16)
+            make.height.equalTo(18)
+        }
+        payWithBonusLabel.snp.makeConstraints { make in
+            make.top.equalTo(amountOfProductsLabel.snp.bottom).offset(12)
+            make.leading.equalTo(amountOfProductsLabel.snp.leading)
+            make.height.equalTo(18)
+        }
+        priceForProductsLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(18)
+            make.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(18)
+        }
+        bonusToPayLabel.snp.makeConstraints { make in
+            make.top.equalTo(priceForProductsLabel.snp.bottom).offset(12)
+            make.trailing.equalTo(priceForProductsLabel.snp.trailing)
+            make.height.equalTo(18)
+        }
+        totalForProductsLabel.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(19)
+            make.leading.equalToSuperview().inset(16)
+            make.height.equalTo(20)
+        }
+        totalPriceForProductsLabel.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(19)
+//            make.trailing÷.equalToSuperview().inset(16)
+            make.height.equalTo(20)
+        }
     }
     //- MARK: - Button actions
     @objc func clearAllBasket() {
@@ -349,7 +580,23 @@ extension BasketViewController: UITableViewDelegate, UITableViewDataSource {
     
     
 }
-
+//- MARK: - UICollectionViewDelegate & UICollectionViewDataSource
+extension BasketViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 14
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
+        cell.goodsImage.image = UIImage(resource: ImageResource.Hardcode.goods)
+        cell.nameLabel.text = "6-ти роликовый массажёр"
+        cell.priceLabel.text = "12 900 ₽"
+        return cell
+    }
+    
+    
+}
+//- MARK: - Navigation bar button constants
 private struct Const {
     /// Image height/width for Large NavBar state
     static let buttonSizeForLargeState: CGFloat = 24
