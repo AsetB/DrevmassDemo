@@ -39,6 +39,8 @@ class CatalogCollectionViewCell: UICollectionViewCell {
     lazy var basketButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton36), for: .normal)
+        button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck36), for: .selected)
+        //button.addTarget(self, action: #selector(addToBasket), for: .touchUpInside)
         return button
     }()
     
@@ -89,5 +91,11 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
         priceLabel.text = formatPrice(catalog.price)
         nameLabel.text = catalog.title
+    }
+    //- MARK: - Button actions
+    @objc func addToBasket() {
+        basketButton.isSelected.toggle()
+        
+        print("added to basket Cell")
     }
 }

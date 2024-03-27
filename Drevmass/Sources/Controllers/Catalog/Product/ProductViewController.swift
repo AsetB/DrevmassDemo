@@ -161,7 +161,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             var view = DashedLineView()
             view.dashColor = UIColor(resource: ColorResource.Colors.D_6_D_1_CE)
             view.backgroundColor = .clear
-            view.spaceBetweenDash = 5
+            view.spaceBetweenDash = 6
             view.perDashLength = 5
             return view
         }()
@@ -285,6 +285,21 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         gradientView.isHidden = true
         gradientView.updateColors()
         gradientView.updateLocations()
+        
+        guard let navBar = navigationController?.navigationBar else { return }
+        
+        let navBarHeight = navBar.frame.height
+        let offsetY = scrollView.contentOffset.y + navBarHeight
+        let buttonY = addToBasketButton.frame.maxY - navBarHeight
+        if offsetY > buttonY {
+            addToBasketButton.isHidden = true
+            addToBasketPriceButton.isHidden = false
+            gradientView.isHidden = false
+        } else {
+            addToBasketButton.isHidden = false
+            addToBasketPriceButton.isHidden = true
+            gradientView.isHidden = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -369,7 +384,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(similarGoodsTitleLabel.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview()
             make.height.equalTo(180)
-            make.bottom.equalToSuperview().inset(81)
+            make.bottom.equalToSuperview().inset(105)
         }
         addToBasketPriceButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
@@ -450,7 +465,6 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
                     for item in array {
                         let similarProduct = Product(json: item)
                         self.productSimilarArray.append(similarProduct)
-                        print(self.productSimilarArray.count)
                     }
                     self.collectionView.reloadData()
                 } else {

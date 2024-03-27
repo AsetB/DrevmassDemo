@@ -10,6 +10,8 @@ import SnapKit
 import SDWebImage
 
 class BasketTableViewCell: UITableViewCell {
+    //- MARK: - Variables
+    var counterLabel: UILabel?
     //- MARK: - Local Outlets
     lazy var goodsImage: UIImageView = {
         let image = UIImageView()
@@ -36,7 +38,9 @@ class BasketTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var counterView: UIView = {
+    lazy var counterView: UIView = { [weak self] in
+        guard let self = self else { return UIView() }
+        
         let view = UIView()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
         view.layer.cornerRadius = 15
@@ -54,6 +58,7 @@ class BasketTableViewCell: UITableViewCell {
         counterLabel.text = "1"
         counterLabel.font = .addFont(type: .SFProTextSemiBold, size: 15)
         counterLabel.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
+        self.counterLabel = counterLabel
         
         view.addSubview(counterLabel)
         view.addSubview(minusButton)
@@ -136,10 +141,11 @@ class BasketTableViewCell: UITableViewCell {
         print("-1")
     }
     //- MARK: - Set Data
-//    func setCell(catalog: Product) {
-//        let transformer = SDImageResizingTransformer(size: CGSize(width: 146, height: 88), scaleMode: .aspectFill)
-//        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
-//        priceLabel.text = formatPrice(catalog.price)
-//        nameLabel.text = catalog.title
-//    }
+    func setCell(product: BasketItem) {
+        let transformer = SDImageResizingTransformer(size: CGSize(width: 112, height: 76), scaleMode: .aspectFill)
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + product.productImg), placeholderImage: nil, context: [.imageTransformer : transformer])
+        priceLabel.text = formatPrice(product.price)
+        nameLabel.text = product.productTitle
+        counterLabel?.text = String(product.count)
+    }
 }

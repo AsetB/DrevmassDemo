@@ -32,7 +32,10 @@ enum URLs {
     static let FAVORITE_URL = BASE_URL + "favorites"
     static let LESSONS_COMPLETE_URL = BASE_URL + "lessons/complete"
     static let GET_DAY_URL = BASE_URL + "days"
-    
+    static let BASKET = BASE_URL + "basket"
+    static let DELETE_ITEM_BASKET = BASE_URL + "basket/"
+    static let INCREASE_ITEM_BASKET = BASE_URL + "increase"
+    static let DECREASE_ITEM_BASKET = BASE_URL + "decrease"
 }
 
 enum imageSource {

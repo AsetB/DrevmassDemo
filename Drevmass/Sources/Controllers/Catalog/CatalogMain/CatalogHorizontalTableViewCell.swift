@@ -39,6 +39,7 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
     private lazy var basketButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton36), for: .normal)
+        button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck36), for: .selected)
         return button
     }()
     //- MARK: - Lifecycle

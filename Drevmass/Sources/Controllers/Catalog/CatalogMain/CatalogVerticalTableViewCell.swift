@@ -38,6 +38,7 @@ class CatalogVerticalTableViewCell: UITableViewCell {
     private lazy var basketButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton48), for: .normal)
+        button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck48), for: .selected)
         return button
     }()
     //- MARK: - Lifecycle

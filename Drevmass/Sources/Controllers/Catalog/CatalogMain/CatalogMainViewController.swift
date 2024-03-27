@@ -407,7 +407,15 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
         cell.setCell(catalog: famousCatalog[indexPath.item])
+        cell.basketButton.addTarget(self, action: #selector(CatalogMainViewController.addToBasketMain), for: .touchUpInside)
         return cell
+    }
+    
+    @objc func addToBasketMain() {
+        tabBarController?.tabBar.addBadge(index: 2, value: 2)
+        //basketButton.isSelected.toggle()
+        
+        print("added to basket Main")
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

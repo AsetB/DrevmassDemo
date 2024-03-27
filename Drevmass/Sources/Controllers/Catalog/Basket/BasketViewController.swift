@@ -7,10 +7,15 @@
 
 import UIKit
 import SnapKit
+import Alamofire
+import SwiftyJSON
+import SVProgressHUD
 
 class BasketViewController: UIViewController {
     //- MARK: - Variables
-    
+    var productsInBasket: [BasketItem] = []
+    var similarProductsBasket: [Product] = []
+    var basketInfo = Basket()
     //- MARK: - Local outlets
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -128,7 +133,7 @@ class BasketViewController: UIViewController {
         let bonusLabel = UILabel()
         bonusLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
         bonusLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
-        bonusLabel.text = "500"
+        bonusLabel.text = ""
         return bonusLabel
     }()
     
@@ -214,7 +219,7 @@ class BasketViewController: UIViewController {
             var view = DashedLineView()
             view.dashColor = UIColor(resource: ColorResource.Colors.D_6_D_1_CE)
             view.backgroundColor = .clear
-            view.spaceBetweenDash = 5
+            view.spaceBetweenDash = 6
             view.perDashLength = 5
             return view
         }()
@@ -339,7 +344,7 @@ class BasketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
-        
+        loadBasketData()
         setNavBar()
         addViews()
         setConstraints()
@@ -350,6 +355,8 @@ class BasketViewController: UIViewController {
         super.viewWillAppear(animated)
         gradientView.updateColors()
         gradientView.updateLocations()
+        
+        //tabBarController?.tabBar.addBadge(index: 2, value: 2)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -476,7 +483,7 @@ class BasketViewController: UIViewController {
             make.top.equalTo(similarProductsLabel.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview()
             make.height.equalTo(180)
-            make.bottom.equalToSuperview().inset(81)
+            make.bottom.equalToSuperview().inset(105)
         }
         orderButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
@@ -498,14 +505,6 @@ class BasketViewController: UIViewController {
             make.leading.equalToSuperview().inset(24)
             make.height.equalTo(22)
         }
-        /*
-         backGroundView.addSubview(amountOfProductsLabel)
-         backGroundView.addSubview(payWithBonusLabel)
-         backGroundView.addSubview(priceForProductsLabel)
-         backGroundView.addSubview(bonusToPayLabel)
-         backGroundView.addSubview(totalForProductsLabel)
-         backGroundView.addSubview(totalPriceForProductsLabel)
-         */
         amountOfProductsLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(18)
             make.leading.equalToSuperview().inset(16)
@@ -533,7 +532,7 @@ class BasketViewController: UIViewController {
         }
         totalPriceForProductsLabel.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(19)
-//            make.trailing÷.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview().inset(16)
             make.height.equalTo(20)
         }
     }
@@ -557,6 +556,83 @@ class BasketViewController: UIViewController {
     @objc func openPromocodeModal() {
         print("enter promocode tapped")
     }
+    //- MARK: - Set data
+    private func setData() {
+        bonusLabel.text = String(basketInfo.bonus)
+        amountOfProductsLabel.text = "\(basketInfo.countProducts)" + " товар"
+        priceForProductsLabel.text = formatPrice(basketInfo.basketPrice)
+        bonusToPayLabel.text = formatPrice(basketInfo.usedBonus)
+        totalPriceForProductsLabel.text = formatPrice(basketInfo.totalPrice)
+        orderButtonPriceLabel.text = formatPrice(basketInfo.totalPrice)
+    }
+    //- MARK: - Network
+    private func loadBasketData() {
+        SVProgressHUD.show()
+        
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        
+        AF.request(URLs.BASKET, method: .get, headers: headers).responseData {  response in
+            
+            SVProgressHUD.dismiss()
+            
+            var resultString = ""
+            if let data = response.data {
+                resultString = String(data: data, encoding: .utf8)!
+                print(resultString)
+            }
+            
+            if response.response?.statusCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                //parse basket items
+                if let array = json["basket"].array {
+                    self.productsInBasket.removeAll()
+                    for item in array {
+                        let basketItem = BasketItem(json: item)
+                        self.productsInBasket.append(basketItem)
+                    }
+                    self.basketTableView.reloadData()
+                }
+                //parse similar products
+                if let array = json["products"].array {
+                    self.similarProductsBasket.removeAll()
+                    for item in array {
+                        let similarProducts = Product(json: item)
+                        self.similarProductsBasket.append(similarProducts)
+                    }
+                    self.collectionView.reloadData()
+                }
+                //parse basket
+                if let bonus = json["bonus"].int {
+                    self.basketInfo.bonus = bonus
+                }
+                if let totalPrice = json["total_price"].int {
+                    self.basketInfo.totalPrice = totalPrice
+                }
+                if let usedBonus = json["used_bonus"].int {
+                    self.basketInfo.usedBonus = usedBonus
+                }
+                if let basketPrice = json["basket_price"].int {
+                    self.basketInfo.basketPrice = basketPrice
+                }
+                if let discount = json["discount"].int {
+                    self.basketInfo.discount = discount
+                }
+                if let countProducts = json["count_products"].int {
+                    self.basketInfo.countProducts = countProducts
+                }
+                self.setData()
+            } else {
+                var ErrorString = "CONNECTION_ERROR"
+                if let sCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(sCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+            }
+        }
+    }
 }
 //- MARK: - UITableViewDelegate & UITableViewDataSource
 extension BasketViewController: UITableViewDelegate, UITableViewDataSource {
@@ -564,37 +640,30 @@ extension BasketViewController: UITableViewDelegate, UITableViewDataSource {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return productsInBasket.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = basketTableView.dequeueReusableCell(withIdentifier: "basketCell") as! BasketTableViewCell
-        cell.goodsImage.image = UIImage(resource: ImageResource.Hardcode.goods)
-        cell.nameLabel.text = "5-ти роликовый массажёр"
-        cell.priceLabel.text = "12 900 ₽"
+        cell.setCell(product: productsInBasket[indexPath.row])
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 108
     }
     
-    
 }
 //- MARK: - UICollectionViewDelegate & UICollectionViewDataSource
 extension BasketViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 14
+        return similarProductsBasket.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
-        cell.goodsImage.image = UIImage(resource: ImageResource.Hardcode.goods)
-        cell.nameLabel.text = "6-ти роликовый массажёр"
-        cell.priceLabel.text = "12 900 ₽"
+        cell.setCell(catalog: similarProductsBasket[indexPath.item])
         return cell
     }
-    
-    
 }
 //- MARK: - Navigation bar button constants
 private struct Const {
