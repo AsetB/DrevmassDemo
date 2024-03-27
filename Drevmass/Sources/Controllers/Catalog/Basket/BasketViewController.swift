@@ -587,6 +587,8 @@ class BasketViewController: UIViewController {
     @objc func clearAllBasket() {
         print("delete tapped")
         let alert = UIAlertController(title: "Удаление товаров", message: "Вы уверены, что хотите удалить все товары?", preferredStyle: .actionSheet)
+        alert.view.backgroundColor = .white
+        alert.view.clipsToBounds = true
         //alert.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .white
         alert.view.tintColor = .systemBlue
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
@@ -599,7 +601,7 @@ class BasketViewController: UIViewController {
                     self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
-                if response.response?.statusCode == 200 {
+                if responseCode == 200 {
                     let json = JSON(response.data!)
                     print("JSON: \(json)")
                     self.emptyBasketView.isHidden = true
@@ -636,6 +638,8 @@ class BasketViewController: UIViewController {
         }
     }
     @objc func openPromocodeModal() {
+        let vc = PromocodeBasketViewController()
+        presentPanModal(vc)
         print("enter promocode tapped")
     }
     //- MARK: - Set data
