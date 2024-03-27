@@ -10,6 +10,9 @@ import SnapKit
 import SDWebImage
 
 class CatalogCollectionViewCell: UICollectionViewCell {
+    //- MARK: - Variables
+    weak var delegate: ProductAdding?
+    var currentProduct = Product()
     //- MARK: - Local outlets
     lazy var goodsImage: UIImageView = {
         let image = UIImageView()
@@ -40,7 +43,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton36), for: .normal)
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck36), for: .selected)
-        //button.addTarget(self, action: #selector(addToBasket), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addToBasket), for: .touchUpInside)
         return button
     }()
     
@@ -87,6 +90,11 @@ class CatalogCollectionViewCell: UICollectionViewCell {
     }
     //- MARK: - Set Data
     func setCell(catalog: Product) {
+        if catalog.basketCount > 0 {
+            basketButton.isSelected = true
+        } else {
+            basketButton.isSelected = false
+        }
         let transformer = SDImageResizingTransformer(size: CGSize(width: 167, height: 100), scaleMode: .aspectFill)
         goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
         priceLabel.text = formatPrice(catalog.price)
@@ -94,8 +102,9 @@ class CatalogCollectionViewCell: UICollectionViewCell {
     }
     //- MARK: - Button actions
     @objc func addToBasket() {
+        //tabBarController?.tabBar.addBadge(index: 2, value: 2)
         basketButton.isSelected.toggle()
+        delegate?.productDidAdd(product: currentProduct)
         
-        print("added to basket Cell")
     }
 }

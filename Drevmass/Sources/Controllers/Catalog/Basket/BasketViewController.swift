@@ -64,7 +64,10 @@ class BasketViewController: UIViewController {
         label1.textAlignment = .center
         
         let label2 = UILabel()
-        label2.text = "Наполните её товарами из каталога"
+        label2.text = """
+        Наполните её товарами из 
+        каталога
+        """
         label2.font = .addFont(type: .SFProTextRegular, size: 16)
         label2.textColor = UIColor(resource: ColorResource.Colors._989898)
         label2.textAlignment = .center
@@ -344,15 +347,16 @@ class BasketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
-        loadBasketData()
+        //loadBasketData()
         setNavBar()
         addViews()
         setConstraints()
-        emptyBasketView.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        emptyBasketView.isHidden = true
+        loadBasketData()
         gradientView.updateColors()
         gradientView.updateLocations()
         
@@ -412,6 +416,49 @@ class BasketViewController: UIViewController {
         orderButton.addSubview(orderButtonLabel)
         orderButton.addSubview(orderButtonPriceLabel)
     }
+    private func setEmptyBasket() {
+        if basketInfo.countProducts == 0 {
+            scrollView.isScrollEnabled = false
+            emptyBasketView.isHidden = false
+            basketTableView.isHidden = true
+            topLabel.isHidden = true
+            bonusLabel.isHidden = true
+            bonusIcon.isHidden = true
+            descriptionLabel.isHidden = true
+            enterPromocodeButton.isHidden = true
+            backGroundView.isHidden = true
+            similarProductsLabel.isHidden = true
+            collectionView.isHidden = true
+            gradientView.isHidden = true
+            orderButton.isHidden = true
+            bonusSwitch.isHidden = true
+            clearBasketButton.isHidden = true
+        } else {
+            scrollView.isScrollEnabled = true
+            emptyBasketView.isHidden = true
+            basketTableView.isHidden = false
+            topLabel.isHidden = false
+            bonusLabel.isHidden = false
+            bonusIcon.isHidden = false
+            descriptionLabel.isHidden = false
+            enterPromocodeButton.isHidden = false
+            backGroundView.isHidden = false
+            similarProductsLabel.isHidden = false
+            collectionView.isHidden = false
+            gradientView.isHidden = false
+            orderButton.isHidden = false
+            bonusSwitch.isHidden = false
+            clearBasketButton.isHidden = false
+        }
+        
+//        for item in view.subviews {
+//            if item == scrollView, item == contentView, item == backView {
+//
+//            }
+//            item.isHidden.toggle()
+//        }
+        
+    }
     //- MARK: - Constraints
     private func setConstraints() {
         scrollView.snp.makeConstraints { make in
@@ -425,7 +472,7 @@ class BasketViewController: UIViewController {
         }
         backView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
-            //make.height.equalTo(1500)
+            //make.height.equalTo(400)
             make.bottom.horizontalEdges.equalToSuperview()
         }
         emptyBasketView.snp.makeConstraints { make in
@@ -538,7 +585,42 @@ class BasketViewController: UIViewController {
     }
     //- MARK: - Button actions
     @objc func clearAllBasket() {
-        print("Clear basket")
+        print("delete tapped")
+        let alert = UIAlertController(title: "Удаление товаров", message: "Вы уверены, что хотите удалить все товары?", preferredStyle: .actionSheet)
+        //alert.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .white
+        alert.view.tintColor = .systemBlue
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        //cancelAction.setValue(UIColor.white, forKey: "titleTextColor")
+        alert.addAction(cancelAction)
+        alert.addAction(UIAlertAction(title: "Очистить корзину", style: .destructive, handler: { _ in
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            AF.request(URLs.BASKET, method: .delete, headers: headers).responseData {  response in
+                guard let responseCode = response.response?.statusCode else {
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    return
+                }
+                if response.response?.statusCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                    self.emptyBasketView.isHidden = true
+                    self.loadBasketData()
+                    self.gradientView.updateColors()
+                    self.gradientView.updateLocations()
+                } else {
+                    var resultString = ""
+                    if let data = response.data {
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                    var ErrorString = "Ошибка"
+                    if let statusCode = response.response?.statusCode {
+                        ErrorString = ErrorString + " \(statusCode)"
+                    }
+                    ErrorString = ErrorString + " \(resultString)"
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                }
+            }
+        }))
+        present(alert, animated: true)
     }
     
     @objc func goToCatalog() {
@@ -622,6 +704,7 @@ class BasketViewController: UIViewController {
                 if let countProducts = json["count_products"].int {
                     self.basketInfo.countProducts = countProducts
                 }
+                self.setEmptyBasket()
                 self.setData()
             } else {
                 var ErrorString = "CONNECTION_ERROR"

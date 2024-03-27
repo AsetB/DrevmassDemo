@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SortSelecting: AnyObject {
-    func sortDidSelected(_ sortSelected: SortType)
+    func sortDidSelect(_ sortSelected: SortType)
 }
 
 enum SortType {

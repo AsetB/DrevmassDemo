@@ -139,6 +139,7 @@ class CatalogMainViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
         navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
+        downloadFamousCatalog()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -407,15 +408,9 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
         cell.setCell(catalog: famousCatalog[indexPath.item])
-        cell.basketButton.addTarget(self, action: #selector(CatalogMainViewController.addToBasketMain), for: .touchUpInside)
+        cell.currentProduct = famousCatalog[indexPath.item]
+        cell.delegate = self
         return cell
-    }
-    
-    @objc func addToBasketMain() {
-        tabBarController?.tabBar.addBadge(index: 2, value: 2)
-        //basketButton.isSelected.toggle()
-        
-        print("added to basket Main")
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -512,7 +507,7 @@ extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource 
 }
 //- MARK: - Protocol SortSelecting
 extension CatalogMainViewController: SortSelecting {
-    func sortDidSelected(_ sortSelected: SortType) {
+    func sortDidSelect(_ sortSelected: SortType) {
         switch sortSelected {
         case .famous:
             print("famous in main")
@@ -537,4 +532,62 @@ extension CatalogMainViewController: SortSelecting {
             sortButton.configuration?.baseForegroundColor = UIColor(resource: ColorResource.Colors._302_C_28)
         }
     }
+}
+
+extension CatalogMainViewController: ProductAdding {
+    func productDidAdd(product: Product) {
+        //tabBarController?.tabBar.addBadge(index: 2, value: 2)
+        if product.basketCount > 0 {
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  response in
+                guard let responseCode = response.response?.statusCode else {
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    return
+                }
+                if response.response?.statusCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                } else {
+                    var resultString = ""
+                    if let data = response.data {
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                    var ErrorString = "Ошибка"
+                    if let statusCode = response.response?.statusCode {
+                        ErrorString = ErrorString + " \(statusCode)"
+                    }
+                    ErrorString = ErrorString + " \(resultString)"
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                }
+            }
+            return
+        }
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        let parameters = ["count": product.basketCount+1, "product_id": product.id, "user_id": 0]
+        
+        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData {  response in
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            
+            if response.response?.statusCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+            } else {
+                var resultString = ""
+                if let data = response.data {
+                    resultString = String(data: data, encoding: .utf8)!
+                }
+                var ErrorString = "Ошибка"
+                if let statusCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(statusCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+            }
+        }
+    }
+    
+    
 }

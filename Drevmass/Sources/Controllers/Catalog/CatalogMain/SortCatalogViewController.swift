@@ -186,17 +186,17 @@ class SortCatalogViewController: UIViewController, PanModalPresentable {
     //- MARK: - Button actions
     @objc func selectFamous() {
         famousButtonRadiobox.image = UIImage(resource: ImageResource.Catalog.radioboxSelected)
-        delegate?.sortDidSelected(.famous)
+        delegate?.sortDidSelect(.famous)
         dismiss(animated: true)
     }
     @objc func selectPricedown() {
         pricedownButtonRadiobox.image = UIImage(resource: ImageResource.Catalog.radioboxSelected)
-        delegate?.sortDidSelected(.pricedown)
+        delegate?.sortDidSelect(.pricedown)
         dismiss(animated: true)
     }
     @objc func selectPriceup() {
         priceupButtonRadiobox.image = UIImage(resource: ImageResource.Catalog.radioboxSelected)
-        delegate?.sortDidSelected(.priceup)
+        delegate?.sortDidSelect(.priceup)
         dismiss(animated: true)
     }
 }
