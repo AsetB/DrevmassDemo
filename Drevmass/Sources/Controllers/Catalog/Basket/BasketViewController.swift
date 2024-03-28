@@ -588,7 +588,6 @@ class BasketViewController: UIViewController {
         print("delete tapped")
         let alert = UIAlertController(title: "Удаление товаров", message: "Вы уверены, что хотите удалить все товары?", preferredStyle: .actionSheet)
         alert.view.backgroundColor = .white
-        alert.view.clipsToBounds = true
         //alert.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .white
         alert.view.tintColor = .systemBlue
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
@@ -881,6 +880,51 @@ extension BasketViewController: ProductCounting {
                 }
             }
         case .decrement:
+            if basketItem.count == 1 {
+                let alert = UIAlertController(title: "Вы уверены, что хотите удалить товар из корзины?", message: nil, preferredStyle: .alert)
+                //alert.view.subviews.first?.subviews.first?.backgroundColor = .white
+                alert.addAction(UIAlertAction(title: "Отменить", style: .cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Удалить", style: .destructive, handler: { _ in
+                    let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+                    let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
+                    
+                    AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                        guard let responseCode = response.response?.statusCode else {
+                            self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                            return
+                        }
+                        
+                        if responseCode == 200 {
+                            let json = JSON(response.data!)
+                            print("JSON: \(json)")
+                            
+                            getTotalCount { totalCount in
+                                DispatchQueue.main.async {
+                                    if totalCount == 0 {
+                                        self?.tabBarController?.tabBar.removeBadge(index: 2)
+                                    } else {
+                                        self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                                    }
+                                    self?.loadBasketData()
+                                }
+                            }
+                        } else {
+                            var resultString = ""
+                            if let data = response.data {
+                                resultString = String(data: data, encoding: .utf8)!
+                            }
+                            var ErrorString = "Ошибка"
+                            if let statusCode = response.response?.statusCode {
+                                ErrorString = ErrorString + " \(statusCode)"
+                            }
+                            ErrorString = ErrorString + " \(resultString)"
+                            self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                        }
+                    }
+                }))
+                present(alert, animated: true)
+                return
+            }
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
             let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
             
