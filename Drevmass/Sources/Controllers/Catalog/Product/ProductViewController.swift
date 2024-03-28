@@ -19,6 +19,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     var productDetail = Product()
     var productSimilarArray: [Product] = []
     var productID: Int = 0
+    weak var delegate: ProductAdding?
     //- MARK: - Local outlets
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -75,7 +76,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
         button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        //button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addToBasketProduct), for: .touchUpInside)
         return button
     }()
     
@@ -83,7 +84,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         let button = UIButton()
         button.layer.cornerRadius = 28
         button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        //button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addToBasketProduct), for: .touchUpInside)
         return button
     }()
     
@@ -410,13 +411,10 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     }
     //- MARK: - Data loading
     private func downloadProductDetail() {
-        SVProgressHUD.show()
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
         AF.request(URLs.GET_PRODUCT_BY_ID + String(productID), method: .get, headers: headers).responseData { [self] response in
-            
-            SVProgressHUD.dismiss()
             
             var resultString = ""
             if let data = response.data {
@@ -502,7 +500,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
-
+    @objc func addToBasketProduct() {
+        print("addToBasket touched")
+        productDidAdd(product: productDetail)
+    }
+    //- MARK: - scrollViewDidScroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == collectionView {
             return
@@ -534,6 +536,8 @@ extension ProductViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
         cell.setCell(catalog: productSimilarArray[indexPath.item])
+        cell.currentProduct = productSimilarArray[indexPath.item]
+        cell.delegate = self
         return cell
     }
     
@@ -544,6 +548,80 @@ extension ProductViewController: UICollectionViewDataSource, UICollectionViewDel
         navigationController?.show(productVC, sender: self)
     }
     
+    
+}
+
+extension ProductViewController: ProductAdding {
+    func productDidAdd(product: Product) {
+        if product.basketCount > 0 {
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  response in
+                guard let responseCode = response.response?.statusCode else {
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    return
+                }
+                if responseCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                    
+                    getTotalCount { totalCount in
+                        DispatchQueue.main.async {
+                            if totalCount == 0 {
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
+                            } else {
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                            }
+                            self.downloadProductDetail()
+                        }
+                    }
+                } else {
+                    var resultString = ""
+                    if let data = response.data {
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                    var ErrorString = "Ошибка"
+                    if let statusCode = response.response?.statusCode {
+                        ErrorString = ErrorString + " \(statusCode)"
+                    }
+                    ErrorString = ErrorString + " \(resultString)"
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                }
+            }
+            return
+        }
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        let parameters = ["count": product.basketCount+1, "product_id": product.id, "user_id": 0]
+        
+        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData {  response in
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            
+            if responseCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                getTotalCount { totalCount in
+                    DispatchQueue.main.async {
+                        self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        self.downloadProductDetail()
+                    }
+                }
+            } else {
+                var resultString = ""
+                if let data = response.data {
+                    resultString = String(data: data, encoding: .utf8)!
+                }
+                var ErrorString = "Ошибка"
+                if let statusCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(statusCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+            }
+        }
+    }
     
 }
 

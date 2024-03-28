@@ -608,6 +608,16 @@ class BasketViewController: UIViewController {
                     self.loadBasketData()
                     self.gradientView.updateColors()
                     self.gradientView.updateLocations()
+                    
+                    getTotalCount { totalCount in
+                        DispatchQueue.main.async {
+                            if totalCount == 0 {
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
+                            } else {
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                            }
+                        }
+                    }
                 } else {
                     var resultString = ""
                     if let data = response.data {
@@ -653,13 +663,10 @@ class BasketViewController: UIViewController {
     }
     //- MARK: - Network
     private func loadBasketData() {
-        SVProgressHUD.show()
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
         AF.request(URLs.BASKET, method: .get, headers: headers).responseData {  response in
-            
-            SVProgressHUD.dismiss()
             
             var resultString = ""
             if let data = response.data {
@@ -733,6 +740,8 @@ extension BasketViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = basketTableView.dequeueReusableCell(withIdentifier: "basketCell") as! BasketTableViewCell
         cell.setCell(product: productsInBasket[indexPath.row])
+        cell.currentBasketItem = productsInBasket[indexPath.row]
+        cell.delegate = self
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -749,9 +758,169 @@ extension BasketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
         cell.setCell(catalog: similarProductsBasket[indexPath.item])
+        cell.currentProduct = similarProductsBasket[indexPath.item]
+        cell.delegate = self
         return cell
     }
 }
+
+//- MARK: - Similar products adding to basket
+extension BasketViewController: ProductAdding {
+    func productDidAdd(product: Product) {
+        if product.basketCount > 0 {
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  response in
+                guard let responseCode = response.response?.statusCode else {
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    return
+                }
+                if responseCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                    
+                    getTotalCount { totalCount in
+                        DispatchQueue.main.async {
+                            if totalCount == 0 {
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
+                            } else {
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                            }
+                            self.loadBasketData()
+                        }
+                    }
+                } else {
+                    var resultString = ""
+                    if let data = response.data {
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                    var ErrorString = "Ошибка"
+                    if let statusCode = response.response?.statusCode {
+                        ErrorString = ErrorString + " \(statusCode)"
+                    }
+                    ErrorString = ErrorString + " \(resultString)"
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                }
+            }
+            return
+        }
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        let parameters = ["count": product.basketCount+1, "product_id": product.id, "user_id": 0]
+        
+        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData {  response in
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            
+            if responseCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                getTotalCount { totalCount in
+                    DispatchQueue.main.async {
+                        self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        self.loadBasketData()
+                    }
+                }
+            } else {
+                var resultString = ""
+                if let data = response.data {
+                    resultString = String(data: data, encoding: .utf8)!
+                }
+                var ErrorString = "Ошибка"
+                if let statusCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(statusCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+            }
+        }
+    }
+    
+    
+}
+
+//- MARK: - TableView product increment and decrement
+extension BasketViewController: ProductCounting {
+    func productDidCount(basketItem: BasketItem, countIs: CountType) {
+        switch countIs {
+        case .increment:
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
+            
+            AF.request(URLs.INCREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                guard let responseCode = response.response?.statusCode else {
+                    self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    return
+                }
+                
+                if responseCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                    
+                    getTotalCount { totalCount in
+                        DispatchQueue.main.async {
+                            if totalCount == 0 {
+                                self?.tabBarController?.tabBar.removeBadge(index: 2)
+                            } else {
+                                self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                            }
+                            self?.loadBasketData()
+                        }
+                    }
+                } else {
+                    var resultString = ""
+                    if let data = response.data {
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                    var ErrorString = "Ошибка"
+                    if let statusCode = response.response?.statusCode {
+                        ErrorString = ErrorString + " \(statusCode)"
+                    }
+                    ErrorString = ErrorString + " \(resultString)"
+                    self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                }
+            }
+        case .decrement:
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
+            
+            AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                guard let responseCode = response.response?.statusCode else {
+                    self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    return
+                }
+                
+                if responseCode == 200 {
+                    let json = JSON(response.data!)
+                    print("JSON: \(json)")
+                    
+                    getTotalCount { totalCount in
+                        DispatchQueue.main.async {
+                            if totalCount == 0 {
+                                self?.tabBarController?.tabBar.removeBadge(index: 2)
+                            } else {
+                                self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                            }
+                            self?.loadBasketData()
+                        }
+                    }
+                } else {
+                    var resultString = ""
+                    if let data = response.data {
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                    var ErrorString = "Ошибка"
+                    if let statusCode = response.response?.statusCode {
+                        ErrorString = ErrorString + " \(statusCode)"
+                    }
+                    ErrorString = ErrorString + " \(resultString)"
+                    self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                }
+            }
+        }
+    }
+}
+
 //- MARK: - Navigation bar button constants
 private struct Const {
     /// Image height/width for Large NavBar state
@@ -769,3 +938,4 @@ private struct Const {
     /// Height of NavBar for Large state. Usually it's just 96.5 but if you have a custom font for the title, please make sure to edit this value since it changes the height for Large state of NavBar
     static let NavBarHeightLargeState: CGFloat = 96.5
 }
+

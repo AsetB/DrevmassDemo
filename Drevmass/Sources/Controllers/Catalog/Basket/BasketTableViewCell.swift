@@ -12,6 +12,8 @@ import SDWebImage
 class BasketTableViewCell: UITableViewCell {
     //- MARK: - Variables
     var counterLabel: UILabel?
+    weak var delegate: ProductCounting?
+    var currentBasketItem = BasketItem()
     //- MARK: - Local Outlets
     lazy var goodsImage: UIImageView = {
         let image = UIImageView()
@@ -135,10 +137,12 @@ class BasketTableViewCell: UITableViewCell {
     }
     //- MARK: - Lifecycle
     @objc func increaseCounter() {
-        print("+1")
+        print("increment +1")
+        delegate?.productDidCount(basketItem: currentBasketItem, countIs: .increment)
     }
     @objc func decreaseCounter() {
-        print("-1")
+        print("decrement -1")
+        delegate?.productDidCount(basketItem: currentBasketItem, countIs: .decrement)
     }
     //- MARK: - Set Data
     func setCell(product: BasketItem) {

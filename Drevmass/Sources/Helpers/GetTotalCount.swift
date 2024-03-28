@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+//сколько штуков товаров в корзине
 func getTotalCount(completion: @escaping (Int) -> Void) {
     var totalCount = 0
     var basketArray = [BasketItem]()

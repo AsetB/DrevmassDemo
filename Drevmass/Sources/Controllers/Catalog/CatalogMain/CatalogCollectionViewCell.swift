@@ -102,9 +102,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
     }
     //- MARK: - Button actions
     @objc func addToBasket() {
-        //tabBarController?.tabBar.addBadge(index: 2, value: 2)
         basketButton.isSelected.toggle()
         delegate?.productDidAdd(product: currentProduct)
-        
     }
 }

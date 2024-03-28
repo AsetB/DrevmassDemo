@@ -139,7 +139,8 @@ class CatalogMainViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
         navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
-        downloadFamousCatalog()//скорее всего сюда нужно поставить функцию из делегата про выбор сортировки и передавать текущую сохраненную сортировку
+        sortDidSelect(currentSortMain)
+        //downloadFamousCatalog()//скорее всего сюда нужно поставить функцию из делегата про выбор сортировки и передавать текущую сохраненную сортировку
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -224,6 +225,7 @@ class CatalogMainViewController: UIViewController {
         } else {
             verticalTableView.reloadData()
         }
+        sortDidSelect(currentSortMain)
     }
     
     private func showCatalogView(_ catalogView: CatalogView) {
@@ -256,13 +258,11 @@ class CatalogMainViewController: UIViewController {
     }
     //- MARK: - Data loading
     private func downloadFamousCatalog() {
-        SVProgressHUD.show()
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
         AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
             
-            SVProgressHUD.dismiss()
             
             var resultString = ""
             if let data = response.data {
@@ -298,13 +298,11 @@ class CatalogMainViewController: UIViewController {
     }
     
     private func downloadPriceupCatalog() {
-        SVProgressHUD.show()
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
         AF.request(URLs.GET_PRODUCT_PRICEUP, method: .get, headers: headers).responseData { response in
             
-            SVProgressHUD.dismiss()
             
             var resultString = ""
             if let data = response.data {
@@ -340,13 +338,11 @@ class CatalogMainViewController: UIViewController {
     }
     
     private func downloadPricedownCatalog() {
-        SVProgressHUD.show()
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
         AF.request(URLs.GET_PRODUCT_PRICEDOWN, method: .get, headers: headers).responseData { response in
             
-            SVProgressHUD.dismiss()
             
             var resultString = ""
             if let data = response.data {
@@ -398,11 +394,15 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
         if currentSortMain == .pricedown {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
             cell.setCell(catalog: pricedownCatalog[indexPath.item])
+            cell.currentProduct = pricedownCatalog[indexPath.item]
+            cell.delegate = self
             return cell
         }
         if currentSortMain == .priceup {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "catalogCell", for: indexPath) as! CatalogCollectionViewCell
             cell.setCell(catalog: priceupCatalog[indexPath.item])
+            cell.currentProduct = priceupCatalog[indexPath.item]
+            cell.delegate = self
             return cell
         }
         
@@ -459,29 +459,41 @@ extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource 
             if currentSortMain == .pricedown {
                 let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
                 cell.setCell(catalog: pricedownCatalog[indexPath.item])
+                cell.currentProduct = pricedownCatalog[indexPath.item]
+                cell.delegate = self
                 return cell
             }
             if currentSortMain == .priceup {
                 let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
                 cell.setCell(catalog: priceupCatalog[indexPath.item])
+                cell.currentProduct = priceupCatalog[indexPath.item]
+                cell.delegate = self
                 return cell
             }
             let cell = horizontalTableView.dequeueReusableCell(withIdentifier: "horizontalCell") as! CatalogHorizontalTableViewCell
             cell.setCell(catalog: famousCatalog[indexPath.item])
+            cell.currentProduct = famousCatalog[indexPath.item]
+            cell.delegate = self
             return cell
         }
         if currentSortMain == .pricedown {
             let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
             cell.setCell(catalog: pricedownCatalog[indexPath.item])
+            cell.currentProduct = pricedownCatalog[indexPath.item]
+            cell.delegate = self
             return cell
         }
         if currentSortMain == .priceup {
             let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
             cell.setCell(catalog: priceupCatalog[indexPath.item])
+            cell.currentProduct = priceupCatalog[indexPath.item]
+            cell.delegate = self
             return cell
         }
         let cell = verticalTableView.dequeueReusableCell(withIdentifier: "verticalCell") as! CatalogVerticalTableViewCell
         cell.setCell(catalog: famousCatalog[indexPath.item])
+        cell.currentProduct = famousCatalog[indexPath.item]
+        cell.delegate = self
         return cell
     }
 
@@ -536,12 +548,11 @@ extension CatalogMainViewController: SortSelecting {
 
 extension CatalogMainViewController: ProductAdding {
     func productDidAdd(product: Product) {
-        //tabBarController?.tabBar.addBadge(index: 2, value: 2)
         if product.basketCount > 0 {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
-            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  response in
+            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  [weak self] response in
                 guard let responseCode = response.response?.statusCode else {
-                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
                 if responseCode == 200 {
@@ -551,10 +562,11 @@ extension CatalogMainViewController: ProductAdding {
                     getTotalCount { totalCount in
                         DispatchQueue.main.async {
                             if totalCount == 0 {
-                                self.tabBarController?.tabBar.removeBadge(index: 2)
+                                self?.tabBarController?.tabBar.removeBadge(index: 2)
                             } else {
-                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                                self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
                             }
+                            self?.sortDidSelect(self?.currentSortMain ?? .famous)
                         }
                     }
                 } else {
@@ -567,7 +579,7 @@ extension CatalogMainViewController: ProductAdding {
                         ErrorString = ErrorString + " \(statusCode)"
                     }
                     ErrorString = ErrorString + " \(resultString)"
-                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                    self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
                 }
             }
             return
@@ -575,18 +587,20 @@ extension CatalogMainViewController: ProductAdding {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         let parameters = ["count": product.basketCount+1, "product_id": product.id, "user_id": 0]
         
-        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData {  response in
+        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
             guard let responseCode = response.response?.statusCode else {
-                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                 return
             }
             
             if responseCode == 200 {
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
+                
                 getTotalCount { totalCount in
                     DispatchQueue.main.async {
-                        self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        self?.sortDidSelect(self?.currentSortMain ?? .famous)
                     }
                 }
             } else {
@@ -599,7 +613,7 @@ extension CatalogMainViewController: ProductAdding {
                     ErrorString = ErrorString + " \(statusCode)"
                 }
                 ErrorString = ErrorString + " \(resultString)"
-                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
             }
         }
     }

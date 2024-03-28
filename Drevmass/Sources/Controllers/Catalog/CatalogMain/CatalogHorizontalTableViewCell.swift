@@ -10,6 +10,9 @@ import SnapKit
 import SDWebImage
 
 class CatalogHorizontalTableViewCell: UITableViewCell {
+    //- MARK: - Variables
+    weak var delegate: ProductAdding?
+    var currentProduct = Product()
     //- MARK: - Local Outlets
     private lazy var goodsImage: UIImageView = {
         let image = UIImageView()
@@ -40,6 +43,7 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton36), for: .normal)
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck36), for: .selected)
+        button.addTarget(self, action: #selector(addToBasket), for: .touchUpInside)
         return button
     }()
     //- MARK: - Lifecycle
@@ -94,9 +98,19 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
     }
     //- MARK: - Set Data
     func setCell(catalog: Product) {
+        if catalog.basketCount > 0 {
+            basketButton.isSelected = true
+        } else {
+            basketButton.isSelected = false
+        }
         let transformer = SDImageResizingTransformer(size: CGSize(width: 146, height: 88), scaleMode: .aspectFill)
         goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
         priceLabel.text = formatPrice(catalog.price)
         nameLabel.text = catalog.title
+    }
+    //- MARK: - Button actions
+    @objc func addToBasket() {
+        basketButton.isSelected.toggle()
+        delegate?.productDidAdd(product: currentProduct)
     }
 }
