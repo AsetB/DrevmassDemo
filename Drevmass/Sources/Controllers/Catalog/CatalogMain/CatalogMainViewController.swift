@@ -139,7 +139,7 @@ class CatalogMainViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
         navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
-        downloadFamousCatalog()
+        downloadFamousCatalog()//скорее всего сюда нужно поставить функцию из делегата про выбор сортировки и передавать текущую сохраненную сортировку
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -544,9 +544,19 @@ extension CatalogMainViewController: ProductAdding {
                     self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
-                if response.response?.statusCode == 200 {
+                if responseCode == 200 {
                     let json = JSON(response.data!)
                     print("JSON: \(json)")
+                    
+                    getTotalCount { totalCount in
+                        DispatchQueue.main.async {
+                            if totalCount == 0 {
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
+                            } else {
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                            }
+                        }
+                    }
                 } else {
                     var resultString = ""
                     if let data = response.data {
@@ -571,9 +581,14 @@ extension CatalogMainViewController: ProductAdding {
                 return
             }
             
-            if response.response?.statusCode == 200 {
+            if responseCode == 200 {
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
+                getTotalCount { totalCount in
+                    DispatchQueue.main.async {
+                        self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                    }
+                }
             } else {
                 var resultString = ""
                 if let data = response.data {
