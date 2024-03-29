@@ -10,7 +10,6 @@ import SVProgressHUD
 import Alamofire
 import SwiftyJSON
 import SDWebImage
-import ShimmerSwift
 import Network
 
 class CoursesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
@@ -123,6 +122,17 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(showInfoVC))
         bannerImageView.addGestureRecognizer(tap)
+        
+        //Ставим бейджи в таббаре если в корзине что-то есть
+        getTotalCount { totalCount in
+            DispatchQueue.main.async {
+                if totalCount == 0 {
+                    self.tabBarController?.tabBar.removeBadge(index: 2)
+                } else {
+                    self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                }
+            }
+        }
         
 
     }

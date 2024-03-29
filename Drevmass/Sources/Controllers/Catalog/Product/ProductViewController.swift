@@ -16,6 +16,8 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     //- MARK: - Variables
     private var heightCentimeterLabel: UILabel?
     private var sizeCentimeterLabel: UILabel?
+    private var topCounterButtonLabel: UILabel?
+    private var bottomCounterButtonLabel: UILabel?
     var productDetail = Product()
     var productSimilarArray: [Product] = []
     var productID: Int = 0
@@ -267,7 +269,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     
     private var gradientView = CustomGradientView(startColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0), midColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1), endColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1), startLocation: 0.1, midLocation: 0.5, endLocation: 1.0, horizontalMode: false, diagonalMode: false)
     
-    //MARK: addedToBasketButtonTop
+    //MARK: addedToBasketButton Top
     private lazy var topCounterButtonContainer: UIView = {
         let view = UIView()
         return view
@@ -285,8 +287,10 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         
         let counterLabel = UILabel()
-        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
-        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        counterLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        counterLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        counterLabel.textAlignment = .center
+        self.topCounterButtonLabel = counterLabel
         
         let decrementButton = UIButton()
         decrementButton.setImage(UIImage(resource: ImageResource.Catalog.minus24), for: .normal)
@@ -305,13 +309,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.leading.equalToSuperview().inset(22)
             make.centerY.equalToSuperview()
             make.height.equalTo(22)
-            make.width.equalTo(85)
-        }
-        decrementButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalTo(label.snp.trailing).offset(38)
-            make.height.equalTo(52)
-            make.width.equalTo(40)
+            //make.width.equalTo(85)
         }
         incrementButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -320,9 +318,15 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalTo(40)
         }
         counterLabel.snp.makeConstraints { make in
-            make.leading.equalTo(decrementButton.snp.trailing)
+            make.trailing.equalTo(incrementButton.snp.leading)
             make.centerY.equalToSuperview()
             make.height.equalTo(22)
+            make.width.equalTo(40)
+        }
+        decrementButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalTo(counterLabel.snp.leading)
+            make.height.equalTo(52)
             make.width.equalTo(40)
         }
         
@@ -332,13 +336,13 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     private lazy var topGoToBasketButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        button.layer.cornerRadius = 50
+        button.layer.cornerRadius = 28
         button.setImage(UIImage(resource: ImageResource.Catalog.arrowRight24), for: .normal)
         button.addTarget(self, action: #selector(goToBasket), for: .touchUpInside)
         return button
     }()
     
-    //MARK: addedToBasketButtonBottom
+    //MARK: addedToBasketButton Bottom
     private lazy var bottomCounterButtonContainer: UIView = {
         let view = UIView()
         return view
@@ -356,8 +360,10 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         
         let counterLabel = UILabel()
-        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
-        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        counterLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
+        counterLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        counterLabel.textAlignment = .center
+        self.bottomCounterButtonLabel = counterLabel
         
         let decrementButton = UIButton()
         decrementButton.setImage(UIImage(resource: ImageResource.Catalog.minus24), for: .normal)
@@ -376,13 +382,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.leading.equalToSuperview().inset(22)
             make.centerY.equalToSuperview()
             make.height.equalTo(22)
-            make.width.equalTo(85)
-        }
-        decrementButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalTo(label.snp.trailing).offset(38)
-            make.height.equalTo(52)
-            make.width.equalTo(40)
+            //make.width.equalTo(85)
         }
         incrementButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -391,9 +391,15 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalTo(40)
         }
         counterLabel.snp.makeConstraints { make in
-            make.leading.equalTo(decrementButton.snp.trailing)
+            make.trailing.equalTo(incrementButton.snp.leading)
             make.centerY.equalToSuperview()
             make.height.equalTo(22)
+            make.width.equalTo(40)
+        }
+        decrementButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalTo(counterLabel.snp.leading)
+            make.height.equalTo(52)
             make.width.equalTo(40)
         }
         
@@ -403,7 +409,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     private lazy var bottomGoToBasketButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        button.layer.cornerRadius = 50
+        button.layer.cornerRadius = 28
         button.setImage(UIImage(resource: ImageResource.Catalog.arrowRight24), for: .normal)
         button.addTarget(self, action: #selector(goToBasket), for: .touchUpInside)
         return button
@@ -424,7 +430,10 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         //navigationController?.isNavigationBarHidden = true
+        downloadProductDetail()
         addToBasketPriceButton.isHidden = true
+        topCounterButtonContainer.isHidden = true
+        bottomCounterButtonContainer.isHidden = true
         gradientView.isHidden = true
         gradientView.updateColors()
         gradientView.updateLocations()
@@ -435,13 +444,31 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         let offsetY = scrollView.contentOffset.y + navBarHeight
         let buttonY = addToBasketButton.frame.maxY - navBarHeight
         if offsetY > buttonY {
-            addToBasketButton.isHidden = true
-            addToBasketPriceButton.isHidden = false
-            gradientView.isHidden = false
+            //top button behind navbar
+            if productDetail.basketCount > 0 {
+                addToBasketButton.isHidden = true
+                topCounterButtonContainer.isHidden = true
+                addToBasketPriceButton.isHidden = true
+                bottomCounterButtonContainer.isHidden = false
+                gradientView.isHidden = false
+            } else {
+                addToBasketButton.isHidden = true
+                addToBasketPriceButton.isHidden = false
+                gradientView.isHidden = false
+            }
         } else {
-            addToBasketButton.isHidden = false
-            addToBasketPriceButton.isHidden = true
-            gradientView.isHidden = true
+            //top button appears
+            if productDetail.basketCount > 0 {
+                addToBasketButton.isHidden = true
+                topCounterButtonContainer.isHidden = false
+                addToBasketPriceButton.isHidden = true
+                bottomCounterButtonContainer.isHidden = true
+                gradientView.isHidden = true
+            } else {
+                addToBasketButton.isHidden = false
+                addToBasketPriceButton.isHidden = true
+                gradientView.isHidden = true
+            }
         }
     }
     
@@ -463,10 +490,16 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         contentView.addSubview(similarGoodsTitleLabel)
         contentView.addSubview(collectionView)
         contentView.addSubview(addToBasketButton)
+        contentView.addSubview(topCounterButtonContainer)
+        topCounterButtonContainer.addSubview(topCounterButton)
+        topCounterButtonContainer.addSubview(topGoToBasketButton)
         view.addSubview(gradientView)
         view.addSubview(addToBasketPriceButton)
+        view.addSubview(bottomCounterButtonContainer)
         addToBasketPriceButton.addSubview(buttonMainLabel)
         addToBasketPriceButton.addSubview(buttonPriceLabel)
+        bottomCounterButtonContainer.addSubview(bottomCounterButton)
+        bottomCounterButtonContainer.addSubview(bottomGoToBasketButton)
     }
     //- MARK: - Set Constraints
     private func setConstraints() {
@@ -549,7 +582,36 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.leading.equalToSuperview().inset(24)
             make.height.equalTo(22)
         }
-        
+        topCounterButtonContainer.snp.makeConstraints { make in
+            make.bottom.equalTo(priceLabel.snp.bottom).offset(72)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(56)
+        }
+        topCounterButton.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview().inset(64)
+        }
+        topGoToBasketButton.snp.makeConstraints { make in
+            make.size.equalTo(56)
+            make.verticalEdges.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
+        bottomCounterButtonContainer.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(56)
+        }
+        bottomCounterButton.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview().inset(64)
+        }
+        bottomGoToBasketButton.snp.makeConstraints { make in
+            make.size.equalTo(56)
+            make.verticalEdges.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
     }
     //- MARK: - Data loading
     private func downloadProductDetail() {
@@ -631,6 +693,41 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         descriptionLabel.text = productDetail.description
         heightCentimeterLabel?.text = productDetail.height
         sizeCentimeterLabel?.text = productDetail.size
+        topCounterButtonLabel?.text = String(productDetail.basketCount)
+        bottomCounterButtonLabel?.text = String(productDetail.basketCount)
+        
+        guard let navBar = navigationController?.navigationBar else { return }
+        
+        let navBarHeight = navBar.frame.height
+        let offsetY = scrollView.contentOffset.y + navBarHeight
+        let buttonY = addToBasketButton.frame.maxY - navBarHeight
+        if offsetY > buttonY {
+            //top button behind navbar
+            if productDetail.basketCount > 0 {
+                addToBasketButton.isHidden = true
+                topCounterButtonContainer.isHidden = true
+                addToBasketPriceButton.isHidden = true
+                bottomCounterButtonContainer.isHidden = false
+                gradientView.isHidden = false
+            } else {
+                addToBasketButton.isHidden = true
+                addToBasketPriceButton.isHidden = false
+                gradientView.isHidden = false
+            }
+        } else {
+            //top button appears
+            if productDetail.basketCount > 0 {
+                addToBasketButton.isHidden = true
+                topCounterButtonContainer.isHidden = false
+                addToBasketPriceButton.isHidden = true
+                bottomCounterButtonContainer.isHidden = true
+                gradientView.isHidden = true
+            } else {
+                addToBasketButton.isHidden = false
+                addToBasketPriceButton.isHidden = true
+                gradientView.isHidden = true
+            }
+        }
     }
     
     //- MARK: - Button Actions
@@ -673,14 +770,42 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         let offsetY = scrollView.contentOffset.y + navBarHeight
         let buttonY = addToBasketButton.frame.maxY - navBarHeight
         if offsetY > buttonY {
-            addToBasketButton.isHidden = true
-            addToBasketPriceButton.isHidden = false
-            gradientView.isHidden = false
+            //top button behind navbar
+            if productDetail.basketCount > 0 {
+                addToBasketButton.isHidden = true
+                topCounterButtonContainer.isHidden = true
+                addToBasketPriceButton.isHidden = true
+                bottomCounterButtonContainer.isHidden = false
+                gradientView.isHidden = false
+            } else {
+                addToBasketButton.isHidden = true
+                addToBasketPriceButton.isHidden = false
+                gradientView.isHidden = false
+            }
         } else {
-            addToBasketButton.isHidden = false
-            addToBasketPriceButton.isHidden = true
-            gradientView.isHidden = true
+            //top button appears
+            if productDetail.basketCount > 0 {
+                addToBasketButton.isHidden = true
+                topCounterButtonContainer.isHidden = false
+                addToBasketPriceButton.isHidden = true
+                bottomCounterButtonContainer.isHidden = true
+                gradientView.isHidden = true
+            } else {
+                addToBasketButton.isHidden = false
+                addToBasketPriceButton.isHidden = true
+                gradientView.isHidden = true
+            }
         }
+        
+//        if offsetY > buttonY {
+//            addToBasketButton.isHidden = true
+//            addToBasketPriceButton.isHidden = false
+//            gradientView.isHidden = false
+//        } else {
+//            addToBasketButton.isHidden = false
+//            addToBasketPriceButton.isHidden = true
+//            gradientView.isHidden = true
+//        }
     }
 }
 

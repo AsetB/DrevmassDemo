@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Reachability
+//import Reachability
 import Network
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

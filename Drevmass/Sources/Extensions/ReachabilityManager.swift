@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Reachability
+//import Reachability
 
 //class ReachabilityManager {
 //    let reachability = Reachability()
