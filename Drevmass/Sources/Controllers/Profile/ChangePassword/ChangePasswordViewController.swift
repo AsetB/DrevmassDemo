@@ -54,7 +54,7 @@ class ChangePasswordViewController: UIViewController {
         textfield.font = .addFont(type: .SFProTextSemiBold, size: 17)
         textfield.addTarget(self, action: #selector(editingDidBeginCurrentPasswordTextfield), for: .editingDidBegin)
         textfield.addTarget(self, action: #selector(editingDidEndForPassword), for: .editingDidEnd)
-//        textfield.addTarget(self, action: #selector(unlockSaveButton), for: .editingDidEnd)
+        textfield.addTarget(self, action: #selector(unlockSaveButton), for: .editingChanged)
         return textfield
     }()
     
@@ -99,7 +99,7 @@ class ChangePasswordViewController: UIViewController {
         textfield.isSecureTextEntry = true
         textfield.addTarget(self, action: #selector(editingDidBeginNewPasswordTextfield), for: .editingDidBegin)
         textfield.addTarget(self, action: #selector(editingDidEndForNewPassword), for: .editingDidEnd)
-//        textfield.addTarget(self, action: #selector(unlockSaveButton), for: .editingDidEnd)
+        textfield.addTarget(self, action: #selector(unlockSaveButton), for: .editingChanged)
         return textfield
     }()
     
@@ -127,6 +127,8 @@ class ChangePasswordViewController: UIViewController {
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         return button
     }()
+    
+    var notificationView = NotificationView()
     
     // - MARK: - Lifecycle
     
@@ -170,16 +172,22 @@ extension ChangePasswordViewController {
                 
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
-                
+                self.notificationView.show(viewController: self, notificationType: .success)
+                self.notificationView.titleLabel.text = "Пароль обновлен"
+                self.dismissView()
             } else {
-                    SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
+                let json = JSON(response.data!)
+                let error = json["code"].stringValue
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = error
+    
             }
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                    let window = windowScene.windows.first else {
                return
              }
         }
-        dismissView()
+        
     }
     
     // - MARK: - other funcs
@@ -189,7 +197,7 @@ extension ChangePasswordViewController {
     }
     
     @objc func unlockSaveButton() {
-        if currentPasswordLabel.text == "" || newPasswordTextfield.text == "" {
+        if !currentPasswordTextfield.hasText || !newPasswordTextfield.hasText {
             saveButton.isEnabled = false
             saveButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3) 
         }else{
@@ -228,6 +236,8 @@ extension ChangePasswordViewController {
         }
         viewUnderNewPassword.backgroundColor = UIColor(resource: ColorResource.Colors.E_0_DEDD) 
     }
+    
+   
     
     @objc func toggleNewShowButton() {
         

@@ -33,6 +33,7 @@ class PromoCodeViewController: UIViewController {
        var label = UILabel()
         label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = .addFont(type: .SFProTextRegular, size: 15)
+        label.numberOfLines = 2
         return label
     }()
     
@@ -98,6 +99,56 @@ class PromoCodeViewController: UIViewController {
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         return button
     }()
+    
+    var viewForShare: UIView = {
+       var view = UIView()
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF_A_10)
+        view.layer.cornerRadius = 12
+        return view
+    }()
+    
+    var shareTitle: UILabel = {
+       var label = UILabel()
+        label.text = "Вы поделились"
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        label.font = .addFont(type: .SFProTextRegular, size: 15)
+        return label
+    }()
+    
+    var sharedLabel: UILabel = {
+       var label = UILabel()
+        label.text = "5"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        return label
+    }()
+    
+     var shareCountLabel: UILabel = {
+       var label = UILabel()
+        label.text = "/6"
+         label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+         label.textColor = UIColor(resource: ColorResource.Colors.ffffffA60)
+        return label
+    }()
+    
+    var viewForCondition: UIView = {
+       var view = UIView()
+        view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
+        view.layer.cornerRadius = 20
+        return view
+    }()
+    
+    var conditiontLabel: UILabel = {
+      var label = UILabel()
+       label.text = "*начислим вам 500 бонусов при условии покупки массажера вашим другом"
+        label.numberOfLines = 2
+        label.font = .addFont(type: .SFProTextRegular, size: 13)
+        label.textColor = UIColor(resource: ColorResource.Colors._787878)
+       return label
+   }()
+   
+    
+    var notificationView = NotificationView()
 
     // - MARK: - Lifecycle
     
@@ -136,17 +187,16 @@ extension PromoCodeViewController {
                 print("JSON: \(json)")
                 
                 if json.exists(){
-                    self.subtitleLabel.text = "Дарим вам и другу \(json["bonus"].int!) бонусов"
+                    self.subtitleLabel.text = "Промокод \(json["bonus"].int!) бонусов на покупку массажера для двух друзей!"
                     self.codeLabel.text = json["promocode"].string
+                    self.sharedLabel.text = "\(json["used"].int!)"
+                    self.shareCountLabel.text = "/\(json["all_attempt"].int!)"
                 }
                                 
             } else {
                     SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
             }
         }
-
-        
-        
     }
     
     // - MARK: - other funcs
@@ -157,7 +207,8 @@ extension PromoCodeViewController {
     
     @objc func copyText() {
         UIPasteboard.general.string = codeLabel.text
-//        дописать всплывающее окно сверху
+        self.notificationView.show(viewController: self, notificationType: .success)
+        self.notificationView.titleLabel.text = "Промокод успешно скопирован"
     }
     
     @objc func share() {
@@ -201,6 +252,12 @@ extension PromoCodeViewController {
         viewForPromocode.addSubview(stackView)
         stackView.addArrangedSubview(shareButton)
         stackView.addArrangedSubview(copyButton)
+        viewForPromocode.addSubview(viewForShare)
+        viewForShare.addSubview(shareTitle)
+        viewForShare.addSubview(sharedLabel)
+        viewForShare.addSubview(shareCountLabel)
+        view.addSubview(viewForCondition)
+        viewForCondition.addSubview(conditiontLabel)
         view.addSubview(existPromoButton)
     }
     
@@ -208,6 +265,7 @@ extension PromoCodeViewController {
         viewForPromocode.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(16)
             make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(270)
         }
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(16)
@@ -229,7 +287,32 @@ extension PromoCodeViewController {
         stackView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview().inset(20)
             make.top.equalTo(dashedLineView.snp.bottom).inset(-16)
-            make.bottom.equalToSuperview().inset(16)
+        }
+        viewForShare.snp.makeConstraints { make in
+            make.top.equalTo(stackView.snp.bottom).inset(-16)
+            make.horizontalEdges.equalToSuperview().inset(20)
+            make.height.equalTo(46)
+        }
+        shareTitle.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().inset(16)
+        }
+        sharedLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalTo(shareCountLabel.snp.left)
+        }
+        shareCountLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(16)
+        }
+        viewForCondition.snp.makeConstraints { make in
+            make.top.equalTo(viewForPromocode.snp.bottom).inset(-12)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(60)
+        }
+        conditiontLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.horizontalEdges.equalToSuperview().inset(16)
         }
         existPromoButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)

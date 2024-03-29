@@ -18,7 +18,6 @@ class CalendarView: UIView {
         button.setTitle("Календарь занятий", for: .normal)
         button.leftIcon.image = UIImage(resource: ImageResource.Courses.icCalendar)
         button.setTitleColor(UIColor(resource: ColorResource.Colors._302_C_28), for: .normal)
-//        button.heightAnchor.constraint(equalToConstant: 63).isActive = true
         button.layer.borderWidth = 0
         return button
     }()
@@ -27,7 +26,6 @@ class CalendarView: UIView {
        var switchForCalendar = UISwitch()
         switchForCalendar.onTintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         switchForCalendar.frame.size = CGSize(width: 51, height: 31)
-//        switchForCalendar.addTarget(self, action: #selector(switchValueChanged), for: .valueChanged)
         return switchForCalendar
     }()
     
@@ -37,12 +35,10 @@ class CalendarView: UIView {
         button.titleLabel?.font = .addFont(type: .SFProTextRegular, size: 17)
         button.setTitleColor(UIColor(resource: ColorResource.Colors._302_C_28), for: .normal)
         button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
-//        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
         button.layer.borderWidth = 0
         button.leftIcon.isHidden = true
         button.contentEdgeInsets.left = 16
         button.isHidden = true
-//        button.addTarget(self, action: #selector(showSelectDayViewController), for: .touchUpInside)
         return button
     }()
     
@@ -60,12 +56,10 @@ class CalendarView: UIView {
         button.titleLabel?.font = .addFont(type: .SFProTextRegular, size: 17)
         button.setTitleColor(UIColor(resource: ColorResource.Colors._302_C_28), for: .normal)
         button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
-//        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
         button.layer.borderWidth = 0
         button.leftIcon.isHidden = true
         button.contentEdgeInsets.left = 16
         button.isHidden = true
-//        button.addTarget(self, action: #selector(showSelectTimeViewController), for: .touchUpInside)
         return button
     }()
     

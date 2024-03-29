@@ -13,13 +13,7 @@ import Alamofire
 import SwiftyJSON
 import YouTubePlayerKit
 
-//protocol GestureRecognazerProtocol {
-//    func didTap(id: Int)
-//}
-
 class DetailLessonViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-    
-//    var delegate: GestureRecognazerProtocol?
     
     var lesson = LessonsById()
     var lessonId = 0
@@ -40,16 +34,16 @@ class DetailLessonViewController: UIViewController, UICollectionViewDataSource, 
            return scrollview
        }()
        
-       var contentview: UIView = {
-           var view = UIView()
-               view.backgroundColor =  UIColor(resource: ColorResource.Colors.FFFFFF)
-           return view
-       }()
+   var contentview: UIView = {
+       var view = UIView()
+           view.backgroundColor =  UIColor(resource: ColorResource.Colors.FFFFFF)
+       return view
+   }()
     
     var posterButton: UIButton = {
         var button = UIButton()
            button.contentMode = .scaleAspectFill
-           button.clipsToBounds = true
+//           button.clipsToBounds = true
            button.layer.cornerRadius = 24
            button.addTarget(self, action: #selector(showYouTubePlayer), for: .touchUpInside)
         return button
@@ -140,14 +134,8 @@ class DetailLessonViewController: UIViewController, UICollectionViewDataSource, 
         getLessonInfo()
         print(used_products.count)
         
-//        let tapRecognazer = UIGestureRecognizer(target: self, action: #selector(handelTapped))
-//        posterButton.addGestureRecognizer(tapRecognazer)
     }
     
-//    @objc func handelTapped() {
-//        delegate?.didTap(id: lessonId)
-//        print(lessonId)
-//    }
     
     // MARK: - Collection view
     
@@ -241,8 +229,13 @@ extension DetailLessonViewController {
 
     
     func updateUI() {
-        self.posterButton.sd_setImage(with:  URL(string: "http://45.12.74.158/\(lesson.image_src)"), for: .normal)
-        
+        if lesson.image_src == "" {
+            self.posterButton.sd_setImage(with: URL(string: "https://img.youtube.com/vi/\(lesson.video_src)/hqdefault.jpg"), for: .normal)
+        }else{
+            self.posterButton.sd_setImage(with: URL(string: "http://45.12.74.158/\(lesson.image_src)"), for: .normal)
+        }
+//        self.posterButton.sd_setImage(with:  URL(string: "http://45.12.74.158/\(lesson.image_src)"), for: .normal)
+//        
         
         let digit = NSAttributedString(string: "\(lesson.duration / 60)", attributes: [.font: UIFont.addFont(type: .SFProTextSemiBold, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)])
         let min = NSAttributedString(string: " мин", attributes: [.font: UIFont.addFont(type: .SFProTextRegular, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)])

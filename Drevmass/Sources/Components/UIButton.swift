@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+
 class Button: UIButton {
     
     var leftIcon: UIImageView = {
@@ -44,6 +45,7 @@ extension Button {
        layer.cornerRadius = 20
        contentHorizontalAlignment = .leading
        contentEdgeInsets.left = 52
+       
        addSubview(leftIcon)
        addSubview(rightIcon)
     }

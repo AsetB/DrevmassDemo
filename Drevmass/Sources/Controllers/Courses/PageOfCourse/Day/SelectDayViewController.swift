@@ -81,6 +81,8 @@ class SelectDayViewController: UIViewController, PanModalPresentable, UICollecti
         return button
     }()
     
+    var notificationView = NotificationView()
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -90,6 +92,8 @@ class SelectDayViewController: UIViewController, PanModalPresentable, UICollecti
         setupConstraints()
         collectionView.allowsMultipleSelection = true
         getDays()
+        
+        notificationView.alpha = 0
     }
     
     // MARK: - collectionView
@@ -189,6 +193,10 @@ extension SelectDayViewController {
                 if response.response?.statusCode == 200 {
                     let json = JSON(response.data!)
                     print("JSON: \(json)")
+                    
+                    self.notificationView.show(viewController: self, notificationType: .success)
+                     self.notificationView.titleLabel.text = "Настройки успешно сохранены"
+                    
                 }else{
                     var ErrorString = "CONNECTION_ERROR"
                     if let sCode = response.response?.statusCode{
@@ -237,9 +245,11 @@ extension SelectDayViewController {
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
         view.addSubview(saveButton)
+       
     }
     
     func setupConstraints() {
+       
         titleLabel.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview().inset(24)
         }

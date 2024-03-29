@@ -54,11 +54,11 @@ class InfoAboutMeViewController: UIViewController {
         return textfieldView
     }() 
     
-    var numberTextFieldView: TextFieldView = {
+   lazy var numberTextFieldView: TextFieldView = {
         var textfieldView = TextFieldView()
         textfieldView.titleLabel.text = "Номер телефона"
         textfieldView.textfield.keyboardType = .numberPad
-        
+        textfieldView.textfield.delegate = self
         return textfieldView
     }() 
     
@@ -164,6 +164,8 @@ class InfoAboutMeViewController: UIViewController {
          return datePicker
      }()
     
+    var notificationView = NotificationView()
+    
     // - MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -175,6 +177,7 @@ class InfoAboutMeViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
 }
 
@@ -237,23 +240,25 @@ extension InfoAboutMeViewController {
         ]
         AF.request(URLs.USER_INFO_URL, method: .post,parameters: parametrs, encoding: JSONEncoding.default, headers: headers).responseData { response in
             SVProgressHUD.dismiss()
-            var resultString = ""
+
             if let data = response.data{
-                resultString = String(data: data, encoding: .utf8)!
+             var  resultString = String(data: data, encoding: .utf8)!
             }
+            
             if response.response?.statusCode == 200{
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
                 self.user = User(json: json)
+                
+                self.notificationView.show(viewController: self, notificationType: .success)
+                self.notificationView.titleLabel.text = "Данные успешно сохранены"
+                self.dismissView()
             }else{
-                var ErrorString = "CONNECTION_ERROR"
-                if let sCode = response.response?.statusCode{
-                    ErrorString = ErrorString + "\(sCode)"
-                }
-                ErrorString = ErrorString + "\(resultString)"
-                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+                let json = JSON(response.data!)
+                let error = json["code"].stringValue
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = error
             }
-            self.dismissView()
         }
     }
     
@@ -394,7 +399,7 @@ extension InfoAboutMeViewController {
             scrollViewBottomConstraint = make.bottom.equalToSuperview().constraint
         }
         contentview.snp.makeConstraints { make in
-            make.horizontalEdges.top.bottom.equalTo(scrollView.contentLayoutGuide)
+            make.top.bottom.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
             make.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
         }
@@ -431,5 +436,22 @@ extension InfoAboutMeViewController {
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(48)
         }
+    }
+}
+extension InfoAboutMeViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == numberTextFieldView.textfield {
+            let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+            
+            let formattedText = newText.applyPatternOnNumbers(pattern: "+# ### ### ## ##", replacementCharacter: "#")
+            
+            let maxLength = "+# ### ### ## ##".count
+                if formattedText.count > maxLength {
+                return false
+            }
+            textField.text = formattedText
+            return false
+        }
+        return true
     }
 }

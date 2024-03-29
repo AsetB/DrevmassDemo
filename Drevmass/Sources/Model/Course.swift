@@ -18,7 +18,7 @@ class Course {
     var image_src: String = ""
     var completed: Bool = false
     var is_started: Bool = false
-    var bonus_info: [CourseBonus] = []
+    var bonus_info = CourseBonus()
     var lessons: [LessonsById] = []
     
     init(){
@@ -50,12 +50,9 @@ class Course {
         if let temp = json["is_started"].bool{
             self.is_started = temp
         }
-        if let array = json["bonus_info"].array{
-            for item in array{
-                let temp = CourseBonus(json: item)
-                self.bonus_info.append(temp)
-            }
-        } 
+        if json["bonus_info"].exists(){
+            bonus_info = CourseBonus(json: json["bonus_info"])
+        }
         if let array = json["lessons"].array{
             for item in array{
                 let temp = LessonsById(json: item)

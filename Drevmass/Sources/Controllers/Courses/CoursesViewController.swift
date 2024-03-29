@@ -10,29 +10,33 @@ import SVProgressHUD
 import Alamofire
 import SwiftyJSON
 import SDWebImage
+import ShimmerSwift
+import Network
 
-                // добавить закладку в навигейшн при скроллинге!!!!
-                // добавить cкролл что бы проверить largetitle на появление в навигейшн
-
-class CoursesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class CoursesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
     
     var course: [Course] = []
-    var bonusInfo: [CourseBonus] = []
-    
+    var request: Request?
+    var nosignalView = NoSignalUIView()
+    private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
+  
     //    MARK: UI elements
-    var scrollView: UIScrollView = {
+    
+  lazy var scrollView: UIScrollView = {
        var scrollview = UIScrollView()
            scrollview.backgroundColor = .clear
-           scrollview.showsVerticalScrollIndicator = false
+           scrollview.showsVerticalScrollIndicator = true
            scrollview.isScrollEnabled = true
            scrollview.clipsToBounds = true
            scrollview.contentMode = .scaleAspectFill
            scrollview.contentInsetAdjustmentBehavior = .never
+           scrollview.alwaysBounceVertical = true
+           scrollview.delegate = self
         return scrollview
     }()
     var contentview: UIView = {
         var view = UIView()
-            view.backgroundColor =  UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
+          view.backgroundColor =  UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
         return view
     }()
     
@@ -45,13 +49,14 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         return view
     }()
     
-    var favoriteButton: Button = {
+   lazy var favoriteButton: Button = {
        var button = Button()
         button.setTitle("Мои закладки", for: .normal)
         button.leftIcon.image = UIImage(resource: ImageResource.Courses.icFavorite)
         button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
         button.layer.borderColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0).cgColor
         button.addTarget(self, action: #selector(showFavoriteVc), for: .touchUpInside)
+      
         return button
     }()
     
@@ -63,16 +68,10 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         imageview.contentMode = .scaleAspectFill
         imageview.clipsToBounds = true
         imageview.layer.cornerRadius = 24
+        imageview.isUserInteractionEnabled = true
         return imageview
     }()
-    
-    var clearButtonForBanner: UIButton = {
-       var button = UIButton()
-        button.backgroundColor = .clear
-        button.addTarget(self, action: #selector(showInfoVC), for: .touchUpInside)
-        return button
-    }()
-    
+
     var titleForBannerLabel: UILabel = {
        var label = UILabel()
         label.text = "Получайте бонусы за\nпрохождение курсов"
@@ -90,8 +89,6 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         return label
     }()
     
-    
-    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -99,7 +96,7 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         layout.minimumInteritemSpacing = 16
 //        layout.estimatedItemSize.width = 343
 //        layout.estimatedItemSize.height = 124
-//        layout.estimatedItemSize = .zero
+        layout.estimatedItemSize = .zero
         
       var collectionview = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionview.backgroundColor = .clear
@@ -113,7 +110,6 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         return collectionview
     }()
     
-    
     //    MARK: Lifecycle
     
     override func viewDidLoad() {
@@ -121,21 +117,31 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         setupView()
         setupConstraints()
+        setupNavigation()
         getCourseInfo()
         getCourseBonusInfo()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showInfoVC))
+        bannerImageView.addGestureRecognizer(tap)
+        
+
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
-        navigationController?.navigationBar.barTintColor = .white
-        navigationItem.title = "Курсы"
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+      let yOffset = scrollView.contentOffset.y
+    
+        if yOffset > 88 {
+            
+            let rightBarButton = UIBarButtonItem(image: UIImage(resource: ImageResource.Courses.icFavorite), style: .plain, target: self, action: #selector(showFavoriteVc))
+            rightBarButton.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+            navigationItem.rightBarButtonItem = rightBarButton
+            navigationItem.rightBarButtonItem?.isHidden = false
+        }else{
+            
+            navigationItem.rightBarButtonItem?.isHidden = true
+        }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationItem.title = " "
-    }
     
     //    MARK: CollectionView
     
@@ -146,34 +152,33 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
-        cell.layer.cornerRadius = 24
-        cell.layer.borderWidth = 2
-        cell.layer.borderColor = UIColor(resource: ColorResource.Colors.EFEBE_9).cgColor
-        cell.widthAnchor.constraint(equalToConstant: 343).isActive = true
+            cell.layer.cornerRadius = 24
+            cell.layer.borderWidth = 2
+            cell.layer.borderColor = UIColor(resource: ColorResource.Colors.EFEBE_9).cgColor
         
         let imageview = UIImageView()
             imageview.layer.cornerRadius = 24
-        imageview.frame.size = CGSize(width: 96, height: 108)
-        imageview.clipsToBounds = true
-        imageview.sd_setImage(with: URL(string: "http://45.12.74.158/\(course[indexPath.row].image_src)"))
+            imageview.frame.size = CGSize(width: 96, height: 108)
+            imageview.clipsToBounds = true
+            imageview.sd_setImage(with: URL(string: "http://45.12.74.158/\(course[indexPath.row].image_src)"))
         
         let lessonAttributed = NSMutableAttributedString(string: "\(course[indexPath.row].lesson_cnt) ")
-        lessonAttributed.addAttributes([.font: UIFont.addFont(type:.SFProTextBold, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)], range: NSRange(location: 0, length: lessonAttributed.length))
+            lessonAttributed.addAttributes([.font: UIFont.addFont(type:.SFProTextBold, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)], range: NSRange(location: 0, length: lessonAttributed.length))
         
         let durationAttributed = NSMutableAttributedString(string:  "\(course[indexPath.row].duration / 60) ")
-        durationAttributed.addAttributes([.font: UIFont.addFont(type: .SFProTextBold, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)], range: NSRange(location: 0, length: durationAttributed.length))
+            durationAttributed.addAttributes([.font: UIFont.addFont(type: .SFProTextBold, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)], range: NSRange(location: 0, length: durationAttributed.length))
         
         let combinedAttributedString = NSMutableAttributedString()
         
-        combinedAttributedString.append(lessonAttributed)
-        combinedAttributedString.append(NSAttributedString(string: "уроков · ", attributes: [.font: UIFont.addFont(type: .SFProTextRegular, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)]))
-        combinedAttributedString.append(durationAttributed)
-        combinedAttributedString.append(NSAttributedString(string: "мин", attributes: [.font: UIFont.addFont(type: .SFProTextRegular, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)]))
+            combinedAttributedString.append(lessonAttributed)
+            combinedAttributedString.append(NSAttributedString(string: "уроков · ", attributes: [.font: UIFont.addFont(type: .SFProTextRegular, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)]))
+            combinedAttributedString.append(durationAttributed)
+            combinedAttributedString.append(NSAttributedString(string: "мин", attributes: [.font: UIFont.addFont(type: .SFProTextRegular, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)]))
         
         let titleLabel = UILabel()
-        titleLabel.font = .addFont(type: .SFProTextRegular, size: 13)
-        titleLabel.textColor = UIColor(resource: ColorResource.Colors._989898)
-        titleLabel.attributedText = combinedAttributedString
+            titleLabel.font = .addFont(type: .SFProTextRegular, size: 13)
+            titleLabel.textColor = UIColor(resource: ColorResource.Colors._989898)
+            titleLabel.attributedText = combinedAttributedString
         
         let subtitleLabel = UILabel()
             subtitleLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
@@ -181,16 +186,12 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
             subtitleLabel.numberOfLines = 2
             subtitleLabel.text = course[indexPath.row].name
         
-        let viewForBonus: BonusUIView = {
-            let view = BonusUIView()
-            view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
-            view.layer.cornerRadius = 12
-            view.bonusTitleLabel.text = "+999"
-//            view.bonusTitleLabel.text = "\(course[indexPath.row].bonus_info.price)"
-            
-            view.bonusImageview.image = UIImage(resource: ImageResource.Profile.iconBonusBeige)
-            return view
-        }()
+        
+        let viewForBonus = BonusUIView()
+            viewForBonus.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
+            viewForBonus.layer.cornerRadius = 12
+            viewForBonus.bonusImageview.image = UIImage(resource: ImageResource.Profile.iconBonusBeige)
+            viewForBonus.bonusTitleLabel.text = "\(course[indexPath.row].bonus_info.price)"
         
         cell.addSubview(imageview)
         cell.addSubview(titleLabel)
@@ -216,6 +217,8 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
             make.height.equalTo(24)
         }
         
+        
+        
        return cell
    }
    
@@ -224,7 +227,6 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
       let pageOfCourse = PageOfCourseViewController()
        pageOfCourse.course = course[indexPath.row]
        pageOfCourse.navigationItem.largeTitleDisplayMode = .never
-//       pageOfCourse.navigationItem.title = "Урок \(course[indexPath.row].id)"
        navigationController?.show(pageOfCourse, sender: self)
    }
 }
@@ -241,51 +243,75 @@ extension CoursesViewController {
     @objc func showInfoVC() {
         print("tapped")
         let infoVC = InformationViewController()
-        navigationController?.pushViewController(infoVC, animated: true)
+        navigationController?.modalPresentationStyle = .overFullScreen
+        present(infoVC, animated: true)
     }
     
     //    MARK: network
     func getCourseInfo() {
         SVProgressHUD.show()
+        request?.cancel()
         
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(AuthenticationService.shared.token)"
-        ]
-        AF.request(URLs.GET_COURSE_URL, method: .get, headers: headers).responseData { response in
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(AuthenticationService.shared.token)"
+            ]
+        
+        request = AF.request(URLs.GET_COURSE_URL, method: .get, headers: headers).responseData { response in
             SVProgressHUD.dismiss()
             var resultString = ""
             if let data = response.data{
                 resultString = String(data: data, encoding: .utf8)!
             }
-                if response.response?.statusCode == 200 {
-                    let json = JSON(response.data!)
-                    print("JSON: \(json)")
-                    
-                    if let array = json.array {
-                        for item in array {
-                            let course = Course(json: item)
-                            self.course.append(course)
-                        }
-                        if let array = json["bonus_info"].array{
-                            for item in array {
-                                let bonus = CourseBonus(json: item)
-                                self.bonusInfo.append(bonus)
-                                print(self.bonusInfo.count)
-                            }
-                        }
-                        self.collectionView.reloadData()
+            if response.response?.statusCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+               
+                self.nosignalView.isHidden = true
+                
+                if let array = json.array {
+                    for item in array {
+                        let course = Course(json: item)
+                        self.course.append(course)
+                        print("ffffff \(course.id)")
                     }
-                }else{
-                    var ErrorString = "CONNECTION_ERROR"
-                    if let sCode = response.response?.statusCode{
-                        ErrorString = ErrorString + "\(sCode)"
-                    }
-                    ErrorString = ErrorString + "\(resultString)"
-                    SVProgressHUD.showError(withStatus: "\(ErrorString)")
+            
+                    self.collectionView.reloadData()
                 }
+            }else{
+
+                self.monitor.pathUpdateHandler = { path in
+                    
+                    if path.status == .unsatisfied {
+                        print("Network disconnected")
+                        DispatchQueue.main.async {
+                            self.view.addSubview(self.nosignalView)
+                            self.nosignalView.snp.makeConstraints { make in
+                                make.top.equalToSuperview().inset(160)
+                                make.horizontalEdges.equalToSuperview()
+                                make.bottom.equalToSuperview()
+                            }
+                            self.nosignalView.button.addAction(UIAction(handler: { _ in
+                                self.getCourseBonusInfo()
+                                self.getCourseInfo()
+                                self.nosignalView.isHidden = true
+                            }), for: .touchUpInside)
+                        }
+                    } else {
+                        
+                        print("Network connected")
+                        DispatchQueue.main.async {
+                            self.nosignalView.removeFromSuperview()
+                        }
+                    }
+                }
+                self.monitor.start(queue: DispatchQueue(label: "network_monitor"))
+                
+                
+            }
         }
     }
     
+    //1500
     func getCourseBonusInfo() {
         SVProgressHUD.show()
 
@@ -306,18 +332,18 @@ extension CoursesViewController {
                     let bonus = json["price"].int
                     self.subtitleForBannerLabel.text = "Начислим до \(String(bonus ?? 0)) ₽ \nбонусами...."
 
-                }else{
-                    var ErrorString = "CONNECTION_ERROR"
-                    if let sCode = response.response?.statusCode{
-                        ErrorString = ErrorString + "\(sCode)"
-                    }
-                    ErrorString = ErrorString + "\(resultString)"
-                    SVProgressHUD.showError(withStatus: "\(ErrorString)")
                 }
         }
     }
         
         //    MARK: - setups
+    func setupNavigation() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.addFont(type: .SFProDisplayBold, size: 28), .foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
+        navigationController?.navigationBar.barTintColor = .white
+        navigationItem.title = "Курсы"
+    }
         
     func setupView() {
         view.backgroundColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
@@ -326,7 +352,6 @@ extension CoursesViewController {
         contentview.addSubview(backgroundView)
         backgroundView.addSubview(favoriteButton)
         backgroundView.addSubview(bannerImageView)
-//        bannerImageView.addSubview(clearButtonForBanner)
         backgroundView.addSubview(titleForBannerLabel)
         backgroundView.addSubview(subtitleForBannerLabel)
         backgroundView.addSubview(collectionView)
@@ -334,19 +359,14 @@ extension CoursesViewController {
     
     func setupConstraints() {
         scrollView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.horizontalEdges.equalToSuperview()
-//            make.height.equalTo(1500)
-            make.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         contentview.snp.makeConstraints { make in
-            make.horizontalEdges.top.bottom.equalTo(scrollView.contentLayoutGuide)
-            make.width.equalTo(scrollView.frameLayoutGuide)
-//            make.height.equalTo(2000)
-            make.height.equalTo(scrollView.frameLayoutGuide).priority(.medium)
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.height.equalTo(scrollView.frameLayoutGuide)
         }
         backgroundView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.top.equalToSuperview().inset(160)
             make.horizontalEdges.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -360,11 +380,6 @@ extension CoursesViewController {
             make.horizontalEdges.equalToSuperview().inset(16)
             make.height.equalTo(128)
         }
-        
-        
-//        clearButtonForBanner.snp.makeConstraints { make in
-//            make.edges.equalToSuperview()
-//        }
         titleForBannerLabel.snp.makeConstraints { make in
             make.top.equalTo(bannerImageView.snp.top).inset(20)
             make.left.equalTo(bannerImageView.snp.left).inset(20)
@@ -376,7 +391,7 @@ extension CoursesViewController {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(bannerImageView.snp.bottom).inset(-24)
             make.horizontalEdges.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(24)
+            make.bottom.equalToSuperview().inset(40)
         }
     }
 }
@@ -389,4 +404,3 @@ extension CoursesViewController: UICollectionViewDelegateFlowLayout {
 //    layout.estimatedItemSize.width = 343
 //    layout.estimatedItemSize.height = 124
 }
- //dkovk-ok-rbk
