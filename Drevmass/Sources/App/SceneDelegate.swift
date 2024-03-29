@@ -6,23 +6,48 @@
 //
 
 import UIKit
+import Reachability
+import Network
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     var currentScene: UIScene?
+    
+
+//    var notificationView = NotificationView()
+//    
+//    @objc func reachabilityChanged(note: Notification) {
+//
+//       let reachability = note.object as! Reachability
+//
+//        if reachability.connection == .wifi {
+//            print("wifi wifi wifi wifi wifi")
+//        }
+//        if reachability.connection == .unavailable {
+//           print("нет соединения!!!!!")
+//            self.notificationView.show(viewController: (window?.rootViewController)!, notificationType: .attantion)
+//        }
+//    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+//        
+//        let reachability = try? Reachability()
+//
+//        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)), name: .reachabilityChanged, object: reachability)
+//        try? reachability?.startNotifier()
+////        do{
+////            try reachability!.startNotifier()
+////        }catch{
+////          print("could not start reachability notifier")
+////        }
+        
         currentScene = scene
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         let rootViewController = AuthenticationService.shared.isAuthorized ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
-        
-//        let pageOfCourseVC = PageOfCourseViewController()
-//        let isSwitchOn = UserDefaults.standard.bool(forKey: "switchCalendar")
-//        pageOfCourseVC.switchForCalendar.isOn = isSwitchOn
     }
     
     func setRootViewController(_ viewController: UIViewController){
@@ -36,6 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     }
 
+   
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

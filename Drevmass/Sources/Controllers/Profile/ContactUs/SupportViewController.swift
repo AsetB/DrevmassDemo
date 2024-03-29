@@ -55,13 +55,16 @@ class SupportViewController: UIViewController {
     
     var sentButton: UIButton = {
         var button = UIButton()
-        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.setTitle("Отправить", for: .normal)
         button.layer.cornerRadius = 24
         button.addTarget(self, action: #selector(sentMessage), for: .touchUpInside)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
+        button.isEnabled = false
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
         return button
     }()
+    
+    var notificationView = NotificationView()
     
     // - MARK: - Lifecycle
     
@@ -80,13 +83,17 @@ class SupportViewController: UIViewController {
 extension SupportViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         placeholderLabel.isHidden = !textView.text.isEmpty
+        editingChange()
      }
      func textViewDidEndEditing(_ textView: UITextView) {
          placeholderLabel.isHidden = !textView.text.isEmpty
+         editingChange()
      }
      func textViewDidBeginEditing(_ textView: UITextView) {
          placeholderLabel.isHidden = true
+         editingChange()
      }
+   
 }
 
 extension SupportViewController {
@@ -96,7 +103,7 @@ extension SupportViewController {
     @objc func sentMessage(){
         SVProgressHUD.show()
         
-        var message = textViewForText.text
+        let message = textViewForText.text
         let parameteres = ["message": message]
         
         let headers: HTTPHeaders = [
@@ -116,12 +123,18 @@ extension SupportViewController {
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
                 
+                self.notificationView.show(viewController: self, notificationType: .success)
+                self.notificationView.titleLabel.text = "Сообщение отправлено"
+                self.dismissView()
+                
             } else {
-                    SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
+                let json = JSON(response.data!)
+                let error = json["code"].stringValue
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = error
             }
         }
-       dismissView()
-        
+       
     }
         
     // - MARK: - other funcs
@@ -129,10 +142,22 @@ extension SupportViewController {
     @objc func dismissView() {
         dismiss(animated: true)
     }
-   
-    func backToProfile() {
-        navigationController?.popToRootViewController(animated: true)
+    
+    func editingChange() {
+        if !textViewForText.hasText {
+            sentButton.isEnabled = false
+            sentButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
+        }else{
+            sentButton.isEnabled = true
+            sentButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        }
     }
+   
+//    func backToProfile() {
+//        let profileVC = ProfileViewController()
+////        dismissView()
+//        self.navigationController?.popToViewController(profileVC, animated: true)
+//    }
     @objc private func keyboardWillShow(notification: NSNotification) {
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                sentButtonBottomConstraint?.update(inset: -16 + keyboardSize.height)

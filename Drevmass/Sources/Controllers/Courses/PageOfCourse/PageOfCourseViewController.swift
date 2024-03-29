@@ -191,6 +191,7 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
           return collectionView
     }()
     
+    var notificationView = NotificationView()
     
     
     // MARK: - Lifecycle
@@ -205,7 +206,7 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
         setupNavigation()
         gradientView.updateColors()
         gradientView.updateLocations()
-        
+ 
         if course.is_started {
             hideStartButton()
         }
@@ -280,17 +281,22 @@ extension PageOfCourseViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
-        if offsetY > 88 {
+        if offsetY > 200 {
+            let appearance = UINavigationBarAppearance()
+
+            appearance.backgroundColor = .white
+
+            navigationController?.navigationBar.standardAppearance = appearance
+         
             let leftBarButton = UIBarButtonItem(image: UIImage(resource: ImageResource.Profile.iconBack), style: .plain, target: self, action: #selector(goBack))
-            leftBarButton.tintColor = UIColor(resource: ColorResource.Colors._302_C_28)
+            leftBarButton.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
             navigationItem.leftBarButtonItem = leftBarButton
             
             let rightBarButton = UIBarButtonItem(image: UIImage(resource: ImageResource.Profile.iconShare), style: .plain, target: self, action: #selector(share))
             navigationItem.rightBarButtonItem = rightBarButton
-            rightBarButton.tintColor = UIColor(resource: ColorResource.Colors._302_C_28)
-            
-//            navigationItem.title = "Авторская методика Древмасс"
-//            navigationController?.navigationBar.isTranslucent = true
+            rightBarButton.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+            navigationItem.title = "Авторская методика Древмасс"
+
         }else{
             setupNavigation()
         }
@@ -357,6 +363,43 @@ extension PageOfCourseViewController {
                 make.horizontalEdges.equalToSuperview().inset(16)
                 make.height.equalTo(163)
             }
+            
+            let parameters: [String: Any] = ["course_id": course.id,
+                                             "mon": days.mon,
+                                             "tue": days.tue,
+                                             "wed": days.wed,
+                                             "thu": days.thu,
+                                             "fri": days.fri,
+                                             "sat": days.sat,
+                                             "sun": days.sun,
+                                             "time": days.time,
+                                             "notificationIsSelected": true]
+                
+                let headers: HTTPHeaders = [
+                    "Authorization": "Bearer \(AuthenticationService.shared.token)"
+                ]
+                AF.request(URLs.GET_DAY_URL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
+                    SVProgressHUD.dismiss()
+                    var resultString = ""
+                    if let data = response.data{
+                        resultString = String(data: data, encoding: .utf8)!
+                    }
+                        if response.response?.statusCode == 200 {
+                            let json = JSON(response.data!)
+                            print("JSON: \(json)")
+        
+                            self.notificationView.show(viewController: self, notificationType: .success)
+                             self.notificationView.titleLabel.text = "Настройки успешно сохранены"
+
+                        }else{
+                            var ErrorString = "CONNECTION_ERROR"
+                            if let sCode = response.response?.statusCode{
+                                ErrorString = ErrorString + "\(sCode)"
+                            }
+                            ErrorString = ErrorString + "\(resultString)"
+                            SVProgressHUD.showError(withStatus: "\(ErrorString)")
+                        }
+                }
         }else{
             calendarView.dayOfClassButton.isHidden = true
             calendarView.timeOfClassButton.isHidden = true
@@ -390,6 +433,10 @@ extension PageOfCourseViewController {
                         if response.response?.statusCode == 200 {
                             let json = JSON(response.data!)
                             print("JSON: \(json)")
+        
+                            self.notificationView.show(viewController: self, notificationType: .success)
+                             self.notificationView.titleLabel.text = "Настройки успешно сохранены"
+
                         }else{
                             var ErrorString = "CONNECTION_ERROR"
                             if let sCode = response.response?.statusCode{
@@ -399,6 +446,49 @@ extension PageOfCourseViewController {
                             SVProgressHUD.showError(withStatus: "\(ErrorString)")
                         }
                 }
+        }
+        
+    }
+    //код повторяется внутри условия с выше функцией
+    func changeStateOfSwitch() {
+        if days.notificationIsSelected {
+            calendarView.switchForCalendar.isOn = true
+            calendarView.dayOfClassButton.isHidden = false
+            calendarView.timeOfClassButton.isHidden = false
+            calendarView.dayOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(48)
+                make.top.equalTo(calendarView.calendarWithSwitch.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.timeOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(48)
+                make.top.equalTo(calendarView.dayOfClassButton.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.snp.remakeConstraints { make in
+                make.top.equalTo(BonusView.snp.bottom).inset(-24)
+                make.horizontalEdges.equalToSuperview().inset(16)
+                make.height.equalTo(163)
+            }
+        }else{
+            calendarView.switchForCalendar.isOn = false
+            calendarView.dayOfClassButton.isHidden = true
+            calendarView.timeOfClassButton.isHidden = true
+            calendarView.dayOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(0)
+                make.top.equalTo(calendarView.calendarWithSwitch.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.timeOfClassButton.snp.remakeConstraints { make in
+                make.height.equalTo(0)
+                make.top.equalTo(calendarView.dayOfClassButton.snp.bottom)
+                make.horizontalEdges.equalToSuperview()
+            }
+            calendarView.snp.remakeConstraints { make in
+                make.top.equalTo(BonusView.snp.bottom).inset(-24)
+                make.horizontalEdges.equalToSuperview().inset(16)
+                make.height.equalTo(63)
+            }
         }
     }
     
@@ -455,10 +545,7 @@ extension PageOfCourseViewController {
                     }
                     
                     self.calendarView.titleForTimeLabel.text = self.days.time
-                    if self.days.notificationIsSelected {
-                        self.calendarView.switchForCalendar.isOn = true
-                        self.switchValueChanged()
-                    }
+                    self.changeStateOfSwitch()
                 }else{
                     var ErrorString = "CONNECTION_ERROR"
                     if let sCode = response.response?.statusCode{
@@ -516,6 +603,14 @@ extension PageOfCourseViewController {
     // MARK: - setups
     
     func setupNavigation() {
+        
+        let appearance = UINavigationBarAppearance()
+       appearance.configureWithTransparentBackground()
+
+       navigationController?.navigationBar.standardAppearance = appearance
+        
+        navigationController?.navigationBar.standardAppearance.awakeFromNib()
+        
         let leftBarButton = UIBarButtonItem(image: UIImage(resource: ImageResource.Profile.iconBack), style: .plain, target: self, action: #selector(goBack))
         leftBarButton.tintColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationItem.leftBarButtonItem = leftBarButton
@@ -524,7 +619,6 @@ extension PageOfCourseViewController {
         navigationItem.rightBarButtonItem = rightBarButton
         rightBarButton.tintColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationItem.title = ""
-        
     }
     
     func setupView() {
@@ -556,9 +650,9 @@ extension PageOfCourseViewController {
     
     func setupConstraints() {
         scrollView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-//            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.horizontalEdges.equalToSuperview()
+            make.edges.equalToSuperview()
+//            make.top.bottom.equalToSuperview()
+//            make.horizontalEdges.equalToSuperview()
         }
         contentview.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)

@@ -85,3 +85,6 @@ packages:
   YouTubePlayerKit:
     url: https://github.com/SvenTiigi/YouTubePlayerKit.git
     from: 1.7.0
+ShimmerSwift:
+    url: https://github.com/BeauNouvelle/ShimmerSwift
+    from: 2.2.0
