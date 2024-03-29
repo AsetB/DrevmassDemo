@@ -59,6 +59,7 @@ targets:
         - package: PanModal
         - package: SDWebImage
         - package: YouTubePlayerKit
+        - package: SkeletonView
 
 packages:
   Alamofire:
@@ -85,6 +86,6 @@ packages:
   YouTubePlayerKit:
     url: https://github.com/SvenTiigi/YouTubePlayerKit.git
     from: 1.7.0
-ShimmerSwift:
-    url: https://github.com/BeauNouvelle/ShimmerSwift
-    from: 2.2.0
+  SkeletonView:
+    url: https://github.com/Juanpe/SkeletonView.git
+    from: 1.30.4
