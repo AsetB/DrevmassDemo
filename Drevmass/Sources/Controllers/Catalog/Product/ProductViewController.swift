@@ -266,6 +266,148 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     private var gradientView = CustomGradientView(startColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0), midColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1), endColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1), startLocation: 0.1, midLocation: 0.5, endLocation: 1.0, horizontalMode: false, diagonalMode: false)
+    
+    //MARK: addedToBasketButtonTop
+    private lazy var topCounterButtonContainer: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private lazy var topCounterButton: UIView = {
+        let buttonView = UIView()
+        buttonView.layer.cornerRadius = 28
+        buttonView.layer.borderWidth = 2
+        buttonView.layer.borderColor = UIColor(resource: ColorResource.Colors.B_5_A_380).cgColor
+        
+        let label = UILabel()
+        label.text = "В корзине"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        
+        let counterLabel = UILabel()
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        
+        let decrementButton = UIButton()
+        decrementButton.setImage(UIImage(resource: ImageResource.Catalog.minus24), for: .normal)
+        decrementButton.addTarget(self, action: #selector(decreaseAction), for: .touchUpInside)
+        
+        let incrementButton = UIButton()
+        incrementButton.setImage(UIImage(resource: ImageResource.Catalog.plus24), for: .normal)
+        incrementButton.addTarget(self, action: #selector(increaseAction), for: .touchUpInside)
+        
+        buttonView.addSubview(label)
+        buttonView.addSubview(counterLabel)
+        buttonView.addSubview(decrementButton)
+        buttonView.addSubview(incrementButton)
+        
+        label.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(22)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(22)
+            make.width.equalTo(85)
+        }
+        decrementButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(label.snp.trailing).offset(38)
+            make.height.equalTo(52)
+            make.width.equalTo(40)
+        }
+        incrementButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(10)
+            make.height.equalTo(52)
+            make.width.equalTo(40)
+        }
+        counterLabel.snp.makeConstraints { make in
+            make.leading.equalTo(decrementButton.snp.trailing)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(22)
+            make.width.equalTo(40)
+        }
+        
+        return buttonView
+    }()
+    
+    private lazy var topGoToBasketButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        button.layer.cornerRadius = 50
+        button.setImage(UIImage(resource: ImageResource.Catalog.arrowRight24), for: .normal)
+        button.addTarget(self, action: #selector(goToBasket), for: .touchUpInside)
+        return button
+    }()
+    
+    //MARK: addedToBasketButtonBottom
+    private lazy var bottomCounterButtonContainer: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private lazy var bottomCounterButton: UIView = {
+        let buttonView = UIView()
+        buttonView.layer.cornerRadius = 28
+        buttonView.layer.borderWidth = 2
+        buttonView.layer.borderColor = UIColor(resource: ColorResource.Colors.B_5_A_380).cgColor
+        
+        let label = UILabel()
+        label.text = "В корзине"
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        
+        let counterLabel = UILabel()
+        label.font = .addFont(type: .SFProTextSemiBold, size: 17)
+        label.textColor = UIColor(resource: ColorResource.Colors._181715)
+        
+        let decrementButton = UIButton()
+        decrementButton.setImage(UIImage(resource: ImageResource.Catalog.minus24), for: .normal)
+        decrementButton.addTarget(self, action: #selector(decreaseAction), for: .touchUpInside)
+        
+        let incrementButton = UIButton()
+        incrementButton.setImage(UIImage(resource: ImageResource.Catalog.plus24), for: .normal)
+        incrementButton.addTarget(self, action: #selector(increaseAction), for: .touchUpInside)
+        
+        buttonView.addSubview(label)
+        buttonView.addSubview(counterLabel)
+        buttonView.addSubview(decrementButton)
+        buttonView.addSubview(incrementButton)
+        
+        label.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(22)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(22)
+            make.width.equalTo(85)
+        }
+        decrementButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(label.snp.trailing).offset(38)
+            make.height.equalTo(52)
+            make.width.equalTo(40)
+        }
+        incrementButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(10)
+            make.height.equalTo(52)
+            make.width.equalTo(40)
+        }
+        counterLabel.snp.makeConstraints { make in
+            make.leading.equalTo(decrementButton.snp.trailing)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(22)
+            make.width.equalTo(40)
+        }
+        
+        return buttonView
+    }()
+    
+    private lazy var bottomGoToBasketButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
+        button.layer.cornerRadius = 50
+        button.setImage(UIImage(resource: ImageResource.Catalog.arrowRight24), for: .normal)
+        button.addTarget(self, action: #selector(goToBasket), for: .touchUpInside)
+        return button
+    }()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -500,9 +642,24 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
+    
     @objc func addToBasketProduct() {
         print("addToBasket touched")
         productDidAdd(product: productDetail)
+    }
+    
+    @objc func goToBasket() {
+        if let tabBarController = self.tabBarController {
+            tabBarController.selectedIndex = 2
+        }
+    }
+    
+    @objc func decreaseAction() {
+        
+    }
+    
+    @objc func increaseAction() {
+        
     }
     //- MARK: - scrollViewDidScroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
