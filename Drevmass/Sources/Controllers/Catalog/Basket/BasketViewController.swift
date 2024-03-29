@@ -365,6 +365,7 @@ class BasketViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        clearBasketButton.isHidden = true
         //navigationController?.navigationBar.prefersLargeTitles = false
         //navigationItem.title = " "
     }
@@ -745,6 +746,11 @@ extension BasketViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 108
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let productVC = ProductViewController()
+        productVC.productID = productsInBasket[indexPath.row].productID
+        navigationController?.show(productVC, sender: self)
     }
     
 }

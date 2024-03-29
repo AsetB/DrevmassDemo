@@ -11,6 +11,7 @@ protocol ProductCounting: AnyObject {
     func productDidCount(basketItem: BasketItem, countIs: CountType)
 }
 
+
 enum CountType {
     case increment
     case decrement

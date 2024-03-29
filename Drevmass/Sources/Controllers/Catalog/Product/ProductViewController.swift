@@ -662,15 +662,20 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
                 if let productViewed = json["Product"]["viewed"].int {
                     self.productDetail.viewed = productViewed
                 }
-                self.setData()
-                self.title = productDetail.title
+                DispatchQueue.main.async {
+                    self.setData()
+                    self.title = self.productDetail.title
+                }
+                
                 if let array = json["Recommend"].array {
                     self.productSimilarArray.removeAll()
                     for item in array {
                         let similarProduct = Product(json: item)
                         self.productSimilarArray.append(similarProduct)
                     }
-                    self.collectionView.reloadData()
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
                 } else {
                     SVProgressHUD.showError(withStatus: "Error with updating data")
                 }
@@ -686,6 +691,14 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     }
     //- MARK: - Set data
     func setData() {
+        if productDetail.basketCount == 0 {
+            addToBasketButton.isHidden = false
+            topCounterButtonContainer.isHidden = true
+            addToBasketPriceButton.isHidden = true
+            bottomCounterButtonContainer.isHidden = true
+            gradientView.isHidden = true
+        }
+        
         let transformer = SDImageResizingTransformer(size: CGSize(width: 357, height: 220), scaleMode: .aspectFill)
         goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + productDetail.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
         nameLabel.text = productDetail.title
@@ -754,11 +767,87 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func decreaseAction() {
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        let parameters = ["count": productDetail.basketCount, "product_id": productDetail.id, "user_id": 0]
         
+        AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            
+            if responseCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                getTotalCount { totalCount in
+                    DispatchQueue.main.async {
+                        if totalCount == 0 {
+                            self.tabBarController?.tabBar.removeBadge(index: 2)
+                        } else {
+                            self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        }
+                        
+//                        self.addToBasketButton.isHidden = false
+//                        self.topCounterButtonContainer.isHidden = true
+//                        self.addToBasketPriceButton.isHidden = false
+//                        self.bottomCounterButtonContainer.isHidden = true
+//                        self.gradientView.isHidden = false
+                        self.downloadProductDetail()
+                    }
+                }
+            } else {
+                var resultString = ""
+                if let data = response.data {
+                    resultString = String(data: data, encoding: .utf8)!
+                }
+                var ErrorString = "Ошибка"
+                if let statusCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(statusCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+            }
+        }
     }
     
     @objc func increaseAction() {
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        let parameters = ["count": productDetail.basketCount, "product_id": productDetail.id, "user_id": 0]
         
+        AF.request(URLs.INCREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            
+            if responseCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                getTotalCount { totalCount in
+                    DispatchQueue.main.async {
+                        if totalCount == 0 {
+                            self.tabBarController?.tabBar.removeBadge(index: 2)
+                        } else {
+                            self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        }
+                        self.downloadProductDetail()
+                    }
+                }
+            } else {
+                var resultString = ""
+                if let data = response.data {
+                    resultString = String(data: data, encoding: .utf8)!
+                }
+                var ErrorString = "Ошибка"
+                if let statusCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(statusCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+            }
+        }
     }
     
     @objc func openVideo() {
