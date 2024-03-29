@@ -11,6 +11,7 @@ import SDWebImage
 import Alamofire
 import SwiftyJSON
 import SVProgressHUD
+import YouTubePlayerKit
 
 class ProductViewController: UIViewController, UIScrollViewDelegate {
     //- MARK: - Variables
@@ -119,6 +120,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         config.baseForegroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
         button.contentHorizontalAlignment = .center
         button.configuration = config
+        button.addTarget(self, action: #selector(openVideo), for: .touchUpInside)
         return button
     }()
     
@@ -757,6 +759,14 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func increaseAction() {
         
+    }
+    
+    @objc func openVideo() {
+        let youTubePlayerViewController = YouTubePlayerViewController(player: "")
+        youTubePlayerViewController.player.source = .video(id: productDetail.videoSource, startSeconds: nil, endSeconds: nil)
+        youTubePlayerViewController.player.configuration = .init(
+            fullscreenMode: .system, autoPlay: true, showControls: true, showFullscreenButton: true, useModestBranding: false, playInline: false, showRelatedVideos: false)
+        self.show(youTubePlayerViewController, sender: self)
     }
     //- MARK: - scrollViewDidScroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
