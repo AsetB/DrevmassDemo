@@ -51,5 +51,10 @@ class DashedLineView : UIView {
     private var height : CGFloat {
         return self.bounds.height
     }
+    
+    func updateDashColor(_ color: UIColor) {
+            self.dashColor = color
+            setNeedsDisplay() // Trigger redraw
+        }
 }
 

@@ -8,10 +8,12 @@
 import UIKit
 import SnapKit
 import PanModal
+import Alamofire
+import SwiftyJSON
 
 class PromocodeBasketViewController: UIViewController, PanModalPresentable {
     //- MARK: - Variables
-
+    var kbHeight: CGFloat?
     //- MARK: - Local outlets
     private lazy var promoTextfield: TextFieldWithPadding = {
         let textfield = TextFieldWithPadding()
@@ -20,10 +22,7 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         textfield.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProDisplaySemibold, size: 20), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors.A_1_A_1_A_1)])
         textfield.setIcon(UIImage(resource: ImageResource.Basket.promocode))
         textfield.borderStyle = .none
-//        textfield.addTarget(self, action: #selector(textfieldEditBegin), for: .editingDidBegin)
-//        textfield.addTarget(self, action: #selector(textfieldEditEnd), for: .editingDidEnd)
-//        textfield.addTarget(self, action: #selector(textfieldEditingChanged), for: .editingChanged)
-//        textfield.addTarget(self, action: #selector(textfieldAllEditing), for: .allEditingEvents)
+        textfield.addTarget(self, action: #selector(promocodeEditDidBegin), for: .allEditingEvents)
         return textfield
     }()
     
@@ -36,9 +35,17 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         return view
     }()
     
-    private lazy var errorLabel: UILabel = {
+    private lazy var emptyErrorLabel: UILabel = {
         let label = UILabel()
         label.text = "Введите промокод"
+        label.font = .addFont(type: .SFProTextMedium, size: 13)
+        label.textColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+        return label
+    }()
+    
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Неверный промокод"
         label.font = .addFont(type: .SFProTextMedium, size: 13)
         label.textColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
         return label
@@ -47,6 +54,7 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
     lazy var applyButton: UIButton = {
         let button = UIButton()
         button.setTitle("Применить", for: .normal)
+        button.setTitle("", for: .disabled)
         button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 15)
         button.layer.cornerRadius = 24
@@ -54,15 +62,21 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         button.addTarget(self, action: #selector(sendPromocode), for: .touchUpInside)
         return button
     }()
-    
+    private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
     //- MARK: - Pan Modal setup
     var panScrollable: UIScrollView? {
         return nil
     }
 
+    
+//    var longFormHeight: PanModalHeight {
+//        return .contentHeight(180)
+//    }
+    let keybHeight = UserDefaults.standard.value(forKey: "keyboardHeight") as? CGFloat
     var longFormHeight: PanModalHeight {
-        return .contentHeight(180)
+        return .contentHeight(150 + (keybHeight ?? 0))
     }
+    
     var panModalBackgroundColor: UIColor {
         return UIColor(resource: ColorResource.Colors._302C28A65)
     }
@@ -77,8 +91,22 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         errorLabel.isHidden = true
+        emptyErrorLabel.isHidden = true
         addViews()
+        setIndicator()
         setConstraints()
+        
+//        hasLoaded = true
+//        panModalSetNeedsLayoutUpdate()
+//        panModalTransition(to: .shortForm)
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        promoTextfield.becomeFirstResponder()
     }
     
     //- MARK: - Add & set Views
@@ -86,8 +114,17 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         view.addSubview(promoTextfield)
         view.addSubview(dashedLineView)
         view.addSubview(applyButton)
+        view.addSubview(errorLabel)
+        view.addSubview(emptyErrorLabel)
     }
-    
+    private func setIndicator() {
+        activityIndicator.image = UIImage(resource: ImageResource.Registration.loading24)
+        applyButton.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalTo(applyButton.snp.center)
+        }
+        activityIndicator.isHidden = true
+    }
     //- MARK: - Set Constraints
     private func setConstraints() {
         promoTextfield.snp.makeConstraints { make in
@@ -105,21 +142,86 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
             make.horizontalEdges.equalTo(dashedLineView.snp.horizontalEdges)
             make.height.equalTo(48)
         }
+        errorLabel.snp.makeConstraints { make in
+            make.top.equalTo(dashedLineView.snp.bottom).offset(4)
+            make.leading.equalTo(dashedLineView.snp.leading)
+            make.height.equalTo(18)
+        }
+        emptyErrorLabel.snp.makeConstraints { make in
+            make.top.equalTo(dashedLineView.snp.bottom).offset(4)
+            make.leading.equalTo(dashedLineView.snp.leading)
+            make.height.equalTo(18)
+        }
     }
     //- MARK: - Set Errors
     private func showRedError() {
         errorLabel.isHidden = false
         promoTextfield.setIcon(UIImage(resource: ImageResource.Basket.promocodeRed))
-        dashedLineView.dashColor = UIColor(resource: ColorResource.Colors.FA_5_C_5_C)
+        dashedLineView.updateDashColor(UIColor(resource: ColorResource.Colors.FA_5_C_5_C))
     }
     
     private func hideRedError() {
         errorLabel.isHidden = true
+        emptyErrorLabel.isHidden = true
         promoTextfield.setIcon(UIImage(resource: ImageResource.Basket.promocode))
-        dashedLineView.dashColor = UIColor(resource: ColorResource.Colors.D_6_D_1_CE)
+        dashedLineView.updateDashColor(UIColor(resource: ColorResource.Colors.D_6_D_1_CE))
     }
+    //- MARK: - Keyboard
+//    @objc private func keyboardWillShow(notification: NSNotification) {
+//        guard let userInfo = notification.userInfo,
+//                      let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+//                    return
+//                }
+//
+//                let kbHeight = keyboardFrame.height
+//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+//            self.kbHeight = keyboardSize.height
+//        }
+//    }
+//    @objc private func keyboardWillHide(notification: NSNotification) {
+//        self.signUpBottomToSignInTop?.update(inset: 68)
+//    }
     //- MARK: - Button actions
+    @objc func promocodeEditDidBegin() {
+        hideRedError()
+    }
     @objc func sendPromocode() {
-        print("send promo")
+        guard let promocode = promoTextfield.text else {
+            return
+        }
+        
+        if promocode.isEmpty {
+            emptyErrorLabel.isHidden = false
+            promoTextfield.setIcon(UIImage(resource: ImageResource.Basket.promocodeRed))
+            dashedLineView.updateDashColor(UIColor(resource: ColorResource.Colors.FA_5_C_5_C))
+            return
+        }
+        
+        let parameters = ["promocode": promocode]
+        
+        applyButton.isEnabled = false
+        activityIndicator.startAnimating()
+        
+        AF.upload(multipartFormData: {(multipartFormData) in
+            for (key, value) in parameters {
+                multipartFormData.append(Data(value.utf8), withName: key)
+            }
+        }, to: URLs.ACTIVATE_PROMOCODE).responseDecodable(of: Data.self) { response in
+            
+            self.activityIndicator.stopAnimating()
+            self.applyButton.isEnabled = true
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            if responseCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                self.showAlertMessage(title: "Success promocode", message: "Success promocode")
+                self.dismiss(animated: true)
+            } else {
+                self.showRedError()
+            }
+        }
     }
 }

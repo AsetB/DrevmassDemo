@@ -747,10 +747,10 @@ class BasketViewController: UIViewController {
     //- MARK: - CalculatePrice
     // все расчитывается и так, только нужно применение бонусов до 30% от стоимости заказа
     private func calculatePrice() -> Int {
-        let basketPrice = Double(basketInfo.basketPrice) // 58600 // 1300
-        let availableBonus = Double(basketInfo.bonus) // 3000 // 3000
-        let maximumPayWithBonus = Double(basketPrice)*0.3 // 17580 // 390
-        var finalPrice: Double = 0
+        let basketPrice = basketInfo.basketPrice // 58600 // 1300
+        let availableBonus = basketInfo.bonus // 3000 // 3000
+        let maximumPayWithBonus = (basketPrice * 30) / 100 // 17580 // 390
+        var finalPrice = 0
         
         if availableBonus <= maximumPayWithBonus {
             finalPrice = basketPrice - availableBonus // 55600
@@ -758,7 +758,7 @@ class BasketViewController: UIViewController {
             finalPrice = basketPrice - maximumPayWithBonus // _ // 910
         }
         finalPrice = max(finalPrice, 0)
-        return Int(finalPrice)
+        return finalPrice
     }
 }
 //- MARK: - UITableViewDelegate & UITableViewDataSource

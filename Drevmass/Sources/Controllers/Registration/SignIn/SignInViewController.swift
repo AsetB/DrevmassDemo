@@ -138,12 +138,9 @@ class SignInViewController: UIViewController {
         button.addTarget(self, action: #selector(goToRestorePass), for: .touchUpInside)
         return button
     }()
-    let loginSpinner: UIActivityIndicatorView = {
-        let loginSpinner = UIActivityIndicatorView(style: .white)
-        loginSpinner.translatesAutoresizingMaskIntoConstraints = false
-        loginSpinner.hidesWhenStopped = true
-        return loginSpinner
-    }()
+    
+    private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+    
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,6 +151,7 @@ class SignInViewController: UIViewController {
 
         addViews()
         setViews()
+        setIndicator()
         setConstraints()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -170,11 +168,18 @@ class SignInViewController: UIViewController {
         view.addSubview(dividerPassView)
         view.addSubview(forgotPassButton)
         view.addSubview(signInButton)
-        signInButton.addSubview(loginSpinner)
         view.addSubview(goToSignUpButton)
     }
     private func setViews() {
         clearEmailButton.isHidden = true
+    }
+    private func setIndicator() {
+        activityIndicator.image = UIImage(resource: ImageResource.Registration.loading24)
+        signInButton.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalTo(signInButton.snp.center)
+        }
+        activityIndicator.isHidden = true
     }
     //- MARK: - Constraints
     private func setConstraints() {
@@ -235,9 +240,12 @@ class SignInViewController: UIViewController {
             make.horizontalEdges.equalTo(goToSignUpButton.snp.horizontalEdges)
             make.height.equalTo(56)
         }
-        loginSpinner.snp.makeConstraints { make in
-            make.center.equalTo(signInButton.snp.center)
-        }
+//        loginSpinner.snp.makeConstraints { make in
+//            make.center.equalTo(signInButton.snp.center)
+//        }
+//        activityIndicator.snp.makeConstraints { make in
+//            make.center.equalTo(signInButton.snp.center)
+//        }
     }
     //- MARK: - Button Actions
     @objc func goToRestorePass() {
@@ -274,10 +282,10 @@ class SignInViewController: UIViewController {
         }
         if !email.isEmpty && !pass.isEmpty {
             signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-            signInButton.isEnabled = true
+            //signInButton.isEnabled = true
         } else {
             signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
-            signInButton.isEnabled = false
+            //signInButton.isEnabled = false
         }
     }
     @objc func clearField() {
@@ -286,6 +294,8 @@ class SignInViewController: UIViewController {
     @objc private func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.signInBottomToSignUpTop?.update(inset: -16 + keyboardSize.height)
+            let defaults = UserDefaults.standard
+            defaults.set(keyboardSize.height, forKey: "keyboardHeight")
         }
     }
     @objc private func keyboardWillHide(notification: NSNotification) {
@@ -305,9 +315,11 @@ class SignInViewController: UIViewController {
         
         let parameters = ["email": email, "password": pass]
         signInButton.isEnabled = false
-        loginSpinner.startAnimating()
+        activityIndicator.startAnimating()
+        
         AF.request(URLs.SIGN_IN_URL, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseData { response in
-            self.loginSpinner.stopAnimating()
+            
+            self.activityIndicator.stopAnimating()
             self.signInButton.isEnabled = true
             
             guard let responseCode = response.response?.statusCode else {

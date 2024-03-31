@@ -154,6 +154,7 @@ class SignUpViewController: UIViewController {
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("Продолжить", for: .normal)
+        button.setTitle("", for: .disabled)
         button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
@@ -178,6 +179,7 @@ class SignUpViewController: UIViewController {
         button.addTarget(self, action: #selector(goToSignIn), for: .touchUpInside)
         return button
     }()
+    private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -187,10 +189,11 @@ class SignUpViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(resource: ImageResource.Registration.backArrowBrand), style: .done, target: self, action: #selector(dismissView))
         navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
 
-
         addViews()
-        setConstraints()
         setViews()
+        setIndicator()
+        setConstraints()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -217,6 +220,14 @@ class SignUpViewController: UIViewController {
         clearNameButton.isHidden = true
         clearEmailButton.isHidden = true
         clearPhoneButton.isHidden = true
+    }
+    private func setIndicator() {
+        activityIndicator.image = UIImage(resource: ImageResource.Registration.loading24)
+        signUpButton.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalTo(signUpButton.snp.center)
+        }
+        activityIndicator.isHidden = true
     }
     //- MARK: - Constraints
     private func setConstraints() {
@@ -390,9 +401,13 @@ class SignUpViewController: UIViewController {
         }
         
         let parameters = ["email": email, "name": name, "password": pass, "phone_number": phone]
+        signUpButton.isEnabled = false
+        activityIndicator.startAnimating()
         
         AF.request(URLs.SIGN_UP_URL, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseData { response in
             
+            self.activityIndicator.stopAnimating()
+            self.signUpButton.isEnabled = true
             guard let responseCode = response.response?.statusCode else {
                 self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                 return
