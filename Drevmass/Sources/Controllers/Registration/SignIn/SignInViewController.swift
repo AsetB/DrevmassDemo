@@ -282,10 +282,10 @@ class SignInViewController: UIViewController {
         }
         if !email.isEmpty && !pass.isEmpty {
             signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-            //signInButton.isEnabled = true
+            signInButton.isEnabled = true
         } else {
             signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
-            //signInButton.isEnabled = false
+            signInButton.isEnabled = false
         }
     }
     @objc func clearField() {
@@ -320,7 +320,7 @@ class SignInViewController: UIViewController {
         AF.request(URLs.SIGN_IN_URL, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseData { response in
             
             self.activityIndicator.stopAnimating()
-            self.signInButton.isEnabled = true
+            self.signInButton.isSelected = false
             
             guard let responseCode = response.response?.statusCode else {
                 self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")

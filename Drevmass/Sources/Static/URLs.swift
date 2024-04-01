@@ -37,6 +37,7 @@ enum URLs {
     static let INCREASE_ITEM_BASKET = BASE_URL + "increase"
     static let DECREASE_ITEM_BASKET = BASE_URL + "decrease"
     static let ACTIVATE_PROMOCODE = BASE_URL + "activate"
+    static let POST_ORDER = BASE_URL + "order"
 }
 
 enum imageSource {

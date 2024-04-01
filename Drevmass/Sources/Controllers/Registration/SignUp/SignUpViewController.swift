@@ -335,11 +335,11 @@ class SignUpViewController: UIViewController {
             return {
                 nameTextfield.text = .none
             }()
-            case clearEmailButton:
+        case clearEmailButton:
             return {
                 emailTextfield.text = .none
             }()
-            case clearPhoneButton:
+        case clearPhoneButton:
             return {
                 phoneTextfield.text = .none
             }()

@@ -96,3 +96,21 @@ extension SignUpViewController: UITextFieldDelegate {
         return true
     }
 }
+
+extension OrderViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == phoneTextfield {
+            let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+            
+            let formattedText = newText.applyPatternOnNumbers(pattern: "+# ### ### ## ##", replacementCharacter: "#")
+            
+            let maxLength = "+# ### ### ## ##".count
+                if formattedText.count > maxLength {
+                return false
+            }
+            textField.text = formattedText
+            return false
+        }
+        return true
+    }
+}

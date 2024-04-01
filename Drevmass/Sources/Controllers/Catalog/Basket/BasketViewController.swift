@@ -271,7 +271,7 @@ class BasketViewController: UIViewController {
         let button = UIButton()
         button.layer.cornerRadius = 28
         button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-        //button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        button.addTarget(self, action: #selector(makeOrder), for: .touchUpInside)
         return button
     }()
     
@@ -359,7 +359,8 @@ class BasketViewController: UIViewController {
         loadBasketData()
         gradientView.updateColors()
         gradientView.updateLocations()
-        
+        setNavBar()
+        //navigationController?.navigationBar.prefersLargeTitles = true
         //tabBarController?.tabBar.addBadge(index: 2, value: 2)
     }
 
@@ -367,7 +368,7 @@ class BasketViewController: UIViewController {
         super.viewWillDisappear(animated)
         clearBasketButton.isHidden = true
         //navigationController?.navigationBar.prefersLargeTitles = false
-        //navigationItem.title = " "
+        navigationItem.title = ""
     }
     //- MARK: - SetupNavBar
     private func setNavBar() {
@@ -644,7 +645,7 @@ class BasketViewController: UIViewController {
             print("apply Bonus")
             totalPriceForProductsLabel.text = formatPrice(calculatePrice())
             orderButtonPriceLabel.text = formatPrice(calculatePrice())
-            bonusToPayLabel.text = "- \(basketInfo.bonus) ₽"
+            bonusToPayLabel.text = "- \(calculateUsedBonus()) ₽"
         } else {
             print("Do not apply Bonus")
             totalPriceForProductsLabel.text = formatPrice(basketInfo.totalPrice)
@@ -656,6 +657,22 @@ class BasketViewController: UIViewController {
         let vc = PromocodeBasketViewController()
         presentPanModal(vc)
         print("enter promocode tapped")
+    }
+    @objc func makeOrder() {
+        let orderVC = OrderViewController()
+        for item in productsInBasket {
+            let productOrder = ProductOrder()
+            productOrder.name = item.productTitle
+            productOrder.price = item.price
+            productOrder.productID = item.productID
+            productOrder.quantity = item.count
+            orderVC.productData.append(productOrder)
+        }
+        orderVC.orderData.bonus = calculateUsedBonus()
+        orderVC.orderData.totalPrice = calculatePrice()
+        navigationController?.show(orderVC, sender: self)
+        
+        //navigationController?.pushViewController(vc, animated: true)
     }
     //- MARK: - Set data
     private func setData() {
@@ -669,7 +686,7 @@ class BasketViewController: UIViewController {
         if bonusSwitch.isOn {
             totalPriceForProductsLabel.text = formatPrice(calculatePrice())
             orderButtonPriceLabel.text = formatPrice(calculatePrice())
-            bonusToPayLabel.text = "- \(basketInfo.bonus) ₽"
+            bonusToPayLabel.text = "- \(calculateUsedBonus()) ₽"
         } else {
             totalPriceForProductsLabel.text = formatPrice(basketInfo.totalPrice)
             orderButtonPriceLabel.text = formatPrice(basketInfo.totalPrice)
@@ -789,6 +806,23 @@ class BasketViewController: UIViewController {
         }
         finalPrice = max(finalPrice, 0)
         return finalPrice
+    }
+    
+    private func calculateUsedBonus() -> Int {
+        let basketPrice = basketInfo.basketPrice // 3190
+        let availableBonus = basketInfo.bonus // 3000
+        let maximumPayWithBonus = (basketPrice * 30) / 100 // 957
+        var usedBonus = 0
+        
+        if availableBonus <= maximumPayWithBonus {
+            // 3190 - 3000
+            usedBonus = availableBonus
+            return usedBonus
+        } else {
+            // 3190 - 957
+            usedBonus = maximumPayWithBonus
+            return usedBonus
+        }
     }
 }
 //- MARK: - UITableViewDelegate & UITableViewDataSource
