@@ -588,11 +588,10 @@ class BasketViewController: UIViewController {
     @objc func clearAllBasket() {
         print("delete tapped")
         let alert = UIAlertController(title: "Удаление товаров", message: "Вы уверены, что хотите удалить все товары?", preferredStyle: .actionSheet)
-        alert.view.backgroundColor = .white
-        //alert.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .white
-        alert.view.tintColor = .systemBlue
+        alert.view.subviews.first?.subviews.first?.backgroundColor = .white
+        alert.view.subviews.first?.subviews.first?.alpha = 1
+        alert.view.subviews.first?.subviews.first?.layer.cornerRadius = 15
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-        //cancelAction.setValue(UIColor.white, forKey: "titleTextColor")
         alert.addAction(cancelAction)
         alert.addAction(UIAlertAction(title: "Очистить корзину", style: .destructive, handler: { _ in
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
@@ -661,7 +660,7 @@ class BasketViewController: UIViewController {
     //- MARK: - Set data
     private func setData() {
         bonusLabel.text = String(basketInfo.bonus)
-        amountOfProductsLabel.text = "\(basketInfo.countProducts)" + " товар"
+        amountOfProductsLabel.text = "\(basketInfo.countProducts)" + " \(applyProductWordEnding(number: basketInfo.countProducts, singular: "товар", genitive: "товара", plural: "товаров"))"
         priceForProductsLabel.text = formatPrice(basketInfo.basketPrice)
         bonusToPayLabel.text = formatPrice(basketInfo.usedBonus)
         //totalPriceForProductsLabel.text = formatPrice(basketInfo.totalPrice)
@@ -676,6 +675,37 @@ class BasketViewController: UIViewController {
             orderButtonPriceLabel.text = formatPrice(basketInfo.totalPrice)
             bonusToPayLabel.text = "0 ₽"
         }
+        if basketInfo.bonus == 0 {
+            noBonus()
+        }
+    }
+    
+    private func noBonus() {
+        topLabel.textColor = UIColor(resource: ColorResource.Colors._989898)
+        bonusLabel.textColor = UIColor(resource: ColorResource.Colors._989898)
+        descriptionLabel.text = """
+На данный момент у вас нет бонусов
+для списания.
+"""
+        bonusSwitch.isEnabled = false
+    }
+    
+    private func applyProductWordEnding(number n: Int, singular s1: String, genitive s2: String, plural s5: String) -> String {
+        let n1 = abs(n) % 100 //две последние цифры числа убираем
+        if n1 >= 11 && n1 <= 19 { // еслм это от 11 до 19 вернем мн.ч
+            return s5
+        }
+        
+        let n2 = n1 % 10 //убираем последнюю цифру
+        if n2 == 1 { // ед.ч
+            return s1
+        }
+        
+        if n2 > 1 && n2 < 5 { //род.падеж
+            return s2
+        }
+        
+        return s5 //во всех ост случаях мн.ч
     }
     //- MARK: - Network
     private func loadBasketData() {
