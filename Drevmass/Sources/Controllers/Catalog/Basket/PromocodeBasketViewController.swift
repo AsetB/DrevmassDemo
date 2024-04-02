@@ -63,12 +63,11 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         return button
     }()
     private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+    private var notificationView = NotificationView()
     //- MARK: - Pan Modal setup
     var panScrollable: UIScrollView? {
         return nil
     }
-
-    
 //    var longFormHeight: PanModalHeight {
 //        return .contentHeight(180)
 //    }
@@ -92,6 +91,7 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         errorLabel.isHidden = true
         emptyErrorLabel.isHidden = true
+        notificationView.alpha = 0
         addViews()
         setIndicator()
         setConstraints()
@@ -217,7 +217,9 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
             if responseCode == 200 {
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
-                self.showAlertMessage(title: "Success promocode", message: "Success promocode")
+                self.notificationView.show(viewController: self, notificationType: .success)
+                self.notificationView.titleLabel.text = "Промокод успешно применен"
+//                self.showAlertMessage(title: "Success promocode", message: "Success promocode")
                 self.dismiss(animated: true)
             } else {
                 self.showRedError()

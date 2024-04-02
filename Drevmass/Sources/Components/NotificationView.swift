@@ -26,6 +26,8 @@ class NotificationView: UIView {
         label.font = .addFont(type: .SFProTextSemiBold, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.textAlignment = .left
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,6 +50,7 @@ class NotificationView: UIView {
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalTo(imageView)
             make.left.equalTo(imageView.snp.right).inset(-12)
+            make.right.equalToSuperview().inset(16)
         }
         
  

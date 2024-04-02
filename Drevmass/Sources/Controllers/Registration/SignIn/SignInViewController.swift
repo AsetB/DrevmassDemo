@@ -141,6 +141,7 @@ class SignInViewController: UIViewController {
     
     private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
     
+    private var notificationView = NotificationView()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +149,9 @@ class SignInViewController: UIViewController {
         navigationItem.title = " "
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(resource: ImageResource.Registration.backArrowBrand), style: .done, target: self, action: #selector(dismissView))
         navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-
+        
+        notificationView.alpha = 0
+        
         addViews()
         setViews()
         setIndicator()
@@ -282,10 +285,10 @@ class SignInViewController: UIViewController {
         }
         if !email.isEmpty && !pass.isEmpty {
             signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-            signInButton.isEnabled = true
+            //signInButton.isEnabled = true
         } else {
             signInButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
-            signInButton.isEnabled = false
+            //signInButton.isEnabled = false
         }
     }
     @objc func clearField() {
@@ -308,6 +311,10 @@ class SignInViewController: UIViewController {
         guard let pass = passTextfield.text else { return }
         guard let email = emailTextfield.text else { return }
         
+        if email.isEmpty || pass.isEmpty {
+            return
+        }
+        
         if !email.isEmail() {
             showAlertMessage(title: "Некорректный адрес email", message: "Попробуйте снова")
             return
@@ -326,11 +333,6 @@ class SignInViewController: UIViewController {
                 self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                 return
             }
-            if responseCode == 401 {
-                self.showRedError()
-                self.showAlertMessage(title: "Ошибка", message: "Неверный логин или пароль")
-                return
-            }
             if responseCode == 200 {
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
@@ -339,16 +341,14 @@ class SignInViewController: UIViewController {
                     self.startApp()
                 }
             } else {
+                self.showRedError()
                 var resultString = ""
-                if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                let json = JSON(response.data!)
+                if let data = json["code"].string {
+                    resultString = data
                 }
-                var ErrorString = "Ошибка"
-                if let statusCode = response.response?.statusCode {
-                    ErrorString = ErrorString + " \(statusCode)"
-                }
-                ErrorString = ErrorString + " \(resultString)"
-                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = resultString
             }
         }
     }
