@@ -16,3 +16,5 @@ Dependencies:
  - SVProgressHUD
  - SwiftyJSON
  - PanModal
+ - YouTubePlayerKit
+ - SkeletonView
