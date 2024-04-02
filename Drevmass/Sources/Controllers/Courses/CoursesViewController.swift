@@ -353,6 +353,17 @@ extension CoursesViewController {
         backgroundView.addSubview(titleForBannerLabel)
         backgroundView.addSubview(subtitleForBannerLabel)
         backgroundView.addSubview(collectionView)
+        
+        //Basket TabBarItem Counter
+        getTotalCount { totalCount in
+            DispatchQueue.main.async {
+                if totalCount == 0 {
+                    self.tabBarController?.tabBar.removeBadge(index: 2)
+                } else {
+                    self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                }
+            }
+        }
     }
     
     func setupConstraints() {

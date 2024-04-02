@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import SDWebImage
+import SkeletonView
 
 class CatalogVerticalTableViewCell: UITableViewCell {
     //- MARK: - Variables
@@ -26,6 +27,10 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         label.font = .addFont(type: .SFProTextBold, size: 20)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.textAlignment = .left
+        label.skeletonTextNumberOfLines = 1
+        label.skeletonLineSpacing = 8
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         return label
     }()
     
@@ -35,11 +40,15 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
+        label.skeletonLineSpacing = 8
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         return label
     }()
     
     private lazy var basketButton: UIButton = {
         let button = UIButton()
+        button.skeletonCornerRadius = 18
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton48), for: .normal)
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck48), for: .selected)
         button.addTarget(self, action: #selector(addToBasket), for: .touchUpInside)
@@ -49,6 +58,7 @@ class CatalogVerticalTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: "verticalCell")
         self.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        self.isSkeletonable = true
         setupViews()
         setupConstraints()
         self.selectedBackgroundView = {
@@ -68,6 +78,11 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         contentView.addSubview(priceLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(basketButton)
+        contentView.isSkeletonable = true
+        goodsImage.isSkeletonable = true
+        priceLabel.isSkeletonable = true
+        nameLabel.isSkeletonable = true
+        basketButton.isSkeletonable = true
     }
     
     //- MARK: - Constarints
