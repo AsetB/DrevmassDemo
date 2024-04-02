@@ -6,12 +6,16 @@
 //
 
 import UIKit
+import SnapKit
+import SkeletonView
 
 class BonusHistoryTableViewCell: UITableViewCell {
     
     var titleLabel: UILabel = {
        var label = UILabel()
-
+        label.isSkeletonable = true
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.font = UIFont(name: "SFProText-Regular", size: 15)
         label.numberOfLines = 2
@@ -20,6 +24,9 @@ class BonusHistoryTableViewCell: UITableViewCell {
     
     var subtitleLabel: UILabel = {
        var label = UILabel()
+        label.isSkeletonable = true
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         label.textColor = UIColor(resource: ColorResource.Colors._989898)
         label.font = UIFont(name: "SFProText-Regular", size: 13)
         return label
@@ -27,6 +34,9 @@ class BonusHistoryTableViewCell: UITableViewCell {
     
     var bonusLabel: UILabel = {
        var label = UILabel()
+        label.isSkeletonable = true
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.font = UIFont(name: "SFProText-Bold", size: 15)
         return label
@@ -55,6 +65,8 @@ class BonusHistoryTableViewCell: UITableViewCell {
         setupView()
         setupConstraints()
         
+        isSkeletonable = true
+        contentView.isSkeletonable = true
     }
     
     required init?(coder: NSCoder) {
@@ -69,6 +81,7 @@ class BonusHistoryTableViewCell: UITableViewCell {
 
 extension BonusHistoryTableViewCell {
     func setupView() {
+        
         contentView.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         contentView.addSubview(titleLabel)
         contentView.addSubview(subtitleLabel)

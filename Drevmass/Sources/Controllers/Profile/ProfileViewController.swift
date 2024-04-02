@@ -87,6 +87,9 @@ class ProfileViewController: UIViewController {
     
     var pointsLabel: UILabel = {
        var label = UILabel()
+        label.isSkeletonable = true
+        label.skeletonTextLineHeight = .fixed(24)
+        label.linesCornerRadius = 8
         label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProDisplay-Bold", size: 28)
         return label
@@ -236,6 +239,9 @@ class ProfileViewController: UIViewController {
         setupConstraints()
         getProfileInfo()
         downlaodBonus()
+
+        pointsLabel.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.ffffffA40))
+
     }
     override func viewWillAppear(_ animated: Bool) {
         getProfileInfo()
@@ -278,7 +284,6 @@ extension ProfileViewController {
         let contactUsVc = ContactUsViewController()
         contactUsVc.hidesBottomBarWhenPushed = true
         contactUsVc.modalPresentationStyle = .overFullScreen
-//       present(contactUsVc, animated: true)
         var panModalHeight: PanModalHeight = .contentHeight(400)
         presentPanModal(contactUsVc)
     }
@@ -353,8 +358,11 @@ extension ProfileViewController {
             
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
-                
-                self.pointsLabel.text = String(json["bonus"].int ?? 0)
+        
+                DispatchQueue.main.async{
+                    self.pointsLabel.hideSkeleton()
+                    self.pointsLabel.text = String(json["bonus"].int ?? 0)
+                }
                 
             }else{
                 var ErrorString = "CONNECTION_ERROR"

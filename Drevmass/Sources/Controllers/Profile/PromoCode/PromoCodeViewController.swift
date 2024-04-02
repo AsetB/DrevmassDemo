@@ -192,7 +192,7 @@ extension PromoCodeViewController {
                     self.sharedLabel.text = "\(json["used"].int!)"
                     self.shareCountLabel.text = "/\(json["all_attempt"].int!)"
                 }
-                                
+                self.checkSharedCount()
             } else {
                     SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
             }
@@ -201,8 +201,26 @@ extension PromoCodeViewController {
     
     // - MARK: - other funcs
     
+    func checkSharedCount() {
+        
+        if sharedLabel.text == "2" {
+            codeLabel.textColor = UIColor(resource: ColorResource.Colors.ffffffA60)
+            shareButton.setTitleColor(UIColor(resource: ColorResource.Colors.ffffffA60), for: .normal)
+            shareButton.setImage(UIImage(resource: ImageResource.Profile.icShareFFFFFF60), for: .normal)
+            shareButton.isUserInteractionEnabled = false
+            copyButton.setTitleColor(UIColor(resource: ColorResource.Colors.ffffffA60), for: .normal)
+            copyButton.setImage(UIImage(resource: ImageResource.Profile.icCopyFFFFFF60), for: .normal)
+            copyButton.isUserInteractionEnabled = false
+            dashedLineView.dashColor = UIColor(resource: ColorResource.Colors.ffffffA60)
+            
+        }
+        
+    }
+    
     @objc func showAddPromocodeVC() {
-//        дописать действие для кнопки и переименовать функцию в название VC
+        let promocodeBasketVC = PromocodeBasketViewController()
+        promocodeBasketVC.modalPresentationStyle = .overFullScreen
+        presentPanModal(promocodeBasketVC)
     }
     
     @objc func copyText() {

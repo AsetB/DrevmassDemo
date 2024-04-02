@@ -222,7 +222,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
     func setupConstraints() {
         imageView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview().inset(8)
-//            make.width.equalTo(327)
+            make.width.equalTo(UIScreen.main.bounds.width - 48)
             make.height.equalTo(185)
         }
         stackView.snp.makeConstraints { make in
@@ -232,7 +232,7 @@ class LessonCollectionViewCell: UICollectionViewCell {
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).inset(-8)
             make.horizontalEdges.equalToSuperview().inset(16)
-//            make.bottom.equalToSuperview().inset(12)
+            make.bottom.equalToSuperview().inset(12)
         }
         favoriteButton.snp.makeConstraints { make in
             make.top.right.equalToSuperview().inset(12)
