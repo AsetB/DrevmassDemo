@@ -179,6 +179,7 @@ class OrderViewController: UIViewController {
     private lazy var orderButton: UIButton = {
         let button = UIButton()
         button.setTitle("Отправить заявку", for: .normal)
+        button.setTitle("", for: .disabled)
         button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 25
@@ -186,6 +187,8 @@ class OrderViewController: UIViewController {
         button.addTarget(self, action: #selector(completeOrder), for: .touchUpInside)
         return button
     }()
+    
+    private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,6 +200,7 @@ class OrderViewController: UIViewController {
         setConstraints()
         loadUserData()
         setData()
+        setIndicator()
         
         //Keyboard observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -233,7 +237,14 @@ class OrderViewController: UIViewController {
         clearEmailButton.isHidden = true
         clearPhoneButton.isHidden = true
     }
-    
+    private func setIndicator() {
+        activityIndicator.image = UIImage(resource: ImageResource.Registration.loading24)
+        orderButton.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        activityIndicator.isHidden = true
+    }
     //- MARK: - Set Constraints
     private func setConstraints() {
         stackView.snp.makeConstraints { make in
@@ -337,7 +348,7 @@ class OrderViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.setData()
                 }
-                self.prepareOrderData()
+//                self.prepareOrderData()
             }else{
                 var ErrorString = "CONNECTION_ERROR"
                 if let sCode = response.response?.statusCode{
@@ -350,14 +361,66 @@ class OrderViewController: UIViewController {
     }
     
     private func sendOrder() {
+        
+        nameTextfield.resignFirstResponder()
+        emailTextfield.resignFirstResponder()
+        phoneTextfield.resignFirstResponder()
+        
+        guard let name = nameTextfield.text else { return }
+        guard let phone = phoneTextfield.text else { return }
+        guard let email = emailTextfield.text else { return }
+        
+        if !email.isEmail() {
+            showAlertMessage(title: "Некорректный email", message: "Попробуйте снова")
+            return
+        }
+        
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(AuthenticationService.shared.token)"
         ]
         
-        let parameters = ["bonus": orderData.bonus, "crnlink": "string", "email": orderData.email, "phone_number": orderData.phoneNumber, "products": [productData], "total_price": orderData.totalPrice, "username": orderData.username ] as [String : Any]
+        let productParameters = productData.map { product -> [String: Any] in return [
+                "name": product.name,
+                "price": product.price,
+                "product_id": product.productID,
+                "quantity": product.quantity
+            ]
+        }
+        
+        let parameters = ["bonus": orderData.bonus, "crmlink": "string", "email": email, "phone_number": phone, "products": productParameters, "total_price": orderData.totalPrice, "username": name ] as [String : Any]
+        
+        orderButton.isEnabled = false
+        activityIndicator.startAnimating()
         
         AF.request(URLs.POST_ORDER, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
             
+            self.activityIndicator.stopAnimating()
+            self.orderButton.isEnabled = true
+            
+            print(parameters)
+            guard let responseCode = response.response?.statusCode else {
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                return
+            }
+            if responseCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                DispatchQueue.main.async {
+                    let vc = SuccessOrderViewController()
+                    self.navigationController?.presentPanModal(vc)
+                }
+            } else {
+                var resultString = ""
+                if let data = response.data {
+                    resultString = String(data: data, encoding: .utf8)!
+                }
+                var ErrorString = "Ошибка"
+                if let statusCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(statusCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+            }
         }
     }
     //- MARK: - Set Data
@@ -367,11 +430,11 @@ class OrderViewController: UIViewController {
         emailTextfield.text = userData.email
     }
     
-    private func prepareOrderData() {
-        orderData.email = userData.email
-        orderData.phoneNumber = userData.phone_number
-        orderData.username = userData.name
-    }
+//    private func prepareOrderData() {
+//        orderData.email = userData.email
+//        orderData.phoneNumber = userData.phone_number
+//        orderData.username = userData.name
+//    }
     //- MARK: - Actions for keyboard observers
     @objc private func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -472,8 +535,6 @@ class OrderViewController: UIViewController {
         }
     }
     @objc func completeOrder() {
-        enableOrder()
-//        let vc = SuccessOrderViewController()
-//        navigationController?.presentPanModal(vc)
+        sendOrder()
     }
 }

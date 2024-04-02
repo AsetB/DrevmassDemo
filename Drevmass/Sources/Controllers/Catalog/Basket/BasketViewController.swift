@@ -343,6 +343,8 @@ class BasketViewController: UIViewController {
         label.text = "12 900 ₽"
         return label
     }()
+    
+    private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -351,6 +353,7 @@ class BasketViewController: UIViewController {
         setNavBar()
         addViews()
         setConstraints()
+        setIndicator()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -460,6 +463,16 @@ class BasketViewController: UIViewController {
 //            item.isHidden.toggle()
 //        }
         
+    }
+    private func setIndicator() {
+        activityIndicator.image = UIImage(resource: ImageResource.Registration.loading24)
+        orderButton.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(24)
+            make.size.equalTo(24)
+        }
+        activityIndicator.isHidden = true
     }
     //- MARK: - Constraints
     private func setConstraints() {
@@ -871,7 +884,15 @@ extension BasketViewController: ProductAdding {
     func productDidAdd(product: Product) {
         if product.basketCount > 0 {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            
+            orderButtonPriceLabel.isHidden = true
+            activityIndicator.startAnimating()
+            
             AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  response in
+                
+                self.activityIndicator.stopAnimating()
+                self.orderButtonPriceLabel.isHidden = false
+                
                 guard let responseCode = response.response?.statusCode else {
                     self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
@@ -908,7 +929,14 @@ extension BasketViewController: ProductAdding {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         let parameters = ["count": product.basketCount+1, "product_id": product.id, "user_id": 0]
         
+        orderButtonPriceLabel.isHidden = true
+        activityIndicator.startAnimating()
+        
         AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData {  response in
+            
+            self.activityIndicator.stopAnimating()
+            self.orderButtonPriceLabel.isHidden = false
+            
             guard let responseCode = response.response?.statusCode else {
                 self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                 return
@@ -949,7 +977,14 @@ extension BasketViewController: ProductCounting {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
             let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
             
+            orderButtonPriceLabel.isHidden = true
+            activityIndicator.startAnimating()
+            
             AF.request(URLs.INCREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                
+                self?.activityIndicator.stopAnimating()
+                self?.orderButtonPriceLabel.isHidden = false
+                
                 guard let responseCode = response.response?.statusCode else {
                     self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
@@ -991,7 +1026,14 @@ extension BasketViewController: ProductCounting {
                     let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
                     let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
                     
+                    self.orderButtonPriceLabel.isHidden = true
+                    self.activityIndicator.startAnimating()
+                    
                     AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                        
+                        self?.activityIndicator.stopAnimating()
+                        self?.orderButtonPriceLabel.isHidden = false
+                        
                         guard let responseCode = response.response?.statusCode else {
                             self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                             return
@@ -1031,7 +1073,14 @@ extension BasketViewController: ProductCounting {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
             let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
             
+            orderButtonPriceLabel.isHidden = true
+            activityIndicator.startAnimating()
+            
             AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                
+                self?.activityIndicator.stopAnimating()
+                self?.orderButtonPriceLabel.isHidden = false
+                
                 guard let responseCode = response.response?.statusCode else {
                     self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return

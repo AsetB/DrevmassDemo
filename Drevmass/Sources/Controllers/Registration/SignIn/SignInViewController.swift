@@ -320,7 +320,7 @@ class SignInViewController: UIViewController {
         AF.request(URLs.SIGN_IN_URL, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseData { response in
             
             self.activityIndicator.stopAnimating()
-            self.signInButton.isSelected = false
+            self.signInButton.isEnabled = true
             
             guard let responseCode = response.response?.statusCode else {
                 self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
