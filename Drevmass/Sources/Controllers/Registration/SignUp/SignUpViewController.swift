@@ -180,11 +180,13 @@ class SignUpViewController: UIViewController {
         return button
     }()
     private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+    private var notificationView = NotificationView()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         navigationItem.title = " "
+        notificationView.alpha = 0
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(resource: ImageResource.Registration.backArrowBrand), style: .done, target: self, action: #selector(dismissView))
         navigationController?.navigationBar.tintColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
@@ -370,10 +372,10 @@ class SignUpViewController: UIViewController {
         }
         if !name.isEmpty && !email.isEmpty && !phone.isEmpty && !pass.isEmpty {
             signUpButton.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)
-            signUpButton.isEnabled = true
+            //signUpButton.isEnabled = true
         } else {
             signUpButton.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
-            signUpButton.isEnabled = false
+            //signUpButton.isEnabled = false
         }
     }
     @objc private func keyboardWillShow(notification: NSNotification) {
@@ -393,6 +395,10 @@ class SignUpViewController: UIViewController {
         guard let phone = phoneTextfield.text else { return }
         guard let pass = passTextfield.text else { return }
         guard let email = emailTextfield.text else { return }
+        
+        if name.isEmpty || phone.isEmpty || email.isEmpty || pass.isEmpty {
+            return
+        }
         
         if !email.isEmail() {
             showAlertMessage(title: "Некорректный email", message: "Попробуйте снова")
@@ -417,20 +423,22 @@ class SignUpViewController: UIViewController {
                 print("JSON: \(json)")
                 if let token = json["access_token"].string {
                     AuthenticationService.shared.token = token
-                    self.showAlertMessage(title: "Успех", message: "Для завершения регистрации проверьте почту")
                 }
+                self.notificationView.show(viewController: self, notificationType: .success)
+                self.notificationView.titleLabel.text = "Для завершения регистрации проверьте почту"
             } else {
                 self.showRedError()
                 var resultString = ""
-                if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+//                if let data = response.data {
+//                    resultString = String(data: data, encoding: .utf8)!
+//                }
+                let json = JSON(response.data!)
+                if let data = json["code"].string {
+                    resultString = data
                 }
-                var ErrorString = "Ошибка"
-                if let statusCode = response.response?.statusCode {
-                    ErrorString = ErrorString + " \(statusCode)"
-                }
-                ErrorString = ErrorString + " \(resultString)"
-                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = resultString
+                //self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
             }
         }
     }

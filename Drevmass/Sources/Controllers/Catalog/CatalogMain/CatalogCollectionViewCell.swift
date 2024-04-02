@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import SDWebImage
+import SkeletonView
 
 class CatalogCollectionViewCell: UICollectionViewCell {
     //- MARK: - Variables
@@ -51,6 +52,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        self.isSkeletonable = true
         setupViews()
         setupConstraints()
         self.isSelected = false
@@ -64,6 +66,10 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(priceLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(basketButton)
+        goodsImage.isSkeletonable = true
+        priceLabel.isSkeletonable = true
+        nameLabel.isSkeletonable = true
+        basketButton.isSkeletonable = true
     }
     //- MARK: - Constraints
     func setupConstraints() {

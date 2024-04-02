@@ -83,11 +83,14 @@ class RestorePassViewController: UIViewController {
         button.addTarget(self, action: #selector(resetPass), for: .touchUpInside)
         return button
     }()
+    
+    private var notificationView = NotificationView()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Сбросить пароль"//cделай как лейбл на верху
         view.backgroundColor = UIColor(resource: ColorResource.Colors.FFFFFF)
+        notificationView.alpha = 0
         setViews()
         setConstraints()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -182,15 +185,12 @@ class RestorePassViewController: UIViewController {
                 self.emailTextfield.text = .none
             } else {
                 var resultString = ""
-                if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                let json = JSON(response.data!)
+                if let data = json["code"].string {
+                    resultString = data
                 }
-                var ErrorString = "Ошибка"
-                if let statusCode = response.response?.statusCode {
-                    ErrorString = ErrorString + " \(statusCode)"
-                }
-                ErrorString = ErrorString + " \(resultString)"
-                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = resultString
             }
         }
     }

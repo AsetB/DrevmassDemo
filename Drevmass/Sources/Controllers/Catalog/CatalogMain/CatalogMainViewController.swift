@@ -10,6 +10,8 @@ import SnapKit
 import Alamofire
 import SVProgressHUD
 import SwiftyJSON
+import Network
+import SkeletonView
 
 class CatalogMainViewController: UIViewController {
     //- MARK: - Variables
@@ -28,6 +30,9 @@ class CatalogMainViewController: UIViewController {
     var priceupCatalog: [Product] = []
     
     var currentSortMain: SortType = .famous
+    
+    var request: Request?
+    private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
     //- MARK: - Local outlets
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -120,16 +125,28 @@ class CatalogMainViewController: UIViewController {
         tableView.bounces = false
         return tableView
     }()
+    
+    private var noSignalView = NoSignalUIView()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
+        
+        verticalTableView.isSkeletonable = true
+        horizontalTableView.isSkeletonable = true
+        
         downloadFamousCatalog()
         addViews()
         setConstraints()
         showCatalogView(currentView)
         horizontalTableView.isHidden = true
         verticalTableView.isHidden = true
+        noSignalView.isHidden = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        collectionView.isSkeletonable = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -154,11 +171,26 @@ class CatalogMainViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(backView)
+        backView.addSubview(noSignalView)
         backView.addSubview(sortButton)
         backView.addSubview(changeCatalogViewButton)
         backView.addSubview(collectionView)
         backView.addSubview(verticalTableView)
         backView.addSubview(horizontalTableView)
+    }
+    private func setNoSignalViewOn() {
+        noSignalView.isHidden = false
+        noSignalView.button.addTarget(self, action: #selector(reloadScreen), for: .touchUpInside)
+        collectionView.isHidden = true
+        verticalTableView.isHidden = true
+        horizontalTableView.isHidden = true
+    }
+    private func setNoSignalViewOff() {
+        downloadFamousCatalog()
+        noSignalView.isHidden = true
+        collectionView.isHidden = false
+        verticalTableView.isHidden = false
+        horizontalTableView.isHidden = false
     }
     //- MARK: - Constraints
     private func setConstraints() {
@@ -173,6 +205,10 @@ class CatalogMainViewController: UIViewController {
         }
         backView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
+            make.bottom.horizontalEdges.equalToSuperview()
+        }
+        noSignalView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
             make.bottom.horizontalEdges.equalToSuperview()
         }
         sortButton.snp.makeConstraints { make in
@@ -256,14 +292,19 @@ class CatalogMainViewController: UIViewController {
         sortVC.currentSort = currentSortMain
         presentPanModal(sortVC)
     }
+    @objc private func reloadScreen() {
+        setNoSignalViewOff()
+    }
     //- MARK: - Data loading
     private func downloadFamousCatalog() {
+        request?.cancel()
+        
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
+        //collectionView.showAnimatedGradientSkeleton()
         AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
-            
-            
+    
             var resultString = ""
             if let data = response.data {
                 resultString = String(data: data, encoding: .utf8)!
@@ -286,7 +327,24 @@ class CatalogMainViewController: UIViewController {
                 } else {
                     SVProgressHUD.showError(withStatus: "Error with updating data")
                 }
+//                DispatchQueue.main.async {
+//                    self.collectionView.stopSkeletonAnimation()
+//                }
             } else {
+                self.monitor.pathUpdateHandler = { path in
+                    if path.status == .unsatisfied {
+                        DispatchQueue.main.async {
+                            self.setNoSignalViewOn()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.setNoSignalViewOff()
+                        }
+                    }
+                }
+                self.monitor.start(queue: DispatchQueue(label: "network_monitor"))
+                
+                
                 var ErrorString = "CONNECTION_ERROR"
                 if let sCode = response.response?.statusCode {
                     ErrorString = ErrorString + " \(sCode)"
@@ -379,7 +437,22 @@ class CatalogMainViewController: UIViewController {
     
 }
 //- MARK: - UICollectionViewDelegate & UICollectionViewDataSource
-extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension CatalogMainViewController: UICollectionViewDelegate, SkeletonCollectionViewDataSource {
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> SkeletonView.ReusableCellIdentifier {
+        if currentSortMain == .pricedown {
+            let cell = "catalogCell"
+            return cell
+        }
+        if currentSortMain == .priceup {
+            let cell = "catalogCell"
+            return cell
+        }
+        
+        let cell = "catalogCell"
+        return cell
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if currentSortMain == .pricedown {
             return pricedownCatalog.count
@@ -435,9 +508,46 @@ extension CatalogMainViewController: UICollectionViewDelegate, UICollectionViewD
 }
 //- MARK: - UITableViewDelegate, UITableViewDataSource
 extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource {
+    
+//    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+//        if currentView == .horizontalTableView {
+//            if currentSortMain == .pricedown {
+//                let cell = "horizontalCell"
+//                return cell
+//            }
+//            if currentSortMain == .priceup {
+//                let cell = "horizontalCell"
+//                return cell
+//            }
+//            let cell = "horizontalCell"
+//            return cell
+//        }
+//        if currentSortMain == .pricedown {
+//            let cell = "verticalCell"
+//            return cell
+//        }
+//        if currentSortMain == .priceup {
+//            let cell = "verticalCell"
+//            return cell
+//        }
+//        let cell = "verticalCell"
+//        return cell
+//    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
+//    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        if currentSortMain == .pricedown {
+//            return pricedownCatalog.count
+//        }
+//        if currentSortMain == .priceup {
+//            return priceupCatalog.count
+//        }
+//        return famousCatalog.count
+//    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if currentSortMain == .pricedown {
             return pricedownCatalog.count
@@ -447,6 +557,7 @@ extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource 
         }
         return famousCatalog.count
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if currentView == .horizontalTableView {
             return 120
