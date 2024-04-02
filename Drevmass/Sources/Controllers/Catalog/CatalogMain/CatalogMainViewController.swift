@@ -132,9 +132,6 @@ class CatalogMainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
         
-        verticalTableView.isSkeletonable = true
-        horizontalTableView.isSkeletonable = true
-        
         downloadFamousCatalog()
         addViews()
         setConstraints()
@@ -147,6 +144,11 @@ class CatalogMainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         collectionView.isSkeletonable = true
+        collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        verticalTableView.isSkeletonable = true
+        verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        horizontalTableView.isSkeletonable = true
+        horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -157,7 +159,6 @@ class CatalogMainViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
         sortDidSelect(currentSortMain)
-        //downloadFamousCatalog()//скорее всего сюда нужно поставить функцию из делегата про выбор сортировки и передавать текущую сохраненную сортировку
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -244,16 +245,37 @@ class CatalogMainViewController: UIViewController {
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.verticalList24), for: .normal)
             collectionViewBottom?.update(priority: .low)
             verticalTableViewBottom?.update(priority: .high)
+            
+            
+            collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            
+            verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            
+            horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         case .verticalTableView:
             currentView = .horizontalTableView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.gorizontalList24), for: .normal)
             verticalTableViewBottom?.update(priority: .low)
             horizontalTableViewBottom?.update(priority: .medium)
+            
+            
+            collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            
+            verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            
+            horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         case .horizontalTableView:
             currentView = .collectionView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.tile24), for: .normal)
             horizontalTableViewBottom?.update(priority: .low)
             collectionViewBottom?.update(priority: .medium)
+            
+            
+            collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            
+            verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            
+            horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         }
         showCatalogView(currentView)
         if currentView == .horizontalTableView {
@@ -302,8 +324,7 @@ class CatalogMainViewController: UIViewController {
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
-        //collectionView.showAnimatedGradientSkeleton()
-        AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
+        request = AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
     
             var resultString = ""
             if let data = response.data {
@@ -321,15 +342,17 @@ class CatalogMainViewController: UIViewController {
                         let famousProduct = Product(json: item)
                         self.famousCatalog.append(famousProduct)
                     }
-                    self.collectionView.reloadData()
-                    self.verticalTableView.reloadData()
-                    self.horizontalTableView.reloadData()
+                    DispatchQueue.main.async {
+                        self.collectionView.hideSkeleton()
+                        self.horizontalTableView.hideSkeleton()
+                        self.verticalTableView.hideSkeleton()
+                        self.collectionView.reloadData()
+                        self.verticalTableView.reloadData()
+                        self.horizontalTableView.reloadData()
+                    }
                 } else {
                     SVProgressHUD.showError(withStatus: "Error with updating data")
                 }
-//                DispatchQueue.main.async {
-//                    self.collectionView.stopSkeletonAnimation()
-//                }
             } else {
                 self.monitor.pathUpdateHandler = { path in
                     if path.status == .unsatisfied {
@@ -344,13 +367,12 @@ class CatalogMainViewController: UIViewController {
                 }
                 self.monitor.start(queue: DispatchQueue(label: "network_monitor"))
                 
-                
-                var ErrorString = "CONNECTION_ERROR"
-                if let sCode = response.response?.statusCode {
-                    ErrorString = ErrorString + " \(sCode)"
-                }
-                ErrorString = ErrorString + " \(resultString)"
-                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+//                var ErrorString = "CONNECTION_ERROR"
+//                if let sCode = response.response?.statusCode {
+//                    ErrorString = ErrorString + " \(sCode)"
+//                }
+//                ErrorString = ErrorString + " \(resultString)"
+//                SVProgressHUD.showError(withStatus: "\(ErrorString)")
             }
         }
     }
@@ -507,32 +529,32 @@ extension CatalogMainViewController: UICollectionViewDelegate, SkeletonCollectio
     
 }
 //- MARK: - UITableViewDelegate, UITableViewDataSource
-extension CatalogMainViewController: UITableViewDelegate, UITableViewDataSource {
+extension CatalogMainViewController: UITableViewDelegate, SkeletonTableViewDataSource {
     
-//    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
-//        if currentView == .horizontalTableView {
-//            if currentSortMain == .pricedown {
-//                let cell = "horizontalCell"
-//                return cell
-//            }
-//            if currentSortMain == .priceup {
-//                let cell = "horizontalCell"
-//                return cell
-//            }
-//            let cell = "horizontalCell"
-//            return cell
-//        }
-//        if currentSortMain == .pricedown {
-//            let cell = "verticalCell"
-//            return cell
-//        }
-//        if currentSortMain == .priceup {
-//            let cell = "verticalCell"
-//            return cell
-//        }
-//        let cell = "verticalCell"
-//        return cell
-//    }
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        if currentView == .horizontalTableView {
+            if currentSortMain == .pricedown {
+                let cell = "horizontalCell"
+                return cell
+            }
+            if currentSortMain == .priceup {
+                let cell = "horizontalCell"
+                return cell
+            }
+            let cell = "horizontalCell"
+            return cell
+        }
+        if currentSortMain == .pricedown {
+            let cell = "verticalCell"
+            return cell
+        }
+        if currentSortMain == .priceup {
+            let cell = "verticalCell"
+            return cell
+        }
+        let cell = "verticalCell"
+        return cell
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1

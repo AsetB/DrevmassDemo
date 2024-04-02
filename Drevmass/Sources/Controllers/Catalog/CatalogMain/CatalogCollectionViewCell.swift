@@ -27,6 +27,10 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         label.font = .addFont(type: .SFProTextBold, size: 15)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
         label.textAlignment = .left
+        label.skeletonTextNumberOfLines = 1
+        label.skeletonLineSpacing = 8
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         return label
     }()
     
@@ -37,11 +41,15 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .left
         label.numberOfLines = 2
         label.lineBreakMode = .byTruncatingTail
+        label.skeletonLineSpacing = 8
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         return label
     }()
     
     lazy var basketButton: UIButton = {
         let button = UIButton()
+        button.skeletonCornerRadius = 18
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButton36), for: .normal)
         button.setImage(UIImage(resource: ImageResource.Catalog.basketButtonCheck36), for: .selected)
         button.addTarget(self, action: #selector(addToBasket), for: .touchUpInside)
@@ -66,6 +74,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(priceLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(basketButton)
+        contentView.isSkeletonable = true
         goodsImage.isSkeletonable = true
         priceLabel.isSkeletonable = true
         nameLabel.isSkeletonable = true

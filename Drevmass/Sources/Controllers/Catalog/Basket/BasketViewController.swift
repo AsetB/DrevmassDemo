@@ -345,11 +345,13 @@ class BasketViewController: UIViewController {
     }()
     
     private var activityIndicator = MyActivityIndicator(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+    
+    private var notificationView = NotificationView()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
-        //loadBasketData()
+        notificationView.alpha = 0
         setNavBar()
         addViews()
         setConstraints()
@@ -794,12 +796,8 @@ class BasketViewController: UIViewController {
                 self.setEmptyBasket()
                 self.setData()
             } else {
-                var ErrorString = "CONNECTION_ERROR"
-                if let sCode = response.response?.statusCode {
-                    ErrorString = ErrorString + " \(sCode)"
-                }
-                ErrorString = ErrorString + " \(resultString)"
-                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+                self.notificationView.show(viewController: self, notificationType: .attantion)
+                self.notificationView.titleLabel.text = "Ошибка соединения"
             }
         }
     }
