@@ -10,10 +10,11 @@ import SVProgressHUD
 import Alamofire
 import SwiftyJSON
 import SDWebImage
-import ShimmerSwift
 import Network
+import SkeletonView
 
-class CoursesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
+
+class CoursesViewController: UIViewController, UIScrollViewDelegate, SkeletonCollectionViewDataSource {
     
     var course: [Course] = []
     var request: Request?
@@ -49,14 +50,20 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         return view
     }()
     
-   lazy var favoriteButton: Button = {
+    var favoriteButton: Button = {
        var button = Button()
+        button.isSkeletonable = true
+        button.leftIcon.isSkeletonable = true
+        button.leftIcon.skeletonCornerRadius = 12
+        button.titleLabel?.isSkeletonable = true
+        button.titleLabel?.linesCornerRadius = 8
         button.setTitle("Мои закладки", for: .normal)
+        button.titleLabel?.isSkeletonable = true
+        button.titleLabel?.skeletonTextLineHeight = .fixed(12)
         button.leftIcon.image = UIImage(resource: ImageResource.Courses.icFavorite)
         button.rightIcon.image = UIImage(resource: ImageResource.Profile.arrowBeigeProfile)
         button.layer.borderColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0).cgColor
         button.addTarget(self, action: #selector(showFavoriteVc), for: .touchUpInside)
-      
         return button
     }()
     
@@ -64,6 +71,8 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     var bannerImageView: UIImageView = {
        var imageview = UIImageView()
+        imageview.isSkeletonable = true
+        imageview.skeletonCornerRadius = 24
         imageview.image = UIImage(resource: ImageResource.Courses.bannerCourses)
         imageview.contentMode = .scaleAspectFill
         imageview.clipsToBounds = true
@@ -74,7 +83,7 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
 
     var titleForBannerLabel: UILabel = {
        var label = UILabel()
-        label.text = "Получайте бонусы за\nпрохождение курсов"
+//        label.text = "Получайте бонусы за\nпрохождение курсов"
         label.numberOfLines = 2
         label.font = .addFont(type: .SFProTextSemiBold, size: 17)
         label.textColor = UIColor(resource: ColorResource.Colors._302_C_28)
@@ -94,8 +103,6 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 16
-//        layout.estimatedItemSize.width = 343
-//        layout.estimatedItemSize.height = 124
         layout.estimatedItemSize = .zero
         
       var collectionview = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -106,7 +113,8 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionview.isScrollEnabled = true
         collectionview.showsHorizontalScrollIndicator = false
         collectionview.bounces = false
-            collectionview.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionview.isSkeletonable = true
+        collectionview.register(CourseCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         return collectionview
     }()
     
@@ -121,9 +129,18 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         getCourseInfo()
         getCourseBonusInfo()
         
+        collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        favoriteButton.leftIcon.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        bannerImageView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
+//            self.collectionView.hideSkeleton()
+//            self.favoriteButton.leftIcon.hideSkeleton()
+//            self.backgroundView.hideSkeleton()
+//        }
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(showInfoVC))
         bannerImageView.addGestureRecognizer(tap)
-        
 
     }
     
@@ -149,18 +166,29 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
         return course.count
    }
    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> SkeletonView.ReusableCellIdentifier {
+        return "Cell"
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, skeletonCellForItemAt indexPath: IndexPath) -> UICollectionViewCell? {
+        let cell = skeletonView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+        cell.layoutIfNeeded()
+        return cell
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
-       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CourseCollectionViewCell
+        
             cell.layer.cornerRadius = 24
             cell.layer.borderWidth = 2
             cell.layer.borderColor = UIColor(resource: ColorResource.Colors.EFEBE_9).cgColor
-        
-        let imageview = UIImageView()
-            imageview.layer.cornerRadius = 24
-            imageview.frame.size = CGSize(width: 96, height: 108)
-            imageview.clipsToBounds = true
-            imageview.sd_setImage(with: URL(string: "http://45.12.74.158/\(course[indexPath.row].image_src)"))
+ 
+        cell.imageView.sd_setImage(with: URL(string: "http://45.12.74.158/\(course[indexPath.row].image_src)"))
         
         let lessonAttributed = NSMutableAttributedString(string: "\(course[indexPath.row].lesson_cnt) ")
             lessonAttributed.addAttributes([.font: UIFont.addFont(type:.SFProTextBold, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)], range: NSRange(location: 0, length: lessonAttributed.length))
@@ -175,49 +203,12 @@ class CoursesViewController: UIViewController, UICollectionViewDelegate, UIColle
             combinedAttributedString.append(durationAttributed)
             combinedAttributedString.append(NSAttributedString(string: "мин", attributes: [.font: UIFont.addFont(type: .SFProTextRegular, size: 13), .foregroundColor: UIColor(resource: ColorResource.Colors._989898)]))
         
-        let titleLabel = UILabel()
-            titleLabel.font = .addFont(type: .SFProTextRegular, size: 13)
-            titleLabel.textColor = UIColor(resource: ColorResource.Colors._989898)
-            titleLabel.attributedText = combinedAttributedString
-        
-        let subtitleLabel = UILabel()
-            subtitleLabel.font = .addFont(type: .SFProTextSemiBold, size: 17)
-            subtitleLabel.textColor = UIColor(resource: ColorResource.Colors._181715)
-            subtitleLabel.numberOfLines = 2
-            subtitleLabel.text = course[indexPath.row].name
-        
-        
-        let viewForBonus = BonusUIView()
-            viewForBonus.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
-            viewForBonus.layer.cornerRadius = 12
-            viewForBonus.bonusImageview.image = UIImage(resource: ImageResource.Profile.iconBonusBeige)
-            viewForBonus.bonusTitleLabel.text = "\(course[indexPath.row].bonus_info.price)"
-        
-        cell.addSubview(imageview)
-        cell.addSubview(titleLabel)
-        cell.addSubview(subtitleLabel)
-        cell.addSubview(viewForBonus)
 
-        imageview.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().inset(8)
-            make.width.equalTo(96)
-            make.height.equalTo(108)
-        }
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(8)
-            make.left.equalTo(imageview.snp.right).inset(-12)
-        }
-        subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(viewForBonus.snp.bottom).inset(-4)
-            make.left.equalTo(imageview.snp.right).inset(-12)
-            make.right.equalToSuperview().inset(8)
-        }
-        viewForBonus.snp.makeConstraints { make in
-            make.top.right.equalToSuperview().inset(8)
-            make.height.equalTo(24)
-        }
+        cell.subtitleLabel.attributedText = combinedAttributedString
         
-        
+        cell.titleLabel.text = course[indexPath.row].name
+ 
+        cell.viewForBonus.bonusTitleLabel.text = "\(course[indexPath.row].bonus_info.price)"
         
        return cell
    }
@@ -274,8 +265,14 @@ extension CoursesViewController {
                         self.course.append(course)
                         print("ffffff \(course.id)")
                     }
-            
-                    self.collectionView.reloadData()
+                    DispatchQueue.main.async {
+                         self.collectionView.reloadData()
+                        self.favoriteButton.leftIcon.hideSkeleton()
+                        self.collectionView.hideSkeleton()
+                        self.backgroundView.hideSkeleton()
+                       }
+                    
+//                    self.collectionView.reloadData()
                 }
             }else{
 
@@ -309,6 +306,7 @@ extension CoursesViewController {
                 
             }
         }
+        
     }
     
     //1500
@@ -331,7 +329,7 @@ extension CoursesViewController {
 
                     let bonus = json["price"].int
                     self.subtitleForBannerLabel.text = "Начислим до \(String(bonus ?? 0)) ₽ \nбонусами...."
-
+                    self.titleForBannerLabel.text = "Получайте бонусы за\nпрохождение курсов"
                 }
         }
     }

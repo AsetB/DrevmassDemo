@@ -9,8 +9,9 @@ import SnapKit
 import SVProgressHUD
 import Alamofire
 import SwiftyJSON
+import SkeletonView
  
-class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MyBonusViewController: UIViewController, SkeletonTableViewDataSource, UITableViewDelegate {
     
     var burningBonus = BurningBonus()
     var transactionBonusArray: [Transactions] = []
@@ -51,9 +52,12 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var pointsLabel: UILabel = {
         var label = UILabel()
+        label.isSkeletonable = true
+        label.skeletonTextLineHeight = .fixed(28)
+        label.linesCornerRadius = 8
         label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProDisplay-Bold", size: 34)
-        label.text = "0"
+        label.text = "500"
         return label
     }()
     
@@ -66,6 +70,9 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var bonusToRUBLabel: UILabel = {
         var label = UILabel()
+        label.isSkeletonable = true
+        label.skeletonTextLineHeight = .fixed(12)
+        label.linesCornerRadius = 4
         label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProText-Semibold", size: 15)
         label.text = "1 балл = 1 ₽"
@@ -74,6 +81,9 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
 
    lazy var burningBonusLabel: UILabel = {
         var label = UILabel()
+       label.isSkeletonable = true
+       label.skeletonTextLineHeight = .fixed(12)
+       label.linesCornerRadius = 4
         label.textColor = UIColor(resource: ColorResource.Colors.FFFFFF)
         label.font = UIFont(name: "SFProText-Regular", size: 13)
         label.backgroundColor = UIColor(resource: ColorResource.Colors._302C28A20) 
@@ -100,6 +110,7 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.register(BonusHistoryTableViewCell.self, forCellReuseIdentifier: "BonusHistoryCell")
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.isSkeletonable = true
         return tableView
     }()
     
@@ -112,21 +123,30 @@ class MyBonusViewController: UIViewController, UITableViewDelegate, UITableViewD
         setupConstraints()
         downlaodTransactions()
         
-        if burningBonus.burning_date.isEmpty {
-            burningBonusLabel.isHidden = true
-        }else{
-      //            ПРОВЕРИТЬ ПРАВИЛЬНО ЛИ ПЕРЕДАЮТСЯ ДАННЫЕ
-            let firstAttributedString = NSAttributedString(string: " 🔥 \(burningBonus.bonus)", attributes: [.font : UIFont.addFont(type: .SFProTextBold , size: 13), .foregroundColor : UIColor(resource: ColorResource.Colors.FFFFFF) ])
-            let secondAttributedString = NSAttributedString(string: "\(burningBonus.burning_date) ", attributes: [.font : UIFont.addFont(type: .SFProTextRegular , size: 13), .foregroundColor : UIColor(resource: ColorResource.Colors.FFFFFF) ])
-            
-            let combinedString = NSMutableAttributedString()
-            combinedString.append(firstAttributedString)
-            combinedString.append(secondAttributedString)
-            burningBonusLabel.attributedText = combinedString
-        }
+        tableView.showSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        pointsLabel.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.ffffffA40))
+        bonusToRUBLabel.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.ffffffA40))
+        burningBonusLabel.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.ffffffA40))
+      
+        
     }
     
     // - MARK: - TableView
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> SkeletonView.ReusableCellIdentifier {
+        return "BonusHistoryCell"
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, skeletonCellForItemAt indexPath: IndexPath) -> UITableViewCell? {
+        let cell = skeletonView.dequeueReusableCell(withIdentifier: "BonusHistoryCell", for: indexPath)
+        cell.layoutIfNeeded()
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return transactionBonusArray.count
     }
@@ -200,16 +220,27 @@ extension MyBonusViewController {
             
                 let json = JSON(response.data!)
                 print("JSON: \(json)")
-                
-                self.pointsLabel.text = String(json["bonus"].int ?? 0)
-                
+              
+                if let bonus = json["bonus"].int {
+                    self.pointsLabel.text = String(bonus)
+                    print("gggggg \(bonus)")
+                }
                
                 if let arrayTransactions = json["Transactions"].array{
                     for item in arrayTransactions {
                         let transactions = Transactions(json: item)
                         self.transactionBonusArray.append(transactions)
                     }
-                    self.tableView.reloadData()
+                    
+                    DispatchQueue.main.async{
+//                        self.pointsLabel.text = String(json["bonus"].int ?? 0)
+                        self.tableView.reloadData()
+                        self.tableView.hideSkeleton()
+                        self.pointsLabel.hideSkeleton()
+                        self.bonusToRUBLabel.hideSkeleton()
+                        self.burningBonusLabel.hideSkeleton()
+                    }
+                  
     
                 }else {
                     SVProgressHUD.showError(withStatus: "CONNECTION_ERROR")
@@ -249,6 +280,19 @@ extension MyBonusViewController {
         stackViewForBonus.addArrangedSubview(burningBonusLabel)
         contentview.addSubview(transactionsView)
         contentview.addSubview(tableView)
+        
+        if burningBonus.burning_date.isEmpty {
+            burningBonusLabel.isHidden = true
+        }else{
+      //            ПРОВЕРИТЬ ПРАВИЛЬНО ЛИ ПЕРЕДАЮТСЯ ДАННЫЕ
+            let firstAttributedString = NSAttributedString(string: " 🔥 \(burningBonus.bonus)", attributes: [.font : UIFont.addFont(type: .SFProTextBold , size: 13), .foregroundColor : UIColor(resource: ColorResource.Colors.FFFFFF) ])
+            let secondAttributedString = NSAttributedString(string: "\(burningBonus.burning_date) ", attributes: [.font : UIFont.addFont(type: .SFProTextRegular , size: 13), .foregroundColor : UIColor(resource: ColorResource.Colors.FFFFFF) ])
+            
+            let combinedString = NSMutableAttributedString()
+            combinedString.append(firstAttributedString)
+            combinedString.append(secondAttributedString)
+            burningBonusLabel.attributedText = combinedString
+        }
     }
     func setupNavigationBar(){
         navigationItem.title = "Мои баллы"
@@ -287,7 +331,7 @@ extension MyBonusViewController {
             make.right.equalToSuperview().inset(16)
         }
         stackViewForBonus.snp.makeConstraints { make in
-            make.top.equalTo(pointsLabel.snp.bottom).inset(-4)
+            make.top.equalTo(iconBonus.snp.bottom).inset(-4)
             make.left.equalToSuperview().inset(16)
         }
         

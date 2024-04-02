@@ -177,6 +177,7 @@ class PageOfCourseViewController: UIViewController, UIScrollViewDelegate, UIColl
        layout.minimumLineSpacing = 12
        layout.estimatedItemSize = .zero
        layout.scrollDirection = .vertical
+       layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
        let collectionView = SelfSizingCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
        collectionView.delegate = self
        collectionView.dataSource = self
@@ -538,10 +539,8 @@ extension PageOfCourseViewController {
                     if self.daysForTitle.count == 7 {
                         self.calendarView.titleForDayLabel.text = "Каждый день"
                     }else{
-                        for day in self.daysForTitle {
-                            self.calendarView.titleForDayLabel.text! += " \(day),"
-                        }
-                        // удалить последнюю запятую
+                        self.calendarView.titleForDayLabel.text = self.daysForTitle.joined(separator: ", ")
+
                     }
                     
                     self.calendarView.titleForTimeLabel.text = self.days.time
@@ -735,10 +734,10 @@ extension PageOfCourseViewController {
 }
 
 extension PageOfCourseViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = UIScreen.main.bounds.width - 32
-        return CGSize(width: width, height: width)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+////        let width = UIScreen.main.bounds.width - 32
+//        return UICollectionViewFlowLayout.automaticSize
+//    }
    
 }
 
