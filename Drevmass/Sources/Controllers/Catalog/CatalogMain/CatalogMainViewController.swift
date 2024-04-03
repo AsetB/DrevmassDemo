@@ -328,7 +328,7 @@ class CatalogMainViewController: UIViewController {
     
             var resultString = ""
             if let data = response.data {
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
                 print(resultString)
             }
             

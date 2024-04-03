@@ -23,6 +23,7 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         textfield.setIcon(UIImage(resource: ImageResource.Basket.promocode))
         textfield.borderStyle = .none
         textfield.addTarget(self, action: #selector(promocodeEditDidBegin), for: .allEditingEvents)
+        textfield.autocapitalizationType = .allCharacters
         return textfield
     }()
     
@@ -196,7 +197,7 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
             dashedLineView.updateDashColor(UIColor(resource: ColorResource.Colors.FA_5_C_5_C))
             return
         }
-        
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         let parameters = ["promocode": promocode]
         
         applyButton.isEnabled = false
@@ -206,7 +207,7 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
             for (key, value) in parameters {
                 multipartFormData.append(Data(value.utf8), withName: key)
             }
-        }, to: URLs.ACTIVATE_PROMOCODE).responseDecodable(of: Data.self) { response in
+        }, to: URLs.ACTIVATE_PROMOCODE, method: .post, headers: headers).responseDecodable(of: Data.self) { response in
             
             self.activityIndicator.stopAnimating()
             self.applyButton.isEnabled = true
@@ -220,8 +221,12 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
                 self.notificationView.show(viewController: self, notificationType: .success)
                 self.notificationView.titleLabel.text = "Промокод успешно применен"
 //                self.showAlertMessage(title: "Success promocode", message: "Success promocode")
-                self.dismiss(animated: true)
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true)
+                }
             } else {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
                 self.showRedError()
             }
         }
