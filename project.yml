@@ -1,7 +1,7 @@
 name: Drevmass
 
 options:
-    bundleIdPrefix: Aset-Madina
+    bundleIdPrefix: kz
     xcodeVersion: '15.2'
     deploymentTarget: '16.0'
     groupSortPosition: top
