@@ -7,6 +7,7 @@
 
 import Foundation
 
+///interface for increment and decrement API
 protocol ProductCounting: AnyObject {
     func productDidCount(basketItem: BasketItem, countIs: CountType)
 }

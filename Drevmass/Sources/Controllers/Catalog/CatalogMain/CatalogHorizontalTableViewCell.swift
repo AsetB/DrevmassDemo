@@ -118,8 +118,7 @@ class CatalogHorizontalTableViewCell: UITableViewCell {
         } else {
             basketButton.isSelected = false
         }
-        let transformer = SDImageResizingTransformer(size: CGSize(width: 146, height: 88), scaleMode: .aspectFill)
-        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: nil)
         priceLabel.text = formatPrice(catalog.price)
         nameLabel.text = catalog.title
     }

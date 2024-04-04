@@ -7,6 +7,7 @@
 
 import UIKit
 
+///Returns string with rouble sing
 func formatPrice(_ price: Int) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal

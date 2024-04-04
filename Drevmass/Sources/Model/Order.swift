@@ -8,6 +8,7 @@
 import Foundation
 import SwiftyJSON
 
+///Model
 class Order {
     public var bonus: Int = 0
     public var crmLink: String = ""

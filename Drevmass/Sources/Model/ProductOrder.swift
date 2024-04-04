@@ -8,6 +8,7 @@
 import Foundation
 import SwiftyJSON
 
+///Model for product ordering
 class ProductOrder {
     public var name: String = ""
     public var price: Int = 0

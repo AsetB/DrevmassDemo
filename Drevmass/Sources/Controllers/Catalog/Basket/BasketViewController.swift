@@ -365,14 +365,11 @@ class BasketViewController: UIViewController {
         gradientView.updateColors()
         gradientView.updateLocations()
         setNavBar()
-        //navigationController?.navigationBar.prefersLargeTitles = true
-        //tabBarController?.tabBar.addBadge(index: 2, value: 2)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         clearBasketButton.isHidden = true
-        //navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = ""
     }
     //- MARK: - SetupNavBar
@@ -384,7 +381,7 @@ class BasketViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
 
-        // Initial setup for image for Large NavBar state since the the screen always has Large NavBar once it gets opened
+        // Initial setup for Large NavBar state
         guard let navigationBar = self.navigationController?.navigationBar else { return }
         navigationBar.addSubview(clearBasketButton)
         clearBasketButton.clipsToBounds = true
@@ -457,14 +454,6 @@ class BasketViewController: UIViewController {
             bonusSwitch.isHidden = false
             clearBasketButton.isHidden = false
         }
-        
-//        for item in view.subviews {
-//            if item == scrollView, item == contentView, item == backView {
-//
-//            }
-//            item.isHidden.toggle()
-//        }
-        
     }
     private func setIndicator() {
         activityIndicator.image = UIImage(resource: ImageResource.Registration.loading24)
@@ -489,7 +478,6 @@ class BasketViewController: UIViewController {
         }
         backView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
-            //make.height.equalTo(400)
             make.bottom.horizontalEdges.equalToSuperview()
         }
         emptyBasketView.snp.makeConstraints { make in
@@ -610,20 +598,25 @@ class BasketViewController: UIViewController {
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         alert.addAction(UIAlertAction(title: "Очистить корзину", style: .destructive, handler: { _ in
+            
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+            
             AF.request(URLs.BASKET, method: .delete, headers: headers).responseData {  response in
+                
                 guard let responseCode = response.response?.statusCode else {
                     self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
+                
                 if responseCode == 200 {
                     let json = JSON(response.data!)
                     print("JSON: \(json)")
-                    self.emptyBasketView.isHidden = true
-                    self.loadBasketData()
-                    self.gradientView.updateColors()
-                    self.gradientView.updateLocations()
-                    
+                    DispatchQueue.main.async{
+                        self.emptyBasketView.isHidden = true
+                        self.loadBasketData()
+                        self.gradientView.updateColors()
+                        self.gradientView.updateLocations()
+                    }
                     getTotalCount { totalCount in
                         DispatchQueue.main.async {
                             if totalCount == 0 {
@@ -636,7 +629,7 @@ class BasketViewController: UIViewController {
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
@@ -695,9 +688,6 @@ class BasketViewController: UIViewController {
         amountOfProductsLabel.text = "\(basketInfo.countProducts)" + " \(applyProductWordEnding(number: basketInfo.countProducts, singular: "товар", genitive: "товара", plural: "товаров"))"
         priceForProductsLabel.text = formatPrice(basketInfo.basketPrice)
         bonusToPayLabel.text = formatPrice(basketInfo.usedBonus)
-        //totalPriceForProductsLabel.text = formatPrice(basketInfo.totalPrice)
-        //totalPriceForProductsLabel.text = formatPrice(calculatePrice())
-        //orderButtonPriceLabel.text = formatPrice(basketInfo.totalPrice)
         if bonusSwitch.isOn {
             totalPriceForProductsLabel.text = formatPrice(calculatePrice())
             orderButtonPriceLabel.text = formatPrice(calculatePrice())
@@ -748,7 +738,7 @@ class BasketViewController: UIViewController {
             
             var resultString = ""
             if let data = response.data {
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
                 print(resultString)
             }
             
@@ -803,34 +793,31 @@ class BasketViewController: UIViewController {
     }
     
     //- MARK: - CalculatePrice
-    // все расчитывается и так, только нужно применение бонусов до 30% от стоимости заказа
     private func calculatePrice() -> Int {
-        let basketPrice = basketInfo.basketPrice // 58600 // 1300
-        let availableBonus = basketInfo.bonus // 3000 // 3000
-        let maximumPayWithBonus = (basketPrice * 30) / 100 // 17580 // 390
+        let basketPrice = basketInfo.basketPrice
+        let availableBonus = basketInfo.bonus
+        let maximumPayWithBonus = (basketPrice * 30) / 100
         var finalPrice = 0
         
         if availableBonus <= maximumPayWithBonus {
-            finalPrice = basketPrice - availableBonus // 55600
+            finalPrice = basketPrice - availableBonus
         } else {
-            finalPrice = basketPrice - maximumPayWithBonus // _ // 910
+            finalPrice = basketPrice - maximumPayWithBonus
         }
         finalPrice = max(finalPrice, 0)
         return finalPrice
     }
     
     private func calculateUsedBonus() -> Int {
-        let basketPrice = basketInfo.basketPrice // 3190
-        let availableBonus = basketInfo.bonus // 3000
-        let maximumPayWithBonus = (basketPrice * 30) / 100 // 957
+        let basketPrice = basketInfo.basketPrice
+        let availableBonus = basketInfo.bonus
+        let maximumPayWithBonus = (basketPrice * 30) / 100
         var usedBonus = 0
         
         if availableBonus <= maximumPayWithBonus {
-            // 3190 - 3000
             usedBonus = availableBonus
             return usedBonus
         } else {
-            // 3190 - 957
             usedBonus = maximumPayWithBonus
             return usedBonus
         }
@@ -912,7 +899,7 @@ extension BasketViewController: ProductAdding {
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
@@ -952,7 +939,7 @@ extension BasketViewController: ProductAdding {
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {
@@ -978,13 +965,13 @@ extension BasketViewController: ProductCounting {
             orderButtonPriceLabel.isHidden = true
             activityIndicator.startAnimating()
             
-            AF.request(URLs.INCREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+            AF.request(URLs.INCREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
                 
-                self?.activityIndicator.stopAnimating()
-                self?.orderButtonPriceLabel.isHidden = false
+                self.activityIndicator.stopAnimating()
+                self.orderButtonPriceLabel.isHidden = false
                 
                 guard let responseCode = response.response?.statusCode else {
-                    self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
                 
@@ -995,45 +982,45 @@ extension BasketViewController: ProductCounting {
                     getTotalCount { totalCount in
                         DispatchQueue.main.async {
                             if totalCount == 0 {
-                                self?.tabBarController?.tabBar.removeBadge(index: 2)
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
                             } else {
-                                self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
                             }
-                            self?.loadBasketData()
+                            self.loadBasketData()
                         }
                     }
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
                         ErrorString = ErrorString + " \(statusCode)"
                     }
                     ErrorString = ErrorString + " \(resultString)"
-                    self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
                 }
             }
         case .decrement:
             if basketItem.count == 1 {
                 let alert = UIAlertController(title: "Вы уверены, что хотите удалить товар из корзины?", message: nil, preferredStyle: .alert)
-                //alert.view.subviews.first?.subviews.first?.backgroundColor = .white
                 alert.addAction(UIAlertAction(title: "Отменить", style: .cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: "Удалить", style: .destructive, handler: { _ in
+                    
                     let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
                     let parameters = ["count": basketItem.count, "product_id": basketItem.productID, "user_id": 0]
                     
                     self.orderButtonPriceLabel.isHidden = true
                     self.activityIndicator.startAnimating()
                     
-                    AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+                    AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
                         
-                        self?.activityIndicator.stopAnimating()
-                        self?.orderButtonPriceLabel.isHidden = false
+                        self.activityIndicator.stopAnimating()
+                        self.orderButtonPriceLabel.isHidden = false
                         
                         guard let responseCode = response.response?.statusCode else {
-                            self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                            self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                             return
                         }
                         
@@ -1044,24 +1031,24 @@ extension BasketViewController: ProductCounting {
                             getTotalCount { totalCount in
                                 DispatchQueue.main.async {
                                     if totalCount == 0 {
-                                        self?.tabBarController?.tabBar.removeBadge(index: 2)
+                                        self.tabBarController?.tabBar.removeBadge(index: 2)
                                     } else {
-                                        self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                                        self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
                                     }
-                                    self?.loadBasketData()
+                                    self.loadBasketData()
                                 }
                             }
                         } else {
                             var resultString = ""
                             if let data = response.data {
-                                resultString = String(data: data, encoding: .utf8)!
+                                resultString = String(data: data, encoding: .utf8) ?? ""
                             }
                             var ErrorString = "Ошибка"
                             if let statusCode = response.response?.statusCode {
                                 ErrorString = ErrorString + " \(statusCode)"
                             }
                             ErrorString = ErrorString + " \(resultString)"
-                            self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                            self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
                         }
                     }
                 }))
@@ -1074,13 +1061,13 @@ extension BasketViewController: ProductCounting {
             orderButtonPriceLabel.isHidden = true
             activityIndicator.startAnimating()
             
-            AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+            AF.request(URLs.DECREASE_ITEM_BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
                 
-                self?.activityIndicator.stopAnimating()
-                self?.orderButtonPriceLabel.isHidden = false
+                self.activityIndicator.stopAnimating()
+                self.orderButtonPriceLabel.isHidden = false
                 
                 guard let responseCode = response.response?.statusCode else {
-                    self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
                 
@@ -1091,24 +1078,24 @@ extension BasketViewController: ProductCounting {
                     getTotalCount { totalCount in
                         DispatchQueue.main.async {
                             if totalCount == 0 {
-                                self?.tabBarController?.tabBar.removeBadge(index: 2)
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
                             } else {
-                                self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
                             }
-                            self?.loadBasketData()
+                            self.loadBasketData()
                         }
                     }
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
                         ErrorString = ErrorString + " \(statusCode)"
                     }
                     ErrorString = ErrorString + " \(resultString)"
-                    self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
                 }
             }
         }

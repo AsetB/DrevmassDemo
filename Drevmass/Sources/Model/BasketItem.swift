@@ -8,7 +8,7 @@
 import Foundation
 import SwiftyJSON
 
-
+///Model
 class BasketItem {
     public var productID: Int = 0
     public var productTitle: String = ""

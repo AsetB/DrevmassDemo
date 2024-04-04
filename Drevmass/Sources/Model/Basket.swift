@@ -8,6 +8,7 @@
 import Foundation
 import SwiftyJSON
 
+///Model
 class Basket {
     //public var basket: [BasketItem] = []
     public var bonus: Int = 0
@@ -19,21 +20,9 @@ class Basket {
     public var countProducts: Int = 0
     
     init(json: JSON) {
-//        if let array = json["basket"].array {
-//            for item in array {
-//                let data = BasketItem(json: item)
-//                self.basket.append(data)
-//            }
-//        }
         if let data = json["bonus"].int {
             self.bonus = data
         }
-//        if let array = json["products"].array {
-//            for item in array {
-//                let data = Product(json: item)
-//                self.products.append(data)
-//            }
-//        }
         if let data = json["total_price"].int {
             self.totalPrice = data
         }

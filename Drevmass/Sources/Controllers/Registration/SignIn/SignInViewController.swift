@@ -156,6 +156,7 @@ class SignInViewController: UIViewController {
         setViews()
         setIndicator()
         setConstraints()
+        //Keyboard height observer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -243,12 +244,6 @@ class SignInViewController: UIViewController {
             make.horizontalEdges.equalTo(goToSignUpButton.snp.horizontalEdges)
             make.height.equalTo(56)
         }
-//        loginSpinner.snp.makeConstraints { make in
-//            make.center.equalTo(signInButton.snp.center)
-//        }
-//        activityIndicator.snp.makeConstraints { make in
-//            make.center.equalTo(signInButton.snp.center)
-//        }
     }
     //- MARK: - Button Actions
     @objc func goToRestorePass() {

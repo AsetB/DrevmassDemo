@@ -40,8 +40,7 @@ class BasketTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var counterView: UIView = { [weak self] in
-        guard let self = self else { return UIView() }
+    lazy var counterView: UIView = {
         
         let view = UIView()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.F_3_F_1_F_0)
@@ -146,8 +145,7 @@ class BasketTableViewCell: UITableViewCell {
     }
     //- MARK: - Set Data
     func setCell(product: BasketItem) {
-        let transformer = SDImageResizingTransformer(size: CGSize(width: 112, height: 76), scaleMode: .aspectFill)
-        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + product.productImg), placeholderImage: nil, context: [.imageTransformer : transformer])
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + product.productImg), placeholderImage: nil, context: nil)
         priceLabel.text = formatPrice(product.price)
         nameLabel.text = product.productTitle
         counterLabel?.text = String(product.count)

@@ -103,13 +103,8 @@ class SuccessOrderViewController: UIViewController, PanModalPresentable {
             make.height.equalTo(56)
         }
     }
-    
+    //only dissmiss
     @objc func okayAction() {
-        self.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            // Dismiss the OrderViewController as well, as it was presented before the modal
-            print("first dismiss")
-            self.presentingViewController?.navigationController?.popViewController(animated: true)
-        }
+        dismiss(animated: true)
     }
 }

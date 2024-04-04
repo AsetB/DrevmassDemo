@@ -85,6 +85,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         goodsImage.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview()
             make.height.equalTo(100)
+            make.width.equalTo(167)
         }
         priceLabel.snp.makeConstraints { make in
             make.top.equalTo(goodsImage.snp.bottom).offset(12)
@@ -110,8 +111,7 @@ class CatalogCollectionViewCell: UICollectionViewCell {
         } else {
             basketButton.isSelected = false
         }
-        let transformer = SDImageResizingTransformer(size: CGSize(width: 167, height: 100), scaleMode: .aspectFill)
-        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: nil)
         priceLabel.text = formatPrice(catalog.price)
         nameLabel.text = catalog.title
     }

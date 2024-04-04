@@ -90,6 +90,7 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         goodsImage.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview()
             make.height.equalTo(202)
+            make.width.equalTo(343)
         }
         priceLabel.snp.makeConstraints { make in
             make.top.equalTo(goodsImage.snp.bottom).offset(12)
@@ -115,8 +116,8 @@ class CatalogVerticalTableViewCell: UITableViewCell {
         } else {
             basketButton.isSelected = false
         }
-        let transformer = SDImageResizingTransformer(size: CGSize(width: 343, height: 202), scaleMode: .aspectFill)
-        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+//        let transformer = SDImageResizingTransformer(size: CGSize(width: 343, height: 202), scaleMode: .aspectFill)
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + catalog.imageSource), placeholderImage: nil, context: nil)
         priceLabel.text = formatPrice(catalog.price)
         nameLabel.text = catalog.title
     }

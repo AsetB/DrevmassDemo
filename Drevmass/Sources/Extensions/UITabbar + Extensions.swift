@@ -8,6 +8,7 @@
 import UIKit
 
 extension UITabBar {
+    ///Add badge for UITabBar Basket
     func addBadge(index: Int, value: Int) {
         let stringValue = String(value)
         if let tabItems = self.items {
@@ -30,7 +31,7 @@ extension UITabBar {
             tabItem.setBadgeTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10, weight: .medium)], for: .normal)
         }
     }
-    
+    ///Remove badge for UITabBar Basket
     func removeBadge(index: Int) {
         if let tabItems = self.items {
             let tabItem = tabItems[index]

@@ -133,7 +133,7 @@ class CatalogMainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: ColorResource.Colors.EFEBE_9)
         
-        downloadFamousCatalog()
+        primaryDownloadFamousCatalog()
         addViews()
         setConstraints()
         showCatalogView(currentView)
@@ -145,10 +145,9 @@ class CatalogMainViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        collectionView.isSkeletonable = true
-//        verticalTableView.isSkeletonable = true
-//        horizontalTableView.isSkeletonable = true
-        
+        collectionView.isSkeletonable = true
+        verticalTableView.isSkeletonable = true
+        horizontalTableView.isSkeletonable = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -158,7 +157,7 @@ class CatalogMainViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
         navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
-        //sortDidSelect(currentSortMain)//тут переключение происходит
+        sortDidSelect(currentSortMain)//тут переключение происходит
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -297,15 +296,15 @@ class CatalogMainViewController: UIViewController {
         setNoSignalViewOff()
     }
     //- MARK: - Data loading
-    private func downloadFamousCatalog() {
+    private func primaryDownloadFamousCatalog() {
         request?.cancel()
         
-        
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        
         DispatchQueue.main.async {
             self.collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
             self.horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         }
         
         request = AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
@@ -352,21 +351,58 @@ class CatalogMainViewController: UIViewController {
         }
     }
     
+    private func downloadFamousCatalog() {
+        
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        
+        AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
+    
+            var resultString = ""
+            if let data = response.data {
+                resultString = String(data: data, encoding: .utf8) ?? ""
+                print(resultString)
+            }
+            
+            if response.response?.statusCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                
+                if let array = json.array {
+                    self.famousCatalog.removeAll()
+                    for item in array {
+                        let famousProduct = Product(json: item)
+                        self.famousCatalog.append(famousProduct)
+                    }
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                        self.verticalTableView.reloadData()
+                        self.horizontalTableView.reloadData()
+                        self.collectionView.hideSkeleton()
+                        self.horizontalTableView.hideSkeleton()
+                        self.verticalTableView.hideSkeleton()
+                    }
+                }
+            } else {
+                var ErrorString = "CONNECTION_ERROR"
+                if let sCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(sCode)"
+                }
+                ErrorString = ErrorString + " \(resultString)"
+                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+            }
+        }
+    }
+    
     private func downloadPriceupCatalog() {
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
-        DispatchQueue.main.async {
-            self.collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            self.horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-        }
         
         AF.request(URLs.GET_PRODUCT_PRICEUP, method: .get, headers: headers).responseData { response in
             
             
             var resultString = ""
             if let data = response.data {
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
                 print(resultString)
             }
             
@@ -405,17 +441,12 @@ class CatalogMainViewController: UIViewController {
     private func downloadPricedownCatalog() {
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
-        DispatchQueue.main.async {
-            self.collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            self.horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-        }
+        
         AF.request(URLs.GET_PRODUCT_PRICEDOWN, method: .get, headers: headers).responseData { response in
-            
             
             var resultString = ""
             if let data = response.data {
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
                 print(resultString)
             }
             
@@ -677,9 +708,9 @@ extension CatalogMainViewController: ProductAdding {
     func productDidAdd(product: Product) {
         if product.basketCount > 0 {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
-            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData {  [weak self] response in
+            AF.request(URLs.DELETE_ITEM_BASKET + String(product.id), method: .delete, headers: headers).responseData { response in
                 guard let responseCode = response.response?.statusCode else {
-                    self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                    self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                     return
                 }
                 if responseCode == 200 {
@@ -689,24 +720,24 @@ extension CatalogMainViewController: ProductAdding {
                     getTotalCount { totalCount in
                         DispatchQueue.main.async {
                             if totalCount == 0 {
-                                self?.tabBarController?.tabBar.removeBadge(index: 2)
+                                self.tabBarController?.tabBar.removeBadge(index: 2)
                             } else {
-                                self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                                self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
                             }
-                            self?.sortDidSelect(self?.currentSortMain ?? .famous)
+                            self.sortDidSelect(self.currentSortMain)
                         }
                     }
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
                         ErrorString = ErrorString + " \(statusCode)"
                     }
                     ErrorString = ErrorString + " \(resultString)"
-                    self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                    self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
                 }
             }
             return
@@ -714,9 +745,9 @@ extension CatalogMainViewController: ProductAdding {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         let parameters = ["count": product.basketCount+1, "product_id": product.id, "user_id": 0]
         
-        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { [weak self]  response in
+        AF.request(URLs.BASKET, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseData { response in
             guard let responseCode = response.response?.statusCode else {
-                self?.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
+                self.showAlertMessage(title: "Ошибка соединения", message: "Проверьте подключение")
                 return
             }
             
@@ -726,21 +757,21 @@ extension CatalogMainViewController: ProductAdding {
                 
                 getTotalCount { totalCount in
                     DispatchQueue.main.async {
-                        self?.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
-                        self?.sortDidSelect(self?.currentSortMain ?? .famous)
+                        self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
+                        self.sortDidSelect(self.currentSortMain)
                     }
                 }
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {
                     ErrorString = ErrorString + " \(statusCode)"
                 }
                 ErrorString = ErrorString + " \(resultString)"
-                self?.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
+                self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
             }
         }
     }

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+///interface for handling current sort on Catalog Main Screen
 protocol SortSelecting: AnyObject {
     func sortDidSelect(_ sortSelected: SortType)
 }

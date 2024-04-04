@@ -22,6 +22,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     var productDetail = Product()
     var productSimilarArray: [Product] = []
     var productID: Int = 0
+    private var userPromocode: String = ""
     weak var delegate: ProductAdding?
     //- MARK: - Local outlets
     lazy var scrollView: UIScrollView = {
@@ -124,8 +125,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         return button
     }()
     
-    private lazy var specificationView: UIView = { [weak self] in
-        guard let self = self else { return UIView() }
+    private lazy var specificationView: UIView = {
         
         let view = UIView()
         view.layer.cornerRadius = 24
@@ -518,6 +518,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalToSuperview().inset(5)
             make.horizontalEdges.equalToSuperview()
             make.height.equalTo(220)
+            make.width.equalTo(357)
         }
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(goodsImage.snp.bottom).offset(17)
@@ -620,11 +621,11 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
         
-        AF.request(URLs.GET_PRODUCT_BY_ID + String(productID), method: .get, headers: headers).responseData { [self] response in
+        AF.request(URLs.GET_PRODUCT_BY_ID + String(productID), method: .get, headers: headers).responseData { response in
             
             var resultString = ""
             if let data = response.data {
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
                 print(resultString)
             }
             
@@ -688,6 +689,21 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
                 SVProgressHUD.showError(withStatus: "\(ErrorString)")
             }
         }
+        AF.request(URLs.GET_PROMOCODE_INFO_URL, method: .get, headers: headers).responseData { response in
+            if response.response?.statusCode == 200 {
+                let json = JSON(response.data!)
+                print("JSON: \(json)")
+                if let userPromocode = json["promocode"].string {
+                    self.userPromocode = userPromocode
+                }
+            } else {
+                var ErrorString = "CONNECTION_ERROR"
+                if let sCode = response.response?.statusCode {
+                    ErrorString = ErrorString + " \(sCode)"
+                }
+                SVProgressHUD.showError(withStatus: "\(ErrorString)")
+            }
+        }
     }
     //- MARK: - Set data
     func setData() {
@@ -699,8 +715,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             gradientView.isHidden = true
         }
         
-        let transformer = SDImageResizingTransformer(size: CGSize(width: 357, height: 220), scaleMode: .aspectFill)
-        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + productDetail.imageSource), placeholderImage: nil, context: [.imageTransformer : transformer])
+        goodsImage.sd_setImage(with: URL(string: imageSource.BASE_URL + productDetail.imageSource), placeholderImage: nil, context: nil)
         nameLabel.text = productDetail.title
         let priceRouble = formatPrice(productDetail.price)
         priceLabel.text = priceRouble
@@ -747,7 +762,8 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
     
     //- MARK: - Button Actions
     @objc func shareAction() {
-        let text = "Привет! В приложении Древмасс нашёл «\(nameLabel.text!)», который стоит внимания. Для дополнительной выгоды используй мой промокод CXVO6WRP и получи 2500 бонусных рублей на счёт. Открой для себя мир комфорта и уюта с лучшими массажёрами. Загрузи приложение по ссылке: https://apps.apple.com/ru/app/drevmass/id6450933706."
+        guard let productTitle = nameLabel.text else { return }
+        let text = "Привет! В приложении Древмасс нашёл «\(productTitle)», который стоит внимания. Для дополнительной выгоды используй мой промокод \(userPromocode) и получи 2500 бонусных рублей на счёт. Открой для себя мир комфорта и уюта с лучшими массажёрами. Загрузи приложение по ссылке: https://apps.apple.com/ru/app/drevmass/id6450933706."
         let image = goodsImage.image
         let shareAll = [text, image!] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
@@ -787,19 +803,13 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
                         } else {
                             self.tabBarController?.tabBar.addBadge(index: 2, value: totalCount)
                         }
-                        
-//                        self.addToBasketButton.isHidden = false
-//                        self.topCounterButtonContainer.isHidden = true
-//                        self.addToBasketPriceButton.isHidden = false
-//                        self.bottomCounterButtonContainer.isHidden = true
-//                        self.gradientView.isHidden = false
                         self.downloadProductDetail()
                     }
                 }
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {
@@ -838,7 +848,7 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {
@@ -897,16 +907,6 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
                 gradientView.isHidden = true
             }
         }
-        
-//        if offsetY > buttonY {
-//            addToBasketButton.isHidden = true
-//            addToBasketPriceButton.isHidden = false
-//            gradientView.isHidden = false
-//        } else {
-//            addToBasketButton.isHidden = false
-//            addToBasketPriceButton.isHidden = true
-//            gradientView.isHidden = true
-//        }
     }
 }
 
@@ -960,7 +960,7 @@ extension ProductViewController: ProductAdding {
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
@@ -994,7 +994,7 @@ extension ProductViewController: ProductAdding {
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {

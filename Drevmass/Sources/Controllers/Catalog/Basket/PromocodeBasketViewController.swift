@@ -13,7 +13,6 @@ import SwiftyJSON
 
 class PromocodeBasketViewController: UIViewController, PanModalPresentable {
     //- MARK: - Variables
-    var kbHeight: CGFloat?
     //- MARK: - Local outlets
     private lazy var promoTextfield: TextFieldWithPadding = {
         let textfield = TextFieldWithPadding()
@@ -69,9 +68,6 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
     var panScrollable: UIScrollView? {
         return nil
     }
-//    var longFormHeight: PanModalHeight {
-//        return .contentHeight(180)
-//    }
     let keybHeight = UserDefaults.standard.value(forKey: "keyboardHeight") as? CGFloat
     var longFormHeight: PanModalHeight {
         return .contentHeight(150 + (keybHeight ?? 0))
@@ -96,13 +92,6 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         addViews()
         setIndicator()
         setConstraints()
-        
-//        hasLoaded = true
-//        panModalSetNeedsLayoutUpdate()
-//        panModalTransition(to: .shortForm)
-//        
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -167,21 +156,6 @@ class PromocodeBasketViewController: UIViewController, PanModalPresentable {
         promoTextfield.setIcon(UIImage(resource: ImageResource.Basket.promocode))
         dashedLineView.updateDashColor(UIColor(resource: ColorResource.Colors.D_6_D_1_CE))
     }
-    //- MARK: - Keyboard
-//    @objc private func keyboardWillShow(notification: NSNotification) {
-//        guard let userInfo = notification.userInfo,
-//                      let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-//                    return
-//                }
-//
-//                let kbHeight = keyboardFrame.height
-//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-//            self.kbHeight = keyboardSize.height
-//        }
-//    }
-//    @objc private func keyboardWillHide(notification: NSNotification) {
-//        self.signUpBottomToSignInTop?.update(inset: 68)
-//    }
     //- MARK: - Button actions
     @objc func promocodeEditDidBegin() {
         hideRedError()

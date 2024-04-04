@@ -196,6 +196,7 @@ class SignUpViewController: UIViewController {
         setIndicator()
         setConstraints()
         
+        //Keyboard observer for getting keyboard Height
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -429,16 +430,12 @@ class SignUpViewController: UIViewController {
             } else {
                 self.showRedError()
                 var resultString = ""
-//                if let data = response.data {
-//                    resultString = String(data: data, encoding: .utf8)!
-//                }
                 let json = JSON(response.data!)
                 if let data = json["code"].string {
                     resultString = data
                 }
                 self.notificationView.show(viewController: self, notificationType: .attantion)
                 self.notificationView.titleLabel.text = resultString
-                //self.showAlertMessage(title: "Ошибка соединения", message: "\(ErrorString)")
             }
         }
     }

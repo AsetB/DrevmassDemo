@@ -171,7 +171,7 @@ extension DetailLessonViewController {
                 SVProgressHUD.dismiss()
                 var resultString = ""
                 if let data = response.data{
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                     if response.response?.statusCode == 200 {
                         let json = JSON(response.data!)
@@ -214,7 +214,7 @@ extension DetailLessonViewController {
                 } else {
                     var resultString = ""
                     if let data = response.data {
-                        resultString = String(data: data, encoding: .utf8)!
+                        resultString = String(data: data, encoding: .utf8) ?? ""
                     }
                     var ErrorString = "Ошибка"
                     if let statusCode = response.response?.statusCode {
@@ -289,7 +289,7 @@ extension DetailLessonViewController {
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {
@@ -323,7 +323,7 @@ extension DetailLessonViewController {
             SVProgressHUD.dismiss()
             var resultString = ""
             if let data = response.data{
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
             }
                 if response.response?.statusCode == 200 {
                     let json = JSON(response.data!)

@@ -9,6 +9,7 @@ import UIKit
 
 //- MARK: - textfiled with image icon on the left
 extension UITextField {
+    ///set icon with padding for Textfield
     func setIcon(_ image: UIImage) {
         let iconView = UIImageView(frame:
                                     CGRect(x: 0, y: 4, width: 24, height: 24))
@@ -58,6 +59,7 @@ extension String {
 }
 
 extension UITextField {
+    ///If string isEmail returns true
     func isEmail() -> Bool {
         return self.text?.isEmail() ?? false
     }

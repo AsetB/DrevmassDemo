@@ -79,11 +79,7 @@ class OrderViewController: UIViewController {
         textfield.defaultTextAttributes = [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._181715)]
         textfield.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors.A_1_A_1_A_1)])
         textfield.borderStyle = .none
-        //textfield.addTarget(self, action: #selector(textfieldEditBegin), for: .editingDidBegin)
-//        textfield.addTarget(self, action: #selector(textfieldEditEnd), for: .editingDidEnd)
-//        textfield.addTarget(self, action: #selector(textfieldEditingChanged), for: .editingChanged)
         textfield.addTarget(self, action: #selector(textfieldAllEditing), for: .allEditingEvents)
-        //textfield.delegate = self
         return textfield
     }()
     
@@ -116,9 +112,6 @@ class OrderViewController: UIViewController {
         textfield.defaultTextAttributes = [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._181715)]
         textfield.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors.A_1_A_1_A_1)])
         textfield.borderStyle = .none
-//        textfield.addTarget(self, action: #selector(textfieldEditBegin), for: .editingDidBegin)
-//        textfield.addTarget(self, action: #selector(textfieldEditEnd), for: .editingDidEnd)
-//        textfield.addTarget(self, action: #selector(textfieldEditingChanged), for: .editingChanged)
         textfield.addTarget(self, action: #selector(textfieldAllEditing), for: .allEditingEvents)
         textfield.delegate = self
         textfield.keyboardType = .phonePad
@@ -154,9 +147,6 @@ class OrderViewController: UIViewController {
         textfield.defaultTextAttributes = [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors._181715)]
         textfield.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.font : UIFont.addFont(type: .SFProTextSemiBold, size: 17), NSAttributedString.Key.foregroundColor : UIColor(resource: ColorResource.Colors.A_1_A_1_A_1)])
         textfield.borderStyle = .none
-        //textfield.addTarget(self, action: #selector(textfieldEditBegin), for: .editingDidBegin)
-//        textfield.addTarget(self, action: #selector(textfieldEditEnd), for: .editingDidEnd)
-//        textfield.addTarget(self, action: #selector(textfieldEditingChanged), for: .editingChanged)
         textfield.addTarget(self, action: #selector(textfieldAllEditing), for: .allEditingEvents)
         //textfield.delegate = self
         textfield.keyboardType = .emailAddress
@@ -336,7 +326,7 @@ class OrderViewController: UIViewController {
         AF.request(URLs.USER_INFO_URL, method: .get, headers: headers).responseData { response in
             var resultString = ""
             if let data = response.data{
-                resultString = String(data: data, encoding: .utf8)!
+                resultString = String(data: data, encoding: .utf8) ?? ""
             }
 
             if response.response?.statusCode == 200{
@@ -348,7 +338,6 @@ class OrderViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.setData()
                 }
-//                self.prepareOrderData()
             }else{
                 var ErrorString = "CONNECTION_ERROR"
                 if let sCode = response.response?.statusCode{
@@ -412,7 +401,7 @@ class OrderViewController: UIViewController {
             } else {
                 var resultString = ""
                 if let data = response.data {
-                    resultString = String(data: data, encoding: .utf8)!
+                    resultString = String(data: data, encoding: .utf8) ?? ""
                 }
                 var ErrorString = "Ошибка"
                 if let statusCode = response.response?.statusCode {
@@ -429,12 +418,6 @@ class OrderViewController: UIViewController {
         phoneTextfield.text = userData.phone_number
         emailTextfield.text = userData.email
     }
-    
-//    private func prepareOrderData() {
-//        orderData.email = userData.email
-//        orderData.phoneNumber = userData.phone_number
-//        orderData.username = userData.name
-//    }
     //- MARK: - Actions for keyboard observers
     @objc private func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {

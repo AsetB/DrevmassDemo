@@ -9,6 +9,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 
+///Interface for adding product to basket
 protocol ProductAdding: AnyObject {
     func productDidAdd(product: Product)
 }
