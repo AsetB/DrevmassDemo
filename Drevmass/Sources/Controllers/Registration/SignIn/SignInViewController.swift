@@ -103,7 +103,7 @@ class SignInViewController: UIViewController {
         button.setTitleColor(UIColor(resource: ColorResource.Colors.FFFFFF), for: .normal)
         button.titleLabel?.font = .addFont(type: .SFProTextSemiBold, size: 17)
         button.layer.cornerRadius = 28
-        button.backgroundColor = UIColor(resource: ColorResource.Colors.B_5_A_380)//.Colors.D_3_C_8_B_3
+        button.backgroundColor = UIColor(resource: ColorResource.Colors.D_3_C_8_B_3)
         button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
         return button
     }()

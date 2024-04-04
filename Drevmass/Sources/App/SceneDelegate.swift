@@ -46,6 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         let rootViewController = AuthenticationService.shared.isAuthorized ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
+        window?.overrideUserInterfaceStyle = .light
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
     }

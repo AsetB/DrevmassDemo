@@ -855,6 +855,8 @@ class ProductViewController: UIViewController, UIScrollViewDelegate {
         youTubePlayerViewController.player.source = .video(id: productDetail.videoSource, startSeconds: nil, endSeconds: nil)
         youTubePlayerViewController.player.configuration = .init(
             fullscreenMode: .system, autoPlay: true, showControls: true, showFullscreenButton: true, useModestBranding: false, playInline: false, showRelatedVideos: false)
+        youTubePlayerViewController.hidesBottomBarWhenPushed = true 
+        
         self.show(youTubePlayerViewController, sender: self)
     }
     //- MARK: - scrollViewDidScroll

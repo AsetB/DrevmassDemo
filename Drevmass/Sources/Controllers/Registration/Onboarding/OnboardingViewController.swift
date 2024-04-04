@@ -168,9 +168,11 @@ class OnboardingViewController: UIViewController, SGSegmentedProgressBarDataSour
         }
         buttonContainer.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(16)
-            make.bottom.equalToSuperview().inset(16)
-            make.width.equalTo(327)
-            //make.height.equalTo(56)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            //make.bottom.equalToSuperview().inset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            //make.width.equalTo(343)
+            make.height.equalTo(56)
             make.centerX.equalToSuperview()
         }
         signInButton.snp.makeConstraints { make in

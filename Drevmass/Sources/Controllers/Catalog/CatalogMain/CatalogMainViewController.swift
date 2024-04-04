@@ -127,6 +127,7 @@ class CatalogMainViewController: UIViewController {
     }()
     
     private var noSignalView = NoSignalUIView()
+    private var notificationView = NotificationView()
     //- MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,16 +140,15 @@ class CatalogMainViewController: UIViewController {
         horizontalTableView.isHidden = true
         verticalTableView.isHidden = true
         noSignalView.isHidden = true
+        notificationView.alpha = 0
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        collectionView.isSkeletonable = true
-        collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-        verticalTableView.isSkeletonable = true
-        verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-        horizontalTableView.isSkeletonable = true
-        horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+//        collectionView.isSkeletonable = true
+//        verticalTableView.isSkeletonable = true
+//        horizontalTableView.isSkeletonable = true
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -158,7 +158,7 @@ class CatalogMainViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor(resource: ColorResource.Colors._302_C_28)]
         navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "Каталог"
-        sortDidSelect(currentSortMain)
+        //sortDidSelect(currentSortMain)//тут переключение происходит
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -245,37 +245,16 @@ class CatalogMainViewController: UIViewController {
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.verticalList24), for: .normal)
             collectionViewBottom?.update(priority: .low)
             verticalTableViewBottom?.update(priority: .high)
-            
-            
-            collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            
-            verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            
-            horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         case .verticalTableView:
             currentView = .horizontalTableView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.gorizontalList24), for: .normal)
             verticalTableViewBottom?.update(priority: .low)
             horizontalTableViewBottom?.update(priority: .medium)
-            
-            
-            collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            
-            verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            
-            horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         case .horizontalTableView:
             currentView = .collectionView
             changeCatalogViewButton.setImage(UIImage(resource: ImageResource.Catalog.tile24), for: .normal)
             horizontalTableViewBottom?.update(priority: .low)
             collectionViewBottom?.update(priority: .medium)
-            
-            
-            collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            
-            verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
-            
-            horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
         }
         showCatalogView(currentView)
         if currentView == .horizontalTableView {
@@ -323,6 +302,11 @@ class CatalogMainViewController: UIViewController {
         
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        DispatchQueue.main.async {
+            self.collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        }
         
         request = AF.request(URLs.GET_PRODUCT_FAMOUS, method: .get, headers: headers).responseData { response in
     
@@ -343,15 +327,13 @@ class CatalogMainViewController: UIViewController {
                         self.famousCatalog.append(famousProduct)
                     }
                     DispatchQueue.main.async {
-                        self.collectionView.hideSkeleton()
-                        self.horizontalTableView.hideSkeleton()
-                        self.verticalTableView.hideSkeleton()
                         self.collectionView.reloadData()
                         self.verticalTableView.reloadData()
                         self.horizontalTableView.reloadData()
+                        self.collectionView.hideSkeleton()
+                        self.horizontalTableView.hideSkeleton()
+                        self.verticalTableView.hideSkeleton()
                     }
-                } else {
-                    SVProgressHUD.showError(withStatus: "Error with updating data")
                 }
             } else {
                 self.monitor.pathUpdateHandler = { path in
@@ -366,13 +348,6 @@ class CatalogMainViewController: UIViewController {
                     }
                 }
                 self.monitor.start(queue: DispatchQueue(label: "network_monitor"))
-                
-//                var ErrorString = "CONNECTION_ERROR"
-//                if let sCode = response.response?.statusCode {
-//                    ErrorString = ErrorString + " \(sCode)"
-//                }
-//                ErrorString = ErrorString + " \(resultString)"
-//                SVProgressHUD.showError(withStatus: "\(ErrorString)")
             }
         }
     }
@@ -380,6 +355,11 @@ class CatalogMainViewController: UIViewController {
     private func downloadPriceupCatalog() {
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
+        DispatchQueue.main.async {
+            self.collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        }
         
         AF.request(URLs.GET_PRODUCT_PRICEUP, method: .get, headers: headers).responseData { response in
             
@@ -400,9 +380,14 @@ class CatalogMainViewController: UIViewController {
                         let priceupProduct = Product(json: item)
                         self.priceupCatalog.append(priceupProduct)
                     }
-                    self.collectionView.reloadData()
-                    self.verticalTableView.reloadData()
-                    self.horizontalTableView.reloadData()
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                        self.verticalTableView.reloadData()
+                        self.horizontalTableView.reloadData()
+                        self.collectionView.hideSkeleton()
+                        self.horizontalTableView.hideSkeleton()
+                        self.verticalTableView.hideSkeleton()
+                    }
                 } else {
                     SVProgressHUD.showError(withStatus: "Error with updating data")
                 }
@@ -420,7 +405,11 @@ class CatalogMainViewController: UIViewController {
     private func downloadPricedownCatalog() {
         
         let headers: HTTPHeaders = ["Authorization": "Bearer \(AuthenticationService.shared.token)"]
-        
+        DispatchQueue.main.async {
+            self.collectionView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.verticalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+            self.horizontalTableView.showAnimatedSkeleton(usingColor: UIColor(resource: ColorResource.Colors.EFEBE_9))
+        }
         AF.request(URLs.GET_PRODUCT_PRICEDOWN, method: .get, headers: headers).responseData { response in
             
             
@@ -440,9 +429,14 @@ class CatalogMainViewController: UIViewController {
                         let pricedownProduct = Product(json: item)
                         self.pricedownCatalog.append(pricedownProduct)
                     }
-                    self.collectionView.reloadData()
-                    self.verticalTableView.reloadData()
-                    self.horizontalTableView.reloadData()
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                        self.verticalTableView.reloadData()
+                        self.horizontalTableView.reloadData()
+                        self.collectionView.hideSkeleton()
+                        self.horizontalTableView.hideSkeleton()
+                        self.verticalTableView.hideSkeleton()
+                    }
                 } else {
                     SVProgressHUD.showError(withStatus: "Error with updating data")
                 }
