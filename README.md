@@ -1,6 +1,5 @@
 # Drevmass
 Application for wood massager manufacturer.
-Internship project.
 
 ![screencast gif](https://github.com/AsetB/DrevmassDemo/blob/2cd02d62a0ee76a5a5e4a290a58f65da26267299/screens/ScreenRecording.gif "Screen")
 
